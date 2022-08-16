@@ -8,7 +8,7 @@ ifeq ($(PREFIX),)
 endif
 
 INCLUDE_DIR := /include/
-LIB_DIR := $(PREFIX) 
+LIB_DIR := $(PREFIX)
 LIB_DIR := /lib/
 LOCAL_CORE_INCLUDE = include/Core
 LOCAL_IO_INCLUDE = include/IO

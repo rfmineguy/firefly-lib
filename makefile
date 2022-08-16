@@ -7,8 +7,9 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-INCLUDE_DIR = PREFIX + /include/firefly_framework
-LIB_DIR = PREFIX + /lib/
+INCLUDE_DIR := /include/
+LIB_DIR := $(PREFIX) 
+LIB_DIR := /lib/
 LOCAL_CORE_INCLUDE = include/Core
 LOCAL_IO_INCLUDE = include/IO
 LOCAL_RESOURCE_INCLUDE = include/Resource
@@ -25,19 +26,19 @@ H_IO = $(LOCAL_IO_INCLUDE)/*.h
 H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
 H_RENDERING = $(LOCAL_RENDERING_INCLUDE)/*.h
 
-all: fireflylib.so
+all: libfirefly.so
 
-fireflylib.so: $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ -L/opt/homebrew/Cellar/glfw/3.3.8/lib -lc -lglfw
+libfirefly.so: $(SOURCES)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ -L/opt/homebrew/Cellar/glfw/3.3.8/lib -lc -lglfw -I$(INCLUDE_DIR)
 
 #
 # The make code below this line is pivotal that it does not change
 #    if you change anything you *may* break other locally installed
 #    libraries
 #
-install: fireflylib.so
+install: libfirefly.so
 	sudo install -d $(DESTDIR)$(PREFIX)/lib/
-	sudo install -m 644 fireflylib.so $(DESTDIR)$(PREFIX)/lib/
+	sudo install -m 644 libfirefly.so $(DESTDIR)$(PREFIX)/lib/
 
 	# Create directories
 	sudo install -d $(DESTDIR)$(PREFIX)/include/firefly
@@ -54,7 +55,7 @@ install: fireflylib.so
 
 
 uninstall:
-	sudo rm $(DESTDIR)$(PREFIX)/lib/fireflylib.so
+	sudo rm $(DESTDIR)$(PREFIX)/lib/libfirefly.so
 	sudo rm -rf $(DESTDIR)$(PREFIX)/include/firefly/
 
 clean:

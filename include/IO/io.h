@@ -1,6 +1,7 @@
-#ifndef IO_SINGLE_H
-#define IO_SINGLE_H
+#ifndef FF_IOSINGLE_H
+#define FF_IOSINGLE_H
 
-#include "log.h"
+#include "Log.h"
+#include "File.h"
 
 #endif

@@ -36,6 +36,9 @@ void SetWindowCloseKey(int);
 void WindowPollEvents();
 double WindowDeltaTime();
 void WindowMinimize();
+bool IsWindowMinimized();
 void WindowSetFullscreen(bool);
+void WindowToggleFullscreen();
+bool IsWindowFullscreen();
 
 #endif

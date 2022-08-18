@@ -6,7 +6,6 @@ typedef enum {
     DEBUG, INFO, WARN, ERROR, CRITICAL
 } LogLevel;
 
-#define NDEBUG      //      
 #ifndef NDEBUG
 #define LOG_DEBUG(x, ...) LogFL(DEBUG, __FILE__, __LINE__, x, ##__VA_ARGS__)
 #define LOG_INFO(x, ...) LogFL(INFO, __FILE__, __LINE__, x, ##__VA_ARGS__)
@@ -23,15 +22,6 @@ typedef enum {
 #endif
 
 FILE* SetLogStream(FILE*);
-
-void Log(LogLevel, const char*, ...);
-void LogEx(LogLevel, const char*, ...);
 void LogFL(LogLevel, char*, int, const char*, ...);
-
-void LogInfo(const char*, ...);
-void LogDebug(const char*, ...);
-void LogWarn(const char*, ...);
-void LogError(const char*, ...);
-void LogCritical(const char*, ...);
 
 #endif

@@ -1,19 +1,29 @@
 #include "../include/IO/Log.h"
 #include <stdio.h>
+#include <string.h>
 
-FILE* activeLogStream;
+#define TEXT_BLACK 
+
+FILE* activeLogStream = NULL;
 
 FILE* SetLogStream(FILE* stream) {
     activeLogStream = stream;
     return stream;
 }
 
-void Log(LogLevel, const char*, ...);
-void LogEx(LogLevel, const char*, ...);
-void LogFL(LogLevel, char*, int, const char*, ...);
+// format: [LEVEL, FILE, LINE]: MSG
+void LogFL(LogLevel lvl, char* file, int line, const char* msg, ...) {
+    if (activeLogStream == NULL)
+        return;
 
-void LogInfo(const char*, ...);
-void LogDebug(const char*, ...);
-void LogWarn(const char*, ...);
-void LogError(const char*, ...);
-void LogCritical(const char*, ...);
+    char buffer[255] = {};
+    char levelStr[12] = {};
+    if (lvl == DEBUG)    strcat(levelStr, "DEBUG");
+    if (lvl == INFO)     strcat(levelStr, "INFO");
+    if (lvl == WARN)     strcat(levelStr, "WARN");
+    if (lvl == ERROR)    strcat(levelStr, "ERROR");
+    if (lvl == CRITICAL) strcat(levelStr, "CRITICAL");
+    
+    sprintf(buffer, "[%s, %s, %d]: %s", levelStr, file, line, msg);
+    fprintf(activeLogStream, "%s\n", buffer);
+}

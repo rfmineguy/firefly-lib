@@ -6,6 +6,7 @@
 typedef enum {
     OPENGL, VULKAN, METAL
 } API;
+
 typedef struct Window WindowInternal;
 typedef struct KeyBind KeyBindInternal;
 typedef struct Input InputInternal;

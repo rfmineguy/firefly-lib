@@ -14,7 +14,7 @@ FILE* FileOpen(const char*, const char*);
 void FileClose(FILE*);
 
 FILE* SetReadStream(FILE*);
-char* FileReadS(long*);
+char* Read(long*);
 
 FILE* SetWriteStream(FILE*);
 int Write(char*);

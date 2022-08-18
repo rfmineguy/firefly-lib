@@ -2,11 +2,12 @@
 #define FL_CORETIMER_H
 #include <stdbool.h>
 
-typedef struct {
-} Timer;
+typedef struct {} Timer;
+typedef enum {
+    SECOND, MINUTE
+} TimerUnit;
 
-//Timing functeons (Timing.h)
-void StartTimerInterval(Timer*, long);
+void StartTimerInterval(Timer*, long, TimerUnit);
 void ResetTimer(Timer*);
 bool TimerElapsed(Timer*);
 

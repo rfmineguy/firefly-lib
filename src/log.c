@@ -1,6 +1,19 @@
-#include "../include/IO/log.h"
+#include "../include/IO/Log.h"
 #include <stdio.h>
 
-void TestPrint(const char* msg) {
-    printf("%s\n", msg);
+FILE* activeLogStream;
+
+FILE* SetLogStream(FILE* stream) {
+    activeLogStream = stream;
+    return stream;
 }
+
+void Log(LogLevel, const char*, ...);
+void LogEx(LogLevel, const char*, ...);
+void LogFL(LogLevel, char*, int, const char*, ...);
+
+void LogInfo(const char*, ...);
+void LogDebug(const char*, ...);
+void LogWarn(const char*, ...);
+void LogError(const char*, ...);
+void LogCritical(const char*, ...);

@@ -21,7 +21,7 @@ void InitWindowGLEx(const char*, int, int);
 void InitWindowVK();
 void InitWindowVKEx(const char*, int, int);
 void InitWindowMTL();
-void InitWindowMTL(const char*, int, int);
+void InitWindowMTLEx(const char*, int, int);
 
 void DestroyWindow();
 void DestroyWindowAPI(API);

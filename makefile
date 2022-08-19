@@ -1,13 +1,14 @@
 CC = gcc
 CFLAGS = -Wall
-LIBRARY_PATHS = /opt/homebrew/Cellar/glfw/3.3.8/lib/ \
-				/opt/homebrew/Cellar/
 
 ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-INCLUDE_DIR := /include/
+LIBRARY_PATHS = /opt/homebrew/Cellar/glfw/3.3.8/lib/
+INCLUDE_DIRS := -I/include/ \
+			   -I/opt/homebrew/Cellar/glfw/3.3.8/include/
+
 LIB_DIR := $(PREFIX)
 LIB_DIR := /lib/
 LOCAL_CORE_INCLUDE = include/Core
@@ -16,10 +17,6 @@ LOCAL_RESOURCE_INCLUDE = include/Resource
 LOCAL_RENDERING_INCLUDE = include/Rendering
 
 SOURCES = src/*.c
-#S_CORE = src/vec.c src/window.c src/input.c
-#S_IO = src/log.c src/file.c
-#S_RESOURCE = src/resource_manager.c src/texture.c src/shader.c src/sound.c src/atlas.c
-#S_RENDERING = src/shapes.c src/text.c src/atlas.c src/batch.c
 
 H_CORE = $(LOCAL_CORE_INCLUDE)/*.h
 H_IO = $(LOCAL_IO_INCLUDE)/*.h
@@ -29,7 +26,7 @@ H_RENDERING = $(LOCAL_RENDERING_INCLUDE)/*.h
 all: libfirefly.so
 
 libfirefly.so: $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ -L/opt/homebrew/Cellar/glfw/3.3.8/lib -lc -lglfw -I$(INCLUDE_DIR)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) -lc -lglfw 
 
 #
 # The make code below this line is pivotal that it does not change

@@ -2,17 +2,28 @@
 #include "../include/IO/Log.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stdlib.h>
 
 typedef struct _Window {
-    GLFWwindow* window;
+    GLFWwindow* windowPtr;
     int width;
     int height;
+    int closeKey;
 } Window;
 
+static Window gWindow;
+
 void InitWindowAPI(API api) {
+    gWindow.closeKey = GLFW_KEY_ESCAPE;
     if (api == OPENGL) InitWindowGL();
     if (api == VULKAN) InitWindowVK();
     if (api == METAL) InitWindowMTL();
+}
+
+void InitWindowAPIEx(API api, const char* title, int width, int height) {
+    if (api == OPENGL) InitWindowGLEx(title, width, height);
+    if (api == VULKAN) InitWindowVKEx(title, width, height);
+    if (api == METAL) InitWindowMTLEx(title, width, height);
 }
 
 void InitWindowGL() {
@@ -21,6 +32,17 @@ void InitWindowGL() {
 
 void InitWindowGLEx(const char* title, int width, int height) {
     fprintf(stderr, "Initializing GL is not implemented\n");
+    if (!glfwInit()) {
+        fprintf(stderr, "Failed to initialize glfw\n");
+        exit(1);
+    }
+    gWindow.windowPtr = glfwCreateWindow(width, height, title, NULL, NULL);
+    if (!gWindow.windowPtr) {
+        fprintf(stderr, "Failed to create window\n");
+        glfwTerminate();
+        exit(1);
+    }
+    glfwMakeContextCurrent(gWindow.windowPtr);
 }
 
 void InitWindowVK() {
@@ -29,4 +51,37 @@ void InitWindowVK() {
 
 void InitWindowVKEx(const char* title, int width, int height) {
     fprintf(stderr, "Initializing Vulkan is not implemented\n");
+}
+
+void InitWindowMTL() {
+    InitWindowMTLEx("Default Window (Metal)", 600, 600);
+}
+
+void InitWindowMTLEx(const char* title, int width, int height) {
+    fprintf(stderr, "Initializing Metal is not implemented\n");
+}
+
+void DestroyWindowGL() {
+    glfwDestroyWindow(gWindow.windowPtr);
+    glfwTerminate();
+}
+
+void SetWindowShouldClose(bool shouldClose) {
+    glfwSetWindowShouldClose(gWindow.windowPtr, GLFW_TRUE);
+}
+
+void WindowPollEvents() {
+    glfwPollEvents();
+    if (glfwGetKey(gWindow.windowPtr, gWindow.closeKey)) {
+        LOG_DEBUG("Pressed the window close key");
+        SetWindowShouldClose(true);
+    }
+}
+
+bool WindowShouldClose() {
+    return glfwWindowShouldClose(gWindow.windowPtr);
+}
+
+void SetWindowCloseKey(int key) {
+    gWindow.closeKey = key;
 }

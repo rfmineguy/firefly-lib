@@ -20,8 +20,8 @@ void InitWindowGL();
 void InitWindowGLEx(const char*, int, int);
 void InitWindowVK();
 void InitWindowVKEx(const char*, int, int);
-void InitWindowMetal();
-void InitWindowMetalEx(const char*, int, int);
+void InitWindowMTL();
+void InitWindowMTL(const char*, int, int);
 
 void DestroyWindow();
 void DestroyWindowAPI(API);

@@ -1,8 +1,9 @@
 #include "../include/Core/Window.h"
+#include "../include/Core/Input.h"
 #include "../include/IO/Log.h"
+#include <stdlib.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stdlib.h>
 
 typedef struct _Window {
     GLFWwindow* windowPtr;
@@ -12,6 +13,20 @@ typedef struct _Window {
 } Window;
 
 static Window gWindow;
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    Input* i = GetInputPtr();
+    i->repeat = false;
+    if (action == GLFW_REPEAT) {
+        i->repeat = true;
+    }
+    if (action == GLFW_PRESS) {
+        i->keys[key] = true;
+    }
+    if (action == GLFW_RELEASE) {
+        i->keys[key] = false;
+    }
+}
 
 void InitWindowAPI(API api) {
     gWindow.closeKey = GLFW_KEY_ESCAPE;
@@ -43,6 +58,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
         exit(1);
     }
     glfwMakeContextCurrent(gWindow.windowPtr);
+    glfwSetKeyCallback(gWindow.windowPtr, key_callback);
 }
 
 void InitWindowVK() {

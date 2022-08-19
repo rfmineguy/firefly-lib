@@ -3,8 +3,16 @@
 #include "Vec.h"
 #include <stdbool.h>
 
-typedef struct KeyBind KeyBindInternal;
-typedef struct Input InputInternal;
+typedef struct _KeyBind KeyBind;
+typedef struct {
+    bool keys[500];
+    bool mouse[12];
+    bool repeat;
+    Vec2f mouse_pos;
+    Vec2f mouse_velocity;
+} Input;
+
+Input* GetInputPtr();
 
 //Input device functions (Input.h)
 void KeyBindRegister(const char*, int, int);

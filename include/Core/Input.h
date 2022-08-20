@@ -147,14 +147,14 @@ void KeyBindModify(const char*, int, int);
 bool IsKeyBindDown(const char*);
 bool IsKeyBindPressed(const char*);
 
-bool IsKeyDown(int);
-bool IsControlDown();
-bool IsAltDown();
-bool IsShiftDown();
-bool IsKeyPressed(int);
+bool IsKeyDown(int);                // implemented
+bool IsControlDown();               // implemented
+bool IsAltDown();                   // implemented
+bool IsShiftDown();                 // implemented
+bool IsKeyPressed(int);             // implemented
 
-bool IsMouseButtonDown(int);
-bool IsMouseButtonPressed(int);
+bool IsMouseButtonDown(int);        // implemented
+bool IsMouseButtonPressed(int);     // implemented
 bool IsMouseMoving();
 Vec2f GetMousePosition();
 float GetMousePositionX();

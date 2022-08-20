@@ -1,10 +1,6 @@
 #include "../include/Core/Input.h"
 #include <stdio.h>
 
-typedef struct _KeyBind {
-
-} KeyBind;
-
 static Input gInput;
 
 Input* GetInputPtr() {
@@ -12,12 +8,12 @@ Input* GetInputPtr() {
 }
 
 bool IsKeyDown(int key) {
-    return GetInputPtr()->pressed && GetInputPtr()->keys[key];
+    return GetInputPtr()->key_pressed && GetInputPtr()->keys[key];
 }
 
 bool IsKeyPressed(int key) {
     if (IsKeyDown(key)) {
-        GetInputPtr()->pressed = false;
+        GetInputPtr()->key_pressed = false;
         return true;
     }
     return false;
@@ -35,3 +31,14 @@ bool IsAltDown() {
     return IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT);
 }
 
+bool IsMouseButtonDown(int button) {
+    return GetInputPtr()->mouse_pressed && GetInputPtr()->mouse[button];
+}
+
+bool IsMouseButtonPressed(int button) {
+    if (IsMouseButtonDown(button)) {
+        GetInputPtr()->mouse_pressed = false;
+        return true;
+    }
+    return false;
+}

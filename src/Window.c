@@ -16,13 +16,24 @@ static Window gWindow;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     Input* i = GetInputPtr();
-    i->repeat = action == GLFW_REPEAT;
-    i->pressed = action == GLFW_PRESS;
-    if (i->pressed) {
+    i->key_repeat = action == GLFW_REPEAT;
+    i->key_pressed = action == GLFW_PRESS;
+    if (i->key_pressed) {
         i->keys[key] = true;
     }
     if (action == GLFW_RELEASE) {
         i->keys[key] = false;
+    }
+}
+
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    Input* i = GetInputPtr();
+    i->mouse_pressed = action == GLFW_PRESS;
+    if (i->mouse_pressed) {
+        i->mouse[button] = true;
+    }
+    if (action == GLFW_RELEASE) {
+        i->mouse[button] = false;
     }
 }
 
@@ -57,6 +68,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
     }
     glfwMakeContextCurrent(gWindow.windowPtr);
     glfwSetKeyCallback(gWindow.windowPtr, key_callback);
+    glfwSetMouseButtonCallback(gWindow.windowPtr, mouse_button_callback);
 }
 
 void InitWindowVK() {

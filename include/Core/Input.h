@@ -5,9 +5,13 @@
 
 typedef struct _KeyBind KeyBind;
 typedef struct {
+    //Keyboard data
     bool keys[500];
+    bool key_repeat, key_pressed;
+
+    //Mouse data
     bool mouse[12];
-    bool repeat, pressed;
+    bool mouse_pressed;
     Vec2f mouse_pos;
     Vec2f mouse_velocity;
 } Input;

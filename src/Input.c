@@ -42,3 +42,32 @@ bool IsMouseButtonPressed(int button) {
     }
     return false;
 }
+
+//may not be very useful
+bool IsMouseMoving() {
+    return GetInputPtr()->mouse_velocity.x != 0 || GetInputPtr()->mouse_velocity.y != 0;
+}
+
+Vec2f GetMousePosition() {
+    return GetInputPtr()->mouse_pos;
+}
+
+double GetMousePositionX() {
+    return GetInputPtr()->mouse_pos.x; 
+}
+
+double GetMousePositionY() {
+    return GetInputPtr()->mouse_pos.y; 
+}
+
+Vec2f GetMouseSpeed() {
+    return GetInputPtr()->mouse_velocity;
+}
+
+double GetMouseSpeedX() {
+    return GetInputPtr()->mouse_velocity.x;
+}
+
+double GetMouseSpeedY() {
+    return GetInputPtr()->mouse_velocity.y;
+}

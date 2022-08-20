@@ -37,6 +37,18 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
     }
 }
 
+static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+    Input* i = GetInputPtr();
+    i->last_mouse_pos = i->mouse_pos;
+
+    i->mouse_pos.x = (float) xpos;
+    i->mouse_pos.y = (float) ypos;
+
+    i->mouse_velocity = (Vec2f) {.x = i->mouse_pos.x - i->last_mouse_pos.x, .y = i->mouse_pos.y - i->last_mouse_pos.y };
+    printf("%0.4f, %0.4f\n", xpos, ypos);
+    printf("%0.4f, %0.4f\n", i->mouse_velocity.x, i->mouse_velocity.y);
+}
+
 void InitWindowAPI(API api) {
     gWindow.closeKey = GLFW_KEY_ESCAPE;
     if (api == OPENGL) InitWindowGL();
@@ -69,6 +81,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
     glfwMakeContextCurrent(gWindow.windowPtr);
     glfwSetKeyCallback(gWindow.windowPtr, key_callback);
     glfwSetMouseButtonCallback(gWindow.windowPtr, mouse_button_callback);
+    glfwSetCursorPosCallback(gWindow.windowPtr, mouse_cursor_position_callback);
 }
 
 void InitWindowVK() {

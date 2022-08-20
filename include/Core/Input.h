@@ -12,7 +12,7 @@ typedef struct {
     //Mouse data
     bool mouse[12];
     bool mouse_pressed;
-    Vec2f mouse_pos;
+    Vec2f mouse_pos, last_mouse_pos;
     Vec2f mouse_velocity;
 } Input;
 
@@ -155,13 +155,13 @@ bool IsKeyPressed(int);             // implemented
 
 bool IsMouseButtonDown(int);        // implemented
 bool IsMouseButtonPressed(int);     // implemented
-bool IsMouseMoving();
-Vec2f GetMousePosition();
-float GetMousePositionX();
-float GetMousePositionY();
-Vec2f GetMouseSpeed();
-float GetMouseSpeedX();
-float GetMouseSpeedY();
+bool IsMouseMoving();               // implemented (may not be very useful)
+Vec2f GetMousePosition();           // implemented 
+double GetMousePositionX();         // implemented
+double GetMousePositionY();         // implemented
+Vec2f GetMouseSpeed();              // implemented
+double GetMouseSpeedX();            // implemented
+double GetMouseSpeedY();            // implemented
 
 //FUTURE
 bool IsControllerConneced(int);

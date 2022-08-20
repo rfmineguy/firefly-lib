@@ -45,8 +45,8 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
     i->mouse_pos.y = (float) ypos;
 
     i->mouse_velocity = (Vec2f) {.x = i->mouse_pos.x - i->last_mouse_pos.x, .y = i->mouse_pos.y - i->last_mouse_pos.y };
-    printf("%0.4f, %0.4f\n", xpos, ypos);
-    printf("%0.4f, %0.4f\n", i->mouse_velocity.x, i->mouse_velocity.y);
+    //printf("%0.4f, %0.4f\n", xpos, ypos);
+    //printf("%0.4f, %0.4f\n", i->mouse_velocity.x, i->mouse_velocity.y);
 }
 
 void InitWindowAPI(API api) {

@@ -16,14 +16,12 @@ static Window gWindow;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     Input* i = GetInputPtr();
-    i->repeat = false;
-    if (action == GLFW_REPEAT) {
-        i->repeat = true;
-    }
-    if (action == GLFW_PRESS) {
+    i->repeat = action == GLFW_REPEAT;
+    i->pressed = action == GLFW_PRESS;
+    if (i->pressed) {
         i->keys[key] = true;
     }
-    if (action == GLFW_RELEASE) {
+    if (action == GLFW_REPEAT) {
         i->keys[key] = false;
     }
 }

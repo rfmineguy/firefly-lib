@@ -7,7 +7,7 @@ typedef struct _KeyBind KeyBind;
 typedef struct {
     bool keys[500];
     bool mouse[12];
-    bool repeat;
+    bool repeat, pressed;
     Vec2f mouse_pos;
     Vec2f mouse_velocity;
 } Input;

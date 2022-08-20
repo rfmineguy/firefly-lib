@@ -16,7 +16,7 @@ bool IsKeyDown(int key) {
 }
 
 bool IsKeyPressed(int key) {
-    if (GetInputPtr()->pressed && IsKeyDown(key)) {
+    if (IsKeyDown(key)) {
         GetInputPtr()->pressed = false;
         return true;
     }

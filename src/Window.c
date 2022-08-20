@@ -21,7 +21,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (i->pressed) {
         i->keys[key] = true;
     }
-    if (action == GLFW_REPEAT) {
+    if (action == GLFW_RELEASE) {
         i->keys[key] = false;
     }
 }

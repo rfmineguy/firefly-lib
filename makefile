@@ -18,6 +18,9 @@ LOCAL_RENDERING_INCLUDE = include/Rendering
 
 SOURCES = src/*.c
 
+# this will make the library not able to compiled on another system with this source
+GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
+
 H_CORE = $(LOCAL_CORE_INCLUDE)/*.h
 H_IO = $(LOCAL_IO_INCLUDE)/*.h
 H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
@@ -26,9 +29,11 @@ HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 
 all: libfirefly.so
 
-libfirefly.so: $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) -lc -lglfw 
+libfirefly.so: glad.o $(SOURCES)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) -lc -lglfw
 
+glad.o: $(GLAD_SOURCE)
+	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o glad.o $(GLAD_SOURCE)
 #
 # The make code below this line is pivotal that it does not change
 #    if you change anything you *may* break other locally installed

@@ -30,15 +30,18 @@ FILE* SetReadStream(FILE* stream) {
 }
 
 char* Read(long* pFileSize) {
-    if (activeReadStream == NULL)
+    if (activeReadStream == NULL) {
+        fprintf(stderr, "Active stread is NULL\n");
         return NULL;
+    }
 
     fseek(activeReadStream, 0, SEEK_END);
     long f_size = ftell(activeReadStream);
     fseek(activeReadStream, 0, SEEK_SET);
     char* buf = (char*) malloc(f_size);
-
+    memset(buf, 0, f_size);
     fread(buf, sizeof(char), f_size, activeReadStream);
+    buf[f_size] = 0;
 
     return buf;
 }

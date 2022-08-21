@@ -1,6 +1,7 @@
 #ifndef FL_IOFILE_H
 #define FL_IOFILE_H
 #include <stdio.h>
+#include <stdlib.h>
 
 #define READ                   "r"
 #define WRITE                  "w"

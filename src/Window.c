@@ -67,21 +67,32 @@ void InitWindowGL() {
 }
 
 void InitWindowGLEx(const char* title, int width, int height) {
-    fprintf(stderr, "Initializing GL is not implemented\n");
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize glfw\n");
-        exit(1);
+        exit(-1);
     }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__ 
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+
     gWindow.windowPtr = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!gWindow.windowPtr) {
         fprintf(stderr, "Failed to create window\n");
         glfwTerminate();
-        exit(1);
+        exit(-1);
     }
     glfwMakeContextCurrent(gWindow.windowPtr);
     glfwSetKeyCallback(gWindow.windowPtr, key_callback);
     glfwSetMouseButtonCallback(gWindow.windowPtr, mouse_button_callback);
     glfwSetCursorPosCallback(gWindow.windowPtr, mouse_cursor_position_callback);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        fprintf(stderr, "Failed to initialize glad\n");
+        exit(-1);
+    }
 }
 
 void InitWindowVK() {

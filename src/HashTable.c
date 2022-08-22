@@ -40,7 +40,6 @@ void ht_free(ht_t *hash_table) {
             tmp = NULL;
         }
     }
-    printf("Freed hashtable\n");
 }
 
 hash_entry* ht_pair(const char* key, void* value) {

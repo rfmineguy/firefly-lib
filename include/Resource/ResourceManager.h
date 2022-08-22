@@ -44,7 +44,7 @@ bool IsAtlasResourceLoaded(const char*);
 Atlas* GetAtlasResource(const char*);
 void FreeAtlasResource(const char*);
 
-int PutSoundResource(Sound*, const char*);
+void PutSoundResource(Sound*, const char*);
 bool IsSoundResourceLoaded(const char*);
 Sound* GetSoundResource(const char*);
 void FreeSoundResource(const char*);

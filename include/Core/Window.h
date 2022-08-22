@@ -34,6 +34,7 @@ bool WindowShouldClose();
 void SetWindowShouldClose(bool);
 void SetWindowCloseKey(int);
 void WindowPollEvents();
+double WindowGetTime();
 double WindowDeltaTime();
 void WindowMinimize();
 bool IsWindowMinimized();

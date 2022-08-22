@@ -137,6 +137,10 @@ void WindowPollEvents() {
     }
 }
 
+double WindowGetTime() {
+    return glfwGetTime();
+}
+
 bool WindowShouldClose() {
     glfwSwapBuffers(gWindow.windowPtr);
     return glfwWindowShouldClose(gWindow.windowPtr);

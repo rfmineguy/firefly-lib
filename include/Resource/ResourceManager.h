@@ -18,13 +18,6 @@ typedef enum {
 
 // abstract type
 typedef struct _ResourcePool ResourcePool;
-/*{
-	Shader* pShaders;
-	Texture* pTextures;
-	Atlas* pAtlases;
-	Sound* pSounds;
-} ResourcePool;
-*/
 
 bool InitResourcePool();
 void DestroyResourcePool();

@@ -1,14 +1,27 @@
+#include "../include/Resource/Geometry.h"
 #include "../include/Rendering/Shapes.h"
 #include "../include/Resource/ResourceManager.h"
+#include <glad/glad.h>
+
+static Geometry quad;
 
 void InitShapes() {
-    static bool initiailized = false;
-    if (initiailized)
-        return;    
-    
-    initiailized = true;
+    bool init = false;
+    if (!init) {
+        PopulateQuad(&quad);
+        init = true;
+    }
 }
 
-void DrawQuad(Vec2f v1, Vec2f v2) {
-    
+void FreeShapes() {
+    bool free = false;
+    if (!free) {
+        FreeGeometry(&quad);
+        free = true;
+    }
+}
+
+void DrawQuad() {
+    BindGeometry(&quad);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }

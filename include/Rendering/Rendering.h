@@ -6,4 +6,7 @@
 #include "Text.h"
 #include "UI.h"
 
+void InitRendering();
+void FreeRendering();
+
 #endif

@@ -1,5 +1,10 @@
 #include "../include/Rendering/Rendering.h"
+#include "../include/Rendering/Shapes.h"
 
 void InitRendering() {
-    //InitShapes();
+    InitShapes();
+}
+
+void FreeRendering() {
+    FreeShapes();
 }

@@ -99,6 +99,7 @@ void InitWindowVK() {
 
 void InitWindowVKEx(const char* title, int width, int height) {
     fprintf(stderr, "Initializing Vulkan is not implemented\n");
+    exit(1);
 }
 
 void InitWindowMTL() {
@@ -107,6 +108,7 @@ void InitWindowMTL() {
 
 void InitWindowMTLEx(const char* title, int width, int height) {
     fprintf(stderr, "Initializing Metal is not implemented\n");
+    exit(1);
 }
 
 void DestroyWindowGL() {

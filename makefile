@@ -30,7 +30,7 @@ HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 all: libfirefly.so
 
 libfirefly.so: glad.o $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) -lc -lglfw
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) -lc -lglfw -lcglm
 
 glad.o: $(GLAD_SOURCE)
 	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o glad.o $(GLAD_SOURCE)

@@ -4,6 +4,7 @@
 
 typedef struct _Vertex {
     vec3 position;
+    vec3 color;
 } Vertex;
 
 typedef struct _Geometry {

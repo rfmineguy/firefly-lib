@@ -6,7 +6,7 @@
 static Geometry quad;
 
 void InitShapes() {
-    bool init = false;
+    static bool init = false;
     if (!init) {
         PopulateQuad(&quad);
         init = true;
@@ -14,7 +14,7 @@ void InitShapes() {
 }
 
 void FreeShapes() {
-    bool free = false;
+    static bool free = false;
     if (!free) {
         FreeGeometry(&quad);
         free = true;

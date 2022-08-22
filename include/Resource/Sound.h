@@ -1,13 +1,16 @@
 #ifndef FL_RES_SOUND_H
 #define FL_RES_SOUND_H
 #include "../Core/Vec.h"
+#include <stdbool.h>
 
-typedef struct {
+typedef struct Sound {
+    char name[50];
 	float pitch;
 	float gain;
 	Vec2f position;
 	Vec2f velocity;
 	bool looping;
+    struct Sound* next;
 } Sound;
 
 // #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources

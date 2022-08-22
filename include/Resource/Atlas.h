@@ -1,8 +1,11 @@
 #ifndef FL_RES_ATLAS_H
 #define FL_RES_ATLAS_H
 
-typedef struct {
+#include <stdbool.h>
 
+typedef struct Atlas {
+    char name[50];
+    struct Atlas *next;
 } Atlas;
 
 Atlas* LoadAtlas(const char*);

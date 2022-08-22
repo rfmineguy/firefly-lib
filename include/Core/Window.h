@@ -26,6 +26,8 @@ void DestroyWindowGL();
 void DestroyWindowVK();
 void DestroyWindowMetal();
 
+void WindowClearBackground();
+void WindowClearBackgroundEx(float, float, float, float);
 void WindowSetFPSCap(float);
 void WindowSetVSync();
 bool WindowShouldClose();

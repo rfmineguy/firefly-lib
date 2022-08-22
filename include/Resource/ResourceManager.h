@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Sound.h"
 #include "Texture.h"
+#include <stdbool.h>
 
 /*
  #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources
@@ -16,29 +17,36 @@ typedef enum {
 } ResourceType;
 
 // abstract type
-typedef struct {
+typedef struct _ResourcePool ResourcePool;
+/*{
 	Shader* pShaders;
 	Texture* pTextures;
 	Atlas* pAtlases;
 	Sound* pSounds;
 } ResourcePool;
+*/
 
-int PutShaderResource(Shader*, const char*);
+bool InitResourcePool();
+void DestroyResourcePool();
+
+void PutShaderResource(Shader*, const char*);
 bool IsShaderResourceLoaded(const char*);
 Shader* GetShaderResource(const char*);
+void FreeShaderResource(const char*);
 
-int PutTextureResource(Texture*, const char*);
+void PutTextureResource(Texture*, const char*);
 bool IsTextureResourceLoaded(const char*);
 Texture* GetTextureResource(const char*);
+void FreeTextureResource(const char*);
 
-int PutAtlasResource(Atlas*, const char*);
+void PutAtlasResource(Atlas*, const char*);
 bool IsAtlasResourceLoaded(const char*);
 Atlas* GetAtlasResource(const char*);
+void FreeAtlasResource(const char*);
 
 int PutSoundResource(Sound*, const char*);
 bool IsSoundResourceLoaded(const char*);
 Sound* GetSoundResource(const char*);
-
-void FreeAllResources(ResourceType);
+void FreeSoundResource(const char*);
 
 #endif

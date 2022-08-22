@@ -45,8 +45,6 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
     i->mouse_pos.y = (float) ypos;
 
     i->mouse_velocity = (Vec2f) {.x = i->mouse_pos.x - i->last_mouse_pos.x, .y = i->mouse_pos.y - i->last_mouse_pos.y };
-    //printf("%0.4f, %0.4f\n", xpos, ypos);
-    //printf("%0.4f, %0.4f\n", i->mouse_velocity.x, i->mouse_velocity.y);
 }
 
 void InitWindowAPI(API api) {
@@ -116,6 +114,15 @@ void DestroyWindowGL() {
     glfwTerminate();
 }
 
+void WindowClearBackground() {
+    WindowClearBackgroundEx(0.4f, 0.4f, 0.4f, 1.0f);
+}
+
+void WindowClearBackgroundEx(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void SetWindowShouldClose(bool shouldClose) {
     glfwSetWindowShouldClose(gWindow.windowPtr, GLFW_TRUE);
 }
@@ -129,6 +136,7 @@ void WindowPollEvents() {
 }
 
 bool WindowShouldClose() {
+    glfwSwapBuffers(gWindow.windowPtr);
     return glfwWindowShouldClose(gWindow.windowPtr);
 }
 

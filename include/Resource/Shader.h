@@ -2,8 +2,10 @@
 #define FL_RES_SHADER_H
 
 //Shader
-typedef struct {
+typedef struct Shader {
+	char name[50];
 	unsigned int vertId, fragId, programId;
+    struct Shader* next;
 } Shader;
 
 // #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources

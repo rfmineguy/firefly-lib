@@ -90,3 +90,31 @@ void BindShader(Shader *pShader) {
 void UnbindShader() {
     glUseProgram(0);
 }
+
+void SetUniform1f(Shader *pShader, const char *name, float a) {
+    int loc = GetUniformLocation(pShader, name);
+    glUniform1f(loc, a);
+}
+
+void SetUniform2f(Shader *pShader, const char *name, float a, float b) {
+    int loc = GetUniformLocation(pShader, name);
+    glUniform2f(loc, a, b);
+}
+
+void SetUniform3f(Shader *pShader, const char *name, float a, float b, float c) {
+    int loc = GetUniformLocation(pShader, name);
+    glUniform3f(loc, a, b, c);
+}
+
+void SetUniform4f(Shader *pShader, const char *name, float a, float b, float c, float d) {
+    int loc = GetUniformLocation(pShader, name);
+    glUniform4f(loc, a, b, c, d);
+}
+
+int GetUniformLocation(Shader *pShader, const char *name) {
+    int location = glGetUniformLocation(pShader->programId, name);
+    if (location == -1) {
+        fprintf(stderr, "Uniform [%s] not found\n", name);
+    }
+    return location;
+}

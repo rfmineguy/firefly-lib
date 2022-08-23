@@ -6,7 +6,7 @@
 
 void ProcessShaderInternal(unsigned int* id, char* contents, GLenum shaderType) {
     *id = glCreateShader(shaderType);
-    glShaderSource(*id, 1, &contents, NULL);
+    glShaderSource(*id, 1, (const char *const *)&contents, NULL);
     glCompileShader(*id);
 
     GLint success;

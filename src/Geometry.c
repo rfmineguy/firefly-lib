@@ -42,11 +42,9 @@ void PopulateQuad(Geometry* pGeometry) {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    printf("Initialized quad\n");
 }
 
 void FreeGeometry(Geometry* pGeometry) {
-    printf("Free'd geometry [%p, %p]\n", pGeometry->vertices, pGeometry->indices);
     free(pGeometry->vertices);
     pGeometry->vertices = NULL;
     free(pGeometry->indices);

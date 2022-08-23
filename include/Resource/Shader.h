@@ -20,7 +20,6 @@ void SetUniform1f(Shader*, const char*, float);
 void SetUniform2f(Shader*, const char*, float, float);
 void SetUniform3f(Shader*, const char*, float, float, float);
 void SetUniform4f(Shader*, const char*, float, float, float, float);
-void SetUniformMat4f(Shader*, const char*, float*);
 
 int GetUniformLocation(Shader*, const char*);
 

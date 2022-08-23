@@ -5,22 +5,23 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_PATHS = /opt/homebrew/Cellar/glfw/3.3.8/lib/
-INCLUDE_DIRS := -I/include/ \
-			   -I/opt/homebrew/Cellar/glfw/3.3.8/include/
+LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm
 
-LIB_DIR := $(PREFIX)
-LIB_DIR := /lib/
+# this will make the library not able to compiled on another system with this source
+GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
+
+# external lib details
+LIBRARY_PATHS = /opt/homebrew/lib/
+INCLUDE_DIRS := -I/include/ \
+			   -I/opt/homebrew/include/
+
+# INCLUDE DIRECTORIES FOR THIS LIBRARY
 LOCAL_CORE_INCLUDE = include/Core
 LOCAL_IO_INCLUDE = include/IO
 LOCAL_RESOURCE_INCLUDE = include/Resource
 LOCAL_RENDERING_INCLUDE = include/Rendering
 
 SOURCES = src/*.c
-
-# this will make the library not able to compiled on another system with this source
-GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
-
 H_CORE = $(LOCAL_CORE_INCLUDE)/*.h
 H_IO = $(LOCAL_IO_INCLUDE)/*.h
 H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
@@ -30,10 +31,11 @@ HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 all: libfirefly.so
 
 libfirefly.so: glad.o $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) -lc -lglfw -lcglm
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES)
 
 glad.o: $(GLAD_SOURCE)
 	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o glad.o $(GLAD_SOURCE)
+
 #
 # The make code below this line is pivotal that it does not change
 #    if you change anything you *may* break other locally installed

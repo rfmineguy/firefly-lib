@@ -10,7 +10,7 @@ LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm
 # this will make the library not able to compiled on another system with this source
 GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
 
-# external lib details
+# external lib details (in addition to the default search paths)
 LIBRARY_PATHS = /opt/homebrew/lib/
 INCLUDE_DIRS := -I/include/ \
 			   -I/opt/homebrew/include/
@@ -28,22 +28,26 @@ H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
 H_RENDERING = $(LOCAL_RENDERING_INCLUDE)/*.h
 HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 
-all: libfirefly.so
+build: prepare out/libfirefly.so
 
-libfirefly.so: glad.o $(SOURCES)
+prepare:
+	rm -rf out
+	mkdir out
+
+out/libfirefly.so: out/glad.o $(SOURCES)
 	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES)
 
-glad.o: $(GLAD_SOURCE)
-	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o glad.o $(GLAD_SOURCE)
+out/glad.o: $(GLAD_SOURCE)
+	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o out/glad.o $(GLAD_SOURCE)
 
 #
 # The make code below this line is pivotal that it does not change
 #    if you change anything you *may* break other locally installed
 #    libraries
 #
-install: libfirefly.so
+install: build
 	sudo install -d $(DESTDIR)$(PREFIX)/lib/
-	sudo install -m 644 libfirefly.so $(DESTDIR)$(PREFIX)/lib/
+	sudo install -m 644 out/libfirefly.so $(DESTDIR)$(PREFIX)/lib/
 
 	# Create directories
 	sudo install -d $(DESTDIR)$(PREFIX)/include/firefly
@@ -65,3 +69,4 @@ uninstall:
 
 clean:
 	rm *.o *.so
+	rm -rf out/

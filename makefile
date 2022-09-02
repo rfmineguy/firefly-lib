@@ -28,13 +28,18 @@ H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
 H_RENDERING = $(LOCAL_RENDERING_INCLUDE)/*.h
 HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 
+SUBDIRS = libs/glad libs/stb
+
 build: prepare out/libfirefly.so
 
-prepare:
+build_libs:
+	make -C libs/glad/
+
+prepare: build_libs
 	rm -rf out
 	mkdir out
 
-out/libfirefly.so: out/glad.o $(SOURCES)
+out/libfirefly.so: libs/glad/out/glad.o $(SOURCES)
 	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES)
 
 out/glad.o: $(GLAD_SOURCE)
@@ -68,5 +73,5 @@ uninstall:
 	sudo rm -rf $(DESTDIR)$(PREFIX)/include/firefly/
 
 clean:
-	rm *.o *.so
+	make -C libs/glad/ clean
 	rm -rf out/

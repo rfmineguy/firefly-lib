@@ -1,6 +1,3 @@
-[submodule "libs/glad"]
-	path = libs/glad
-	url = https://github.com/Olgardos/glad
 [submodule "libs/glfw"]
 	path = libs/glfw
 	url = https://github.com/glfw/glfw

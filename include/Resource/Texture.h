@@ -3,6 +3,8 @@
 
 typedef struct Texture {
     char name[50];
+    int width, height, channels;
+    unsigned int handle;
     struct Texture* next;
 } Texture;
 

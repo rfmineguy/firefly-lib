@@ -12,7 +12,7 @@ LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
-				-Llibs/glad/out/ \
+				-Llibs/glad-rf/out/ \
 				-Llibs/glfw/out/
 INCLUDE_DIRS := -I/include/ \
 			    -I/opt/homebrew/include/ \
@@ -37,8 +37,8 @@ HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 GLFW_LIB_BUILD = libs/glfw/out/libglfw3.a
 GLFW_LIB_DIR = libs/glfw/out/
 GLFW_LIB = glfw3
-GLAD_LIB_BUILD = libs/glad/out/libglad.a
-GLAD_LIB_DIR = libs/glad/out/
+GLAD_LIB_BUILD = libs/glad-rf/out/libglad.a
+GLAD_LIB_DIR = libs/glad-rf/out/
 GLAD_LIB = glad
 
 build: prepare out/libfirefly.so
@@ -47,8 +47,8 @@ $(GLFW_LIB_BUILD):
 	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make
 	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
 $(GLAD_LIB_BUILD):
-	cmake -S libs/glad/ -B libs/glad/cmakeout/ && cd libs/glad/cmakeout && make
-	-mkdir libs/glad/out/ && cp libs/glad/cmakeout/libglad.a libs/glad/out/
+	cmake -S libs/glad-rf/ -B libs/glad-rf/cmakeout/ && cd libs/glad-rf/cmakeout && make
+	-mkdir libs/glad-rf/out/ && cp libs/glad-rf/cmakeout/libglad.a libs/glad-rf/out/
 
 prepare: build_libs
 	rm -rf out

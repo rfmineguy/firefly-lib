@@ -5,22 +5,27 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm
+LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad
 
 # this will make the library not able to compiled on another system with this source
-GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
+#GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
 
 # external lib details (in addition to the default search paths)
-LIBRARY_PATHS = /opt/homebrew/lib/
+LIBRARY_PATHS = -L/opt/homebrew/lib/ \
+				-Llibs/glad/out/ \
+				-Llibs/glfw/out/
 INCLUDE_DIRS := -I/include/ \
-			   -I/opt/homebrew/include/
+			    -I/opt/homebrew/include/ \
+				-I/libs/glad/include/ \
+				-I/libs/stb/include/
 
-# INCLUDE DIRECTORIES FOR THIS LIBRARY
+# INCLUDE DIRECTORIES FOR THIS FireflyLib
 LOCAL_CORE_INCLUDE = include/Core
 LOCAL_IO_INCLUDE = include/IO
 LOCAL_RESOURCE_INCLUDE = include/Resource
 LOCAL_RENDERING_INCLUDE = include/Rendering
 
+# FILE GLOBS FOR THIS FireflyLib
 SOURCES = src/*.c
 H_CORE = $(LOCAL_CORE_INCLUDE)/*.h
 H_IO = $(LOCAL_IO_INCLUDE)/*.h
@@ -28,22 +33,32 @@ H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
 H_RENDERING = $(LOCAL_RENDERING_INCLUDE)/*.h
 HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 
-SUBDIRS = libs/glad libs/stb
+# LIBRARY DIRECTORIES AND FILES FOR THIS FireflyLib
+GLFW_LIB_BUILD = libs/glfw/out/libglfw3.a
+GLFW_LIB_DIR = libs/glfw/out/
+GLFW_LIB = glfw3
+GLAD_LIB_BUILD = libs/glad/out/libglad.a
+GLAD_LIB_DIR = libs/glad/out/
+GLAD_LIB = glad
 
 build: prepare out/libfirefly.so
-
-build_libs:
-	make -C libs/glad/
+build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD)
+$(GLFW_LIB_BUILD):
+	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make
+	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
+$(GLAD_LIB_BUILD):
+	cmake -S libs/glad/ -B libs/glad/cmakeout/ && cd libs/glad/cmakeout && make
+	-mkdir libs/glad/out/ && cp libs/glad/cmakeout/libglad.a libs/glad/out/
 
 prepare: build_libs
 	rm -rf out
 	mkdir out
 
-out/libfirefly.so: libs/glad/out/glad.o $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) -L$(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES)
+out/libfirefly.so: $(SOURCES)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES)
 
-out/glad.o: $(GLAD_SOURCE)
-	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o out/glad.o $(GLAD_SOURCE)
+#out/glad.o: $(GLAD_SOURCE)
+#	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o out/glad.o $(GLAD_SOURCE)
 
 #
 # The make code below this line is pivotal that it does not change
@@ -72,6 +87,11 @@ uninstall:
 	sudo rm $(DESTDIR)$(PREFIX)/lib/libfirefly.so
 	sudo rm -rf $(DESTDIR)$(PREFIX)/include/firefly/
 
-clean:
-	make -C libs/glad/ clean
-	rm -rf out/
+clean: clean-cmake clean-build
+clean-cmake:
+	rm -rf libs/glfw/cmakeout/
+	rm -rf libs/glad/cmakeout/
+
+clean-build:
+	rm -rf libs/glfw/out/
+	rm -rf libs/glad/out/

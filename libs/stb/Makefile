@@ -1,2 +1,0 @@
-all:
-	echo "Building stb"

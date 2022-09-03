@@ -95,3 +95,4 @@ clean-cmake:
 clean-build:
 	rm -rf libs/glfw/out/
 	rm -rf libs/glad/out/
+	rm -rf out

@@ -21,7 +21,6 @@ void PopulateQuad(Geometry* pGeometry) {
     pGeometry->vertices[2] = (Vertex){ .position={-0.5f, -0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={0.0f, 0.0f} };
     pGeometry->vertices[3] = (Vertex){ .position={-0.5f,  0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={0.0f, 1.0f} };
 
-    //pGeometry->indices = (uint32_t[]){0, 1, 3, 1, 2, 3};
     memcpy(pGeometry->indices, (uint32_t[]){0, 1, 3, 1, 2, 3}, sizeof(uint32_t) * 6);
     glGenVertexArrays(1, &pGeometry->vao);
     glGenBuffers(1, &pGeometry->vbo);

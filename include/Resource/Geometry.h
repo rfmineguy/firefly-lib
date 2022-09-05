@@ -19,5 +19,6 @@ void UnbindGeometry();
 void FreeGeometry(Geometry*);
 
 void PopulateQuad(Geometry*);
+void PopulateCube(Geometry*);
 
 #endif

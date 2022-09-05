@@ -91,6 +91,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
         fprintf(stderr, "Failed to initialize glad\n");
         exit(-1);
     }
+    glEnable(GL_DEPTH_TEST);
 }
 
 void InitWindowVK() {
@@ -122,7 +123,7 @@ void WindowClearBackground() {
 
 void WindowClearBackgroundEx(float r, float g, float b, float a) {
     glClearColor(r, g, b, a);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void SetWindowShouldClose(bool shouldClose) {

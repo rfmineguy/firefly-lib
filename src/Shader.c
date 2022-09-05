@@ -111,6 +111,11 @@ void SetUniform4f(Shader *pShader, const char *name, float a, float b, float c, 
     glUniform4f(loc, a, b, c, d);
 }
 
+void SetUniform4fv(Shader *pShader, const char *name, float* mat) {
+    int loc = GetUniformLocation(pShader, name);
+    glUniformMatrix4fv(loc, 1, GL_FALSE, mat);    
+}
+
 int GetUniformLocation(Shader *pShader, const char *name) {
     int location = glGetUniformLocation(pShader->programId, name);
     if (location == -1) {

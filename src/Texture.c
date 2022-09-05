@@ -1,17 +1,20 @@
 #include "../include/Resource/Texture.h"
 #include "../include/IO/Log.h"
-#include "glad/glad.h"
 #include "../libs/stb/stb_image.h"
 #include <stdlib.h>
 
 Texture* LoadTexture(const char* path) {
+  return LoadTextureEx(path, GL_REPEAT, GL_NEAREST);
+}
+
+Texture* LoadTextureEx(const char *path, GLint wrapValue, GLint filterValue) {
   Texture *t = malloc(sizeof(*t));
   glGenTextures(1, &t->handle);
   glBindTexture(GL_TEXTURE_2D, t->handle);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapValue);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapValue);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterValue);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterValue);
 
   unsigned char* data = stbi_load(path, &t->width, &t->height, &t->channels, 0);
   if (data) {
@@ -32,11 +35,13 @@ void FreeTexture(Texture *pTexture) {
 }
 
 void BindTexture(Texture *pTexture) {
-  glBindTexture(GL_TEXTURE_2D, pTexture->handle);
+  BindTextureToUnit(pTexture, 0);
 }
 
 void BindTextureToUnit(Texture *pTexture, int unit) {
-  BindTexture(pTexture);
+  glActiveTexture(GL_TEXTURE0 + unit);
+  glBindTexture(GL_TEXTURE_2D, pTexture->handle);
+  //BindTexture(pTexture);
 }
 
 void UnbindTexture() {

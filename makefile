@@ -13,11 +13,13 @@ LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
 				-Llibs/glad-rf/out/ \
-				-Llibs/glfw/out/
+				-Llibs/glfw/out/ \
+				-Llibs/cglm/out/
 INCLUDE_DIRS := -I/include/ \
 			    -I/opt/homebrew/include/ \
 				-I/libs/glad/include/ \
-				-I/libs/stb/include/
+				-I/libs/stb/include/ \
+				-I/libs/cglm/include/
 
 # INCLUDE DIRECTORIES FOR THIS FireflyLib
 LOCAL_CORE_INCLUDE = include/Core
@@ -37,18 +39,28 @@ HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
 GLFW_LIB_BUILD = libs/glfw/out/libglfw3.a
 GLFW_LIB_DIR = libs/glfw/out/
 GLFW_LIB = glfw3
+
 GLAD_LIB_BUILD = libs/glad-rf/out/libglad.a
 GLAD_LIB_DIR = libs/glad-rf/out/
 GLAD_LIB = glad
 
+CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
+CGLM_LIB_DIR = libs/cglm/out/
+CGLM_LIB = cglm
+
 build: prepare out/libfirefly.so
-build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD)
+build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD)
 $(GLFW_LIB_BUILD):
 	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make
 	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
+	
 $(GLAD_LIB_BUILD):
 	cmake -S libs/glad-rf/ -B libs/glad-rf/cmakeout/ && cd libs/glad-rf/cmakeout && make
 	-mkdir libs/glad-rf/out/ && cp libs/glad-rf/cmakeout/libglad.a libs/glad-rf/out/
+
+$(CGLM_LIB_BUILD):
+	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make
+	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.dylib libs/cglm/out/
 
 prepare: build_libs
 	rm -rf out

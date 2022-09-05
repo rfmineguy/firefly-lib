@@ -41,5 +41,10 @@ bool IsWindowMinimized();
 void WindowSetFullscreen(bool);
 void WindowToggleFullscreen();
 bool IsWindowFullscreen();
+bool WasWindowResized();
+int WindowGetWidth();
+int WindowGetHeight();
+
+void ToggleCursorLocked();
 
 #endif

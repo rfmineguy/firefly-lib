@@ -32,6 +32,8 @@ Texture* LoadTextureEx(const char *path, GLint wrapValue, GLint filterValue) {
 void FreeTexture(Texture *pTexture) {
   UnbindTexture(pTexture);
   glDeleteTextures(1, &pTexture->handle);
+  free(pTexture);
+  pTexture = NULL;
 }
 
 void BindTexture(Texture *pTexture) {

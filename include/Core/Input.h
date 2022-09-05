@@ -12,13 +12,17 @@ typedef struct {
     //Mouse data
     bool mouse[12];
     bool mouse_pressed;
+
+    Vec2f mouse_offset;
     Vec2f mouse_pos, last_mouse_pos;
     Vec2f mouse_velocity;
+    
+    float yaw, pitch;
 } Input;
 
 Input* GetInputPtr();
 typedef enum {
-    KEY_SPACE             = 32,
+  KEY_SPACE             = 32,
  	KEY_APOSTROPHE        = 39, /* ' */
  	KEY_COMMA             = 44, /* , */
  	KEY_MINUS             = 45, /* - */
@@ -162,6 +166,8 @@ double GetMousePositionY();         // implemented
 Vec2f GetMouseSpeed();              // implemented
 double GetMouseSpeedX();            // implemented
 double GetMouseSpeedY();            // implemented
+double GetMouseYaw();
+double GetMousePitch();
 
 //FUTURE
 bool IsControllerConneced(int);

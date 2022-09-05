@@ -10,6 +10,7 @@ typedef struct _Window {
     int width;
     int height;
     int closeKey;
+    bool resized, cursorLocked;
 } Window;
 
 static Window gWindow;
@@ -39,12 +40,39 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 
 static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
     Input* i = GetInputPtr();
-    i->last_mouse_pos = i->mouse_pos;
+    static bool firstMouse = true;
+    if (firstMouse) {
+        i->last_mouse_pos.x = (float) xpos;
+        i->last_mouse_pos.y = (float) ypos;
+        firstMouse = false;
+    }
 
-    i->mouse_pos.x = (float) xpos;
-    i->mouse_pos.y = (float) ypos;
+    if (gWindow.cursorLocked)
+        return;
 
-    i->mouse_velocity = (Vec2f) {.x = i->mouse_pos.x - i->last_mouse_pos.x, .y = i->mouse_pos.y - i->last_mouse_pos.y };
+    i->mouse_pos.x = xpos;
+    i->mouse_pos.y = ypos;
+    i->mouse_offset.x = xpos - i->last_mouse_pos.x;
+    i->mouse_offset.y = i->last_mouse_pos.y - ypos;
+    i->last_mouse_pos.x = xpos;
+    i->last_mouse_pos.y = ypos;
+    
+    float sensitivity = 0.1f;
+    i->mouse_offset.x *= sensitivity;
+    i->mouse_offset.y *= sensitivity;
+    
+    i->yaw += i->mouse_offset.x;
+    i->pitch += i->mouse_offset.y;
+    if (i->pitch > 89.f) 
+        i->pitch = 89.f;
+    if (i->pitch < -89.f)
+        i->pitch = -89.f;
+}
+
+static void window_size_callback(GLFWwindow* window, int width, int height) {
+    gWindow.resized = true;
+    gWindow.width = width;
+    gWindow.height = height;
 }
 
 void InitWindowAPI(API api) {
@@ -86,6 +114,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
     glfwSetKeyCallback(gWindow.windowPtr, key_callback);
     glfwSetMouseButtonCallback(gWindow.windowPtr, mouse_button_callback);
     glfwSetCursorPosCallback(gWindow.windowPtr, mouse_cursor_position_callback);
+    glfwSetWindowSizeCallback(gWindow.windowPtr, window_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "Failed to initialize glad\n");
@@ -149,4 +178,30 @@ bool WindowShouldClose() {
 
 void SetWindowCloseKey(int key) {
     gWindow.closeKey = key;
+}
+
+bool WasWindowResized() {
+    bool resized = gWindow.resized;
+    gWindow.resized = false;
+    return resized;
+}
+
+int WindowGetWidth() {
+    return gWindow.width;
+}
+
+int WindowGetHeight() {
+    return gWindow.height;
+}
+
+void ToggleCursorLocked() {
+    static bool locked = false;
+    if (locked) {
+        glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    else {
+        glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    locked = !locked;
+    gWindow.cursorLocked = locked;
 }

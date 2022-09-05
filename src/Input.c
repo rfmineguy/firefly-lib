@@ -45,7 +45,7 @@ bool IsMouseButtonPressed(int button) {
 
 //may not be very useful
 bool IsMouseMoving() {
-    return GetInputPtr()->mouse_velocity.x != 0 || GetInputPtr()->mouse_velocity.y != 0;
+    return GetInputPtr()->mouse_offset.x != 0 || GetInputPtr()->mouse_offset.y != 0;
 }
 
 Vec2f GetMousePosition() {
@@ -61,13 +61,21 @@ double GetMousePositionY() {
 }
 
 Vec2f GetMouseSpeed() {
-    return GetInputPtr()->mouse_velocity;
+    return GetInputPtr()->mouse_offset;
 }
 
 double GetMouseSpeedX() {
-    return GetInputPtr()->mouse_velocity.x;
+    return GetInputPtr()->mouse_offset.x;
 }
 
 double GetMouseSpeedY() {
-    return GetInputPtr()->mouse_velocity.y;
+    return GetInputPtr()->mouse_offset.y;
+}
+
+double GetMouseYaw() {
+    return GetInputPtr()->yaw;
+}
+
+double GetMousePitch() {
+    return GetInputPtr()->pitch;
 }

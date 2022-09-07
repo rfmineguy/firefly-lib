@@ -9,6 +9,7 @@ typedef struct {
     bool prevPressed, pressed, repeat;    
     bool released;
 } KeyS;
+
 typedef struct {
     //Keyboard data
     KeyS keys[500];
@@ -24,7 +25,7 @@ typedef struct {
     float yaw, pitch;
 } Input;
 
-Input* GetInputPtr();
+
 typedef enum {
   KEY_SPACE             = 32,
  	KEY_APOSTROPHE        = 39, /* ' */
@@ -82,7 +83,7 @@ typedef enum {
  	KEY_BACKSPACE         = 259,
  	KEY_INSERT            = 260,
  	KEY_DELETE            = 261,
- 	KEY_RIGHT             = 62,
+ 	KEY_RIGHT             = 262,
  	KEY_LEFT              = 263,
  	KEY_DOWN              = 264,
  	KEY_UP                = 265,
@@ -150,6 +151,8 @@ typedef enum {
 } Key;
 
 //Input device functions (Input.h)
+Input* GetInputPtr();
+
 void KeyBindRegister(const char*, int, int);
 void KeyBindModify(const char*, int, int);
 bool IsKeyBindDown(const char*);
@@ -170,8 +173,8 @@ double GetMousePositionY();         // implemented
 Vec2f GetMouseSpeed();              // implemented
 double GetMouseSpeedX();            // implemented
 double GetMouseSpeedY();            // implemented
-double GetMouseYaw();
-double GetPitch();
+double GetMouseYaw();               // implemented
+double GetPitch();                  // implemented
 
 //FUTURE
 bool IsControllerConneced(int);

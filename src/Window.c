@@ -38,7 +38,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
             i->keys[key].repeat = false;
             break;
     }
-    LOG_INFO("Key {repeat=%d, prevPressed=%d, pressed=%d}", i->keys[key].repeat, i->keys[key].prevPressed, i->keys[key].pressed);
 }
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {

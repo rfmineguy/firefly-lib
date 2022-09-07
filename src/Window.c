@@ -87,6 +87,11 @@ static void window_size_callback(GLFWwindow* window, int width, int height) {
     gWindow.height = height;
 }
 
+static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
+    GetInputPtr()->scroll_offset.x = xoff;
+    GetInputPtr()->scroll_offset.y = yoff;
+}
+
 void InitWindowAPI(API api) {
     gWindow.closeKey = GLFW_KEY_ESCAPE;
     if (api == OPENGL) InitWindowGL();
@@ -128,6 +133,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
     glfwSetMouseButtonCallback(gWindow.windowPtr, mouse_button_callback);
     glfwSetCursorPosCallback(gWindow.windowPtr, mouse_cursor_position_callback);
     glfwSetWindowSizeCallback(gWindow.windowPtr, window_size_callback);
+    glfwSetScrollCallback(gWindow.windowPtr, scroll_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "Failed to initialize glad\n");

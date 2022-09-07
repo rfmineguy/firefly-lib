@@ -77,3 +77,23 @@ double GetMouseYaw() {
 double GetMousePitch() {
     return GetInputPtr()->pitch;
 }
+
+bool IsScroll() {
+    return IsScrollUp() || IsScrollDown() || IsScrollRight() || IsScrollLeft();
+}
+
+bool IsScrollUp() {
+    return GetInputPtr()->scroll_offset.y > 0.1;
+}
+
+bool IsScrollDown() {
+    return GetInputPtr()->scroll_offset.y < -0.1;
+}
+
+bool IsScrollRight() {
+    return GetInputPtr()->scroll_offset.x < -0.11;
+}
+
+bool IsScrollLeft() {
+    return GetInputPtr()->scroll_offset.x > 0.11;
+}

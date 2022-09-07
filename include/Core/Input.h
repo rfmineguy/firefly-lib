@@ -22,6 +22,8 @@ typedef struct {
     Vec2f mouse_pos, last_mouse_pos;
     Vec2f mouse_velocity;
     
+    Vec2f scroll_offset;
+    
     float yaw, pitch;
 } Input;
 
@@ -174,7 +176,13 @@ Vec2f GetMouseSpeed();              // implemented
 double GetMouseSpeedX();            // implemented
 double GetMouseSpeedY();            // implemented
 double GetMouseYaw();               // implemented
-double GetPitch();                  // implemented
+double GetMousePitch();             // implemented
+
+bool IsScroll();
+bool IsScrollUp();
+bool IsScrollDown();
+bool IsScrollRight();
+bool IsScrollLeft();
 
 //FUTURE
 bool IsControllerConneced(int);

@@ -1,11 +1,11 @@
 #include "../include/Core/Timer.h"
 #include "../include/Core/Window.h"
 
-void StartTimerInterval(Timer *pTimer, double interval) {
-  StartTimerIntervalEx(pTimer, interval, MILLISECOND);
+void TimerStartInterval(Timer *pTimer, double interval) {
+  TimerStartIntervalEx(pTimer, interval, MILLISECOND);
 }
 
-void StartTimerIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
+void TimerStartIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
   pTimer->unit = unit;
   if (!pTimer->running) {
     pTimer->start_time = WindowGetTime();
@@ -17,7 +17,7 @@ void StartTimerIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
 
 void ResetTimer(Timer *pTimer) {
   pTimer->running = false;
-  StartTimerInterval(pTimer, pTimer->interval);
+  TimerStartInterval(pTimer, pTimer->interval);
 }
 
 bool TimerElapsed(Timer *pTimer) {

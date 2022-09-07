@@ -12,8 +12,8 @@ typedef struct {
     TimerUnit unit;
 } Timer;
 
-void StartTimerInterval(Timer*, double);
-void StartTimerIntervalEx(Timer*, double, TimerUnit);
+void TimerStartInterval(Timer*, double);
+void TimerStartIntervalEx(Timer*, double, TimerUnit);
 void ResetTimer(Timer*);
 bool TimerElapsed(Timer*);
 

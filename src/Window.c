@@ -52,7 +52,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 }
 
 static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (gWindow.cursorLocked)
+    if (!gWindow.cursorLocked)
         return;
 
     Input* i = GetInputPtr();
@@ -92,6 +92,7 @@ void InitWindowAPI(API api) {
     if (api == OPENGL) InitWindowGL();
     if (api == VULKAN) InitWindowVK();
     if (api == METAL) InitWindowMTL();
+    gWindow.cursorLocked = false;
 }
 
 void InitWindowAPIEx(API api, const char* title, int width, int height) {
@@ -208,13 +209,11 @@ int WindowGetHeight() {
 }
 
 void ToggleCursorLocked() {
-    static bool locked = false;
-    if (locked) {
+    gWindow.cursorLocked = !gWindow.cursorLocked;
+    if (gWindow.cursorLocked) {
         glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else {
         glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-    locked = !locked;
-    gWindow.cursorLocked = locked;
 }

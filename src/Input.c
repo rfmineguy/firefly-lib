@@ -8,15 +8,13 @@ Input* GetInputPtr() {
 }
 
 bool IsKeyDown(int key) {
-    return GetInputPtr()->key_pressed && GetInputPtr()->keys[key];
+    return GetInputPtr()->keys[key].down;
 }
 
 bool IsKeyPressed(int key) {
-    if (IsKeyDown(key)) {
-        GetInputPtr()->key_pressed = false;
-        return true;
-    }
-    return false;
+    bool pressed = GetInputPtr()->keys[key].pressed;//IsKeyDown(key);
+    GetInputPtr()->keys[key].pressed = false;
+    return pressed && !GetInputPtr()->keys[key].repeat;
 }
 
 bool IsControlDown() {

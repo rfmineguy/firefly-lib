@@ -5,10 +5,14 @@
 
 typedef struct _KeyBind KeyBind;
 typedef struct {
+    bool down;
+    bool prevPressed, pressed, repeat;    
+    bool released;
+} KeyS;
+typedef struct {
     //Keyboard data
-    bool keys[500];
-    bool key_repeat, key_pressed;
-
+    KeyS keys[500];
+    
     //Mouse data
     bool mouse[12];
     bool mouse_pressed;
@@ -167,7 +171,7 @@ Vec2f GetMouseSpeed();              // implemented
 double GetMouseSpeedX();            // implemented
 double GetMouseSpeedY();            // implemented
 double GetMouseYaw();
-double GetMousePitch();
+double GetPitch();
 
 //FUTURE
 bool IsControllerConneced(int);

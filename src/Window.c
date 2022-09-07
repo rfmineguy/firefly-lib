@@ -17,14 +17,28 @@ static Window gWindow;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     Input* i = GetInputPtr();
-    i->key_repeat = action == GLFW_REPEAT;
-    i->key_pressed = action == GLFW_PRESS;
-    if (i->key_pressed) {
-        i->keys[key] = true;
+    i->keys[key].prevPressed = i->keys[key].pressed;
+    i->keys[key].repeat = action == GLFW_REPEAT;
+
+    switch (action) {
+        case GLFW_PRESS:
+            i->keys[key].down = true;
+            i->keys[key].pressed = true;
+            i->keys[key].released = false;
+            break;
+        case GLFW_REPEAT:
+            i->keys[key].down = true;
+            i->keys[key].repeat = true;
+            i->keys[key].released = false;
+            break;
+        case GLFW_RELEASE:
+            i->keys[key].down = false;
+            i->keys[key].pressed = false;
+            i->keys[key].released = true;
+            i->keys[key].repeat = false;
+            break;
     }
-    if (action == GLFW_RELEASE) {
-        i->keys[key] = false;
-    }
+    LOG_INFO("Key {repeat=%d, prevPressed=%d, pressed=%d}", i->keys[key].repeat, i->keys[key].prevPressed, i->keys[key].pressed);
 }
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -39,6 +53,9 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 }
 
 static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (gWindow.cursorLocked)
+        return;
+
     Input* i = GetInputPtr();
     static bool firstMouse = true;
     if (firstMouse) {
@@ -46,10 +63,6 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
         i->last_mouse_pos.y = (float) ypos;
         firstMouse = false;
     }
-
-    if (gWindow.cursorLocked)
-        return;
-
     i->mouse_pos.x = xpos;
     i->mouse_pos.y = ypos;
     i->mouse_offset.x = xpos - i->last_mouse_pos.x;
@@ -121,6 +134,7 @@ void InitWindowGLEx(const char* title, int width, int height) {
         exit(-1);
     }
     glEnable(GL_DEPTH_TEST);
+    glfwSwapInterval(1);
 }
 
 void InitWindowVK() {

@@ -7,3 +7,6 @@ This is an intalled library
 ## Usage instructions
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>
 `gcc src/main.c -lfirefly`
+
+## Disclaimer
+This has *ONLY* been tested on macos as of now. If you have any issues with building for other platforms please notify me via the Issues tab.

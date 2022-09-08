@@ -183,6 +183,7 @@ bool IsScrollUp();
 bool IsScrollDown();
 bool IsScrollRight();
 bool IsScrollLeft();
+Vec2f GetScrollDirection();
 
 //FUTURE
 bool IsControllerConneced(int);

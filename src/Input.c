@@ -97,3 +97,12 @@ bool IsScrollRight() {
 bool IsScrollLeft() {
     return GetInputPtr()->scroll_offset.x > 0.11;
 }
+
+Vec2f GetScrollDirection() {
+    float xDir = 0, yDir = 0;
+    if (IsScrollDown()) yDir = -1;
+    if (IsScrollUp()) yDir = 1;
+    if (IsScrollRight()) xDir = 1;
+    if (IsScrollLeft()) xDir = -1;
+    return (Vec2f){.x=xDir, .y=yDir};
+}

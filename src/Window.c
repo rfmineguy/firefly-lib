@@ -11,6 +11,8 @@ typedef struct _Window {
     int height;
     int closeKey;
     bool resized, cursorLocked;
+    
+    float deltaTime, currentTime, lastTime;
 } Window;
 
 static Window gWindow;
@@ -191,8 +193,15 @@ double WindowGetTime() {
     return glfwGetTime();
 }
 
+double WindowDeltaTime() {
+    return gWindow.deltaTime;
+}
+
 bool WindowShouldClose() {
-    glfwSwapBuffers(gWindow.windowPtr);
+    gWindow.currentTime = WindowGetTime();
+    gWindow.deltaTime = gWindow.currentTime - gWindow.lastTime;
+    gWindow.lastTime = gWindow.currentTime;
+    glfwSwapBuffers(gWindow.windowPtr);    
     return glfwWindowShouldClose(gWindow.windowPtr);
 }
 

@@ -5,7 +5,7 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad
+LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal
 
 # this will make the library not able to compiled on another system with this source
 #GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
@@ -14,12 +14,14 @@ LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
 				-Llibs/glad-rf/out/ \
 				-Llibs/glfw/out/ \
-				-Llibs/cglm/out/
+				-Llibs/cglm/out/ \
+				-Llibs/openal/out/
 INCLUDE_DIRS := -I/include/ \
 			    -I/opt/homebrew/include/ \
 				-I/libs/glad/include/ \
 				-I/libs/stb/include/ \
-				-I/libs/cglm/include/
+				-I/libs/cglm/include/ \
+				-I/libs/openal/include/
 
 # INCLUDE DIRECTORIES FOR THIS FireflyLib
 LOCAL_CORE_INCLUDE = include/Core
@@ -48,8 +50,12 @@ CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
 CGLM_LIB_DIR = libs/cglm/out/
 CGLM_LIB = cglm
 
+OPENAL_LIB_BUILD = libs/openal/out/libopenal.dylib
+OPENAL_LIB_DIR = libs/openal/out/
+OPENAL_LIB = openal
+
 build: prepare out/libfirefly.so
-build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD)
+build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_BUILD)
 $(GLFW_LIB_BUILD):
 	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make
 	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
@@ -61,6 +67,10 @@ $(GLAD_LIB_BUILD):
 $(CGLM_LIB_BUILD):
 	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make
 	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.dylib libs/cglm/out/
+
+$(CGLM_LIB_BUILD):
+	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make
+	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/
 
 prepare: build_libs
 	rm -rf out

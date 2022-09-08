@@ -54,9 +54,6 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 }
 
 static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (!gWindow.cursorLocked)
-        return;
-
     Input* i = GetInputPtr();
     static bool firstMouse = true;
     if (firstMouse) {
@@ -75,12 +72,14 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
     i->mouse_offset.x *= sensitivity;
     i->mouse_offset.y *= sensitivity;
     
-    i->yaw += i->mouse_offset.x;
-    i->pitch += i->mouse_offset.y;
-    if (i->pitch > 89.f) 
-        i->pitch = 89.f;
-    if (i->pitch < -89.f)
-        i->pitch = -89.f;
+    //if (!gWindow.cursorLocked) {
+        i->yaw += i->mouse_offset.x;
+        i->pitch += i->mouse_offset.y;
+        if (i->pitch > 89.f) 
+            i->pitch = 89.f;
+        if (i->pitch < -89.f)
+            i->pitch = -89.f;
+    //}
 }
 
 static void window_size_callback(GLFWwindow* window, int width, int height) {

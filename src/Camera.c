@@ -25,7 +25,7 @@ void InitCameraIso(Camera* pCamera) {
   pCamera->isOrtho = false;
   pCamera->fov = 45.f;
   glm_vec2_copy((vec2){600, 600}, pCamera->size);
-  glm_vec3_copy((vec3){0, 0, 3}, pCamera->camPos);
+  glm_vec3_copy((vec3){0, 0, 20}, pCamera->camPos);
   glm_vec3_copy((vec3){0, 0, 0}, pCamera->camTarget);
   glm_vec3_copy((vec3){0, 1, 0}, pCamera->up);
   glm_vec3_copy((vec3){0, 0, 0}, pCamera->camRight);

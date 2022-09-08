@@ -11,3 +11,5 @@ This is an intalled library
 
 ## Usage instructions
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly`
+
+`gcc src/main.c -lfirefly`

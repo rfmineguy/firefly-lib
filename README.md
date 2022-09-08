@@ -5,5 +5,5 @@ This is an intalled library
 `make install`
 
 ## Usage instructions
-Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly`
+Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>
 `gcc src/main.c -lfirefly`

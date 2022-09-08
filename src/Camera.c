@@ -85,6 +85,5 @@ void UpdateProjectionCamera(Camera *pCamera, int width, int height) {
   pCamera->size[1] = height;
   LOG_INFO("Resizing projection matrix to {w:%d, h:%d}", width, height);
   glm_perspective(glm_rad(pCamera->fov), (float)width/(float)height, 0.1f, 100.f, pCamera->proj);
-  //glViewport(0, 0, width, height);
   UpdateCameraVectors(pCamera);
 }

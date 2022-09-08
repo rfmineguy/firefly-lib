@@ -46,5 +46,6 @@ int WindowGetWidth();
 int WindowGetHeight();
 
 void ToggleCursorLocked();
+bool IsCursorLocked();
 
 #endif

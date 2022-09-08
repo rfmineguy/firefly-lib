@@ -232,3 +232,7 @@ void ToggleCursorLocked() {
         glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
+
+bool IsCursorLocked() {
+    return gWindow.cursorLocked;
+}

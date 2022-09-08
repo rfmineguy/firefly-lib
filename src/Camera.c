@@ -23,7 +23,8 @@ void UpdateCameraVectors(Camera* pCamera) {
 
 void InitCameraIso(Camera* pCamera) {
   pCamera->isOrtho = false;
-
+  pCamera->fov = 45.f;
+  glm_vec2_copy((vec2){600, 600}, pCamera->size);
   glm_vec3_copy((vec3){0, 0, 3}, pCamera->camPos);
   glm_vec3_copy((vec3){0, 0, 0}, pCamera->camTarget);
   glm_vec3_copy((vec3){0, 1, 0}, pCamera->up);
@@ -31,7 +32,7 @@ void InitCameraIso(Camera* pCamera) {
   glm_vec3_copy((vec3){0, 1, 0}, pCamera->camUp);
   glm_vec3_copy((vec3){0, 0, -1}, pCamera->camFront);
 
-  glm_perspective(glm_rad(45.f), (float)600/(float)600, 0.1f, 100.f, pCamera->proj);
+  glm_perspective(glm_rad(pCamera->fov), pCamera->size[0] / pCamera->size[1], 0.1f, 100.f, pCamera->proj);
   UpdateCameraVectors(pCamera);
 }
 
@@ -60,6 +61,16 @@ void UpdateCamera(Camera *pCamera) {
     glm_normalize(cross);
     glm_vec3_muladds(cross, camSpeed, pCamera->camPos);
   }
+  Vec2f scrollDir = GetScrollDirection();
+  pCamera->fov += scrollDir.y;
+  if (IsScroll())
+    UpdateProjectionCamera(pCamera, pCamera->size[0], pCamera->size[1]);
+  if (pCamera->fov < 1.f) {
+    pCamera->fov = 1.f;
+  }
+  if (pCamera->fov > 45.f) {
+    pCamera->fov = 45.f;
+  }
   UpdateCameraVectors(pCamera);
 }
 
@@ -70,8 +81,10 @@ void RecalcCamera(Camera *pCamera) {
 }
 
 void UpdateProjectionCamera(Camera *pCamera, int width, int height) {
+  pCamera->size[0] = width;
+  pCamera->size[1] = height;
   LOG_INFO("Resizing projection matrix to {w:%d, h:%d}", width, height);
-  glViewport(0, 0, width, height);
-  glm_perspective(glm_rad(45.f), (float)width/(float)height, 0.1f, 100.f, pCamera->proj);
+  glm_perspective(glm_rad(pCamera->fov), (float)width/(float)height, 0.1f, 100.f, pCamera->proj);
+  //glViewport(0, 0, width, height);
   UpdateCameraVectors(pCamera);
 }

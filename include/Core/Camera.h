@@ -16,6 +16,8 @@ typedef struct _Camera {
   mat4 proj;
   
   bool isOrtho;
+  float fov;
+  vec2 size;
 } Camera;
 
 void InitCameraOrtho(Camera*);

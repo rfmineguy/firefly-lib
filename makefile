@@ -64,19 +64,19 @@ build: prepare out/libfirefly.so
 
 build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_BUILD)
 $(GLFW_LIB_BUILD):
-	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make
+	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make && sudo make install
 	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
 	
 $(GLAD_LIB_BUILD):
-	cmake -S libs/glad-rf/ -B libs/glad-rf/cmakeout/ && cd libs/glad-rf/cmakeout && make
+	cmake -S libs/glad-rf/ -B libs/glad-rf/cmakeout/ && cd libs/glad-rf/cmakeout && make && sudo make install
 	-mkdir libs/glad-rf/out/ && cp libs/glad-rf/cmakeout/libglad.a libs/glad-rf/out/
 
 $(CGLM_LIB_BUILD):
-	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make
+	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make && sudo make install
 	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.dylib libs/cglm/out/
 
 $(OPENAL_LIB_BUILD):
-	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make
+	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make && sudo make install
 	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/libopenal.1.dylib
 
 prepare: build_libs

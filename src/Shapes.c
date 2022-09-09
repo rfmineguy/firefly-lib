@@ -1,7 +1,6 @@
 #include "../include/Resource/Geometry.h"
 #include "../include/Rendering/Shapes.h"
 #include "../include/Resource/ResourceManager.h"
-#include <glad/glad.h>
 
 static Geometry quad, cube;
 static Shader* camShader;

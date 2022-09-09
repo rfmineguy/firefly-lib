@@ -166,7 +166,7 @@ void SoundMasterSetListener(vec3 position, vec3 velocity) {
 SoundSource* SoundSourceCreate() {
   SoundSource* s = malloc(sizeof(SoundSource));
   alGenSources(1, &s->id);
-  SoundSourceFull(s, 1, 1, (vec3){0, 0, 0});
+  SoundSourceFull(s, 1, 1, (vec3){0, 0, 0}, false);
   return s;
 }
 
@@ -177,10 +177,11 @@ void SoundSourceDestroy(SoundSource *pSource) {
   pSource = NULL;
 }
 
-void SoundSourceFull(SoundSource *pSource, float gain, float pitch, vec3 pos) {
+void SoundSourceFull(SoundSource *pSource, float gain, float pitch, vec3 pos, bool looping) {
   SoundSourceSetGain(pSource, gain);
   SoundSourceSetPitch(pSource, pitch);
   SoundSourceSetPos(pSource, pos);
+  SoundSourceSetLooping(pSource, looping);
 }
 
 void SoundSourceSetGain(SoundSource *pSource, float gain) {
@@ -200,9 +201,22 @@ void SoundSourceSetPos(SoundSource *pSource, vec3 pos) {
   alSource3f(pSource->id, AL_POSITION, pos[0], pos[1], pos[2]);  
 }
 
+void SoundSourceSetLooping(SoundSource *pSource, bool looping) {
+  alSourcei(pSource->id, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
+}
+
 void SoundSourcePlay(SoundSource *pSource, Sound* pSound) {
+  SoundSourceStop(pSource);
   alSourcei(pSource->id, AL_BUFFER, pSound->buffer);
   alSourcePlay(pSource->id);
+}
+
+void SoundSourcePause(SoundSource *pSource) {
+  alSourcePause(pSource->id);
+}
+
+void SoundSourceUnpause(SoundSource *pSource) {
+  alSourcePlay(pSource->id);  
 }
 
 void SoundSourceStop(SoundSource *pSource) {

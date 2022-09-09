@@ -25,11 +25,14 @@ void FreeSound(Sound*);
 SoundSource* SoundSourceCreate();
 void SoundSourceDestroy(SoundSource*);
 
-void SoundSourceFull(SoundSource*, float, float, vec3);
+void SoundSourceFull(SoundSource*, float, float, vec3, bool);
 void SoundSourceSetGain(SoundSource*, float);
 void SoundSourceSetPitch(SoundSource*, float);
 void SoundSourceSetPos(SoundSource*, vec3);
+void SoundSourceSetLooping(SoundSource*, bool);
 void SoundSourcePlay(SoundSource*, Sound*);
+void SoundSourcePause(SoundSource*);
+void SoundSourceUnpause(SoundSource*);
 void SoundSourceStop(SoundSource*);
 bool SoundSourcePlaying(SoundSource*);
 

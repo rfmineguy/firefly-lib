@@ -2,8 +2,8 @@
 #include "../include/Core/Input.h"
 #include "../include/IO/Log.h"
 #include <stdlib.h>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "../libs/glad-rf/include/glad/glad.h"
+#include "../libs/glfw/include/GLFW/glfw3.h"
 
 typedef struct _Window {
     GLFWwindow* windowPtr;

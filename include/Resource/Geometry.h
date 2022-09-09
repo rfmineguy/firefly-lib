@@ -1,6 +1,6 @@
 #ifndef FL_RES_GEOMETRY_H
 #define FL_RES_GEOMETRY_H
-#include "../../libs/cglm/include/cglm/cglm.h"
+#include <cglm/cglm.h>
 
 typedef struct _Vertex {
     vec3 position;

@@ -1,7 +1,7 @@
 #ifndef FL_CORE_CAMERA_H
 #define FL_CORE_CAMERA_H
-#include "../../libs/cglm/include/cglm/cglm.h"
-#include "../../libs/cglm/include/cglm/cam.h"
+#include <cglm/cglm.h>
+#include <cglm/cam.h>
 
 typedef struct _Camera {
   vec3 camPos;

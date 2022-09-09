@@ -5,7 +5,7 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal
+LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal.1
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
@@ -50,9 +50,9 @@ CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
 CGLM_LIB_DIR = libs/cglm/out/
 CGLM_LIB = cglm
 
-OPENAL_LIB_BUILD = libs/openal/out/libopenal.1.dylib
+OPENAL_LIB_BUILD = libs/openal/out/libopenal.dylib
 OPENAL_LIB_DIR = libs/openal/out/
-OPENAL_LIB = openal.1
+OPENAL_LIB = openal
 
 DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
 
@@ -77,7 +77,7 @@ $(CGLM_LIB_BUILD):
 
 $(OPENAL_LIB_BUILD):
 	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make
-	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/
+	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/libopenal.1.dylib
 
 prepare: build_libs
 	rm -rf out

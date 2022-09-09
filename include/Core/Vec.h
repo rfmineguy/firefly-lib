@@ -1,6 +1,6 @@
 #ifndef FL_COREVEC_H
 #define FL_COREVEC_H
-#include "../../libs/glad-rf/include/glad/glad.h"
+#include <glad/glad.h>
 
 typedef struct {
     double x, y;

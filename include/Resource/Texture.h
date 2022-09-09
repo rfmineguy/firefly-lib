@@ -1,6 +1,6 @@
 #ifndef FL_RES_TEXTURE_H
 #define FL_RES_TEXTURE_H
-#include "../../libs/glad-rf/include/glad/glad.h"
+#include <glad/glad.h>
 
 typedef struct Texture {
     char name[50];

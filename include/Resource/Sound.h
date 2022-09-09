@@ -1,6 +1,6 @@
 #ifndef FL_RES_SOUND_H
 #define FL_RES_SOUND_H
-#include <cglm/cglm.h>
+#include "../../libs/cglm/include/cglm/cglm.h"
 #include <stdbool.h>
 
 typedef struct _Sound Sound;

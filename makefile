@@ -5,10 +5,7 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal
-
-# this will make the library not able to compiled on another system with this source
-#GLAD_SOURCE = $(PREFIX)/include/glad/glad.c
+LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal.1
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
@@ -16,6 +13,9 @@ LIBRARY_PATHS = -L/opt/homebrew/lib/ \
 				-Llibs/glfw/out/ \
 				-Llibs/cglm/out/ \
 				-Llibs/openal/out/
+
+DYLIB_PATH = $(shell pwd)/libs/openal/out/
+
 INCLUDE_DIRS := -I/include/ \
 			    -I/opt/homebrew/include/ \
 				-I/libs/glad/include/ \
@@ -50,11 +50,18 @@ CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
 CGLM_LIB_DIR = libs/cglm/out/
 CGLM_LIB = cglm
 
-OPENAL_LIB_BUILD = libs/openal/out/libopenal.dylib
+OPENAL_LIB_BUILD = libs/openal/out/libopenal.1.dylib
 OPENAL_LIB_DIR = libs/openal/out/
-OPENAL_LIB = openal
+OPENAL_LIB = openal.1
+
+DYLIB_CMD = -rpath $(shell pwd)/libs/openal/out/
+
+#
+# NOTE: The OpenAL linking problem is mostly likely due to the dylib not being in a standard location.
+#
 
 build: prepare out/libfirefly.so
+
 build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_BUILD)
 $(GLFW_LIB_BUILD):
 	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make
@@ -68,7 +75,7 @@ $(CGLM_LIB_BUILD):
 	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make
 	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.dylib libs/cglm/out/
 
-$(CGLM_LIB_BUILD):
+$(OPENAL_LIB_BUILD):
 	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make
 	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/
 
@@ -77,11 +84,15 @@ prepare: build_libs
 	mkdir out
 
 out/libfirefly.so: $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES) $(DYLIB_CMD)
 
-#out/glad.o: $(GLAD_SOURCE)
-#	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -c -o out/glad.o $(GLAD_SOURCE)
+libinfo:
+	nm out/libfirefly.so >> libinfo.txt
+	echo "wrote info to 'libinfo.txt'"
 
+linked_libraries:
+	otool -L out/libfirefly.so
+	
 #
 # The make code below this line is pivotal that it does not change
 #    if you change anything you *may* break other locally installed
@@ -104,17 +115,25 @@ install: build
 	sudo install -m 664 $(H_RESOURCE) $(DESTDIR)$(PREFIX)/include/firefly/Resource/
 	sudo install -m 664 $(H_RENDERING) $(DESTDIR)$(PREFIX)/include/firefly/Rendering/
 
-
 uninstall:
 	sudo rm $(DESTDIR)$(PREFIX)/lib/libfirefly.so
 	sudo rm -rf $(DESTDIR)$(PREFIX)/include/firefly/
 
-clean: clean-cmake clean-build
+clean: clean-cmake clean-build clean-other
+clean-other:
+	rm -rf libinfo.txt
+
 clean-cmake:
 	rm -rf libs/glfw/cmakeout/
-	rm -rf libs/glad/cmakeout/
+	rm -rf libs/glad-rf/cmakeout/
+	rm -rf libs/cglm/cmakeout/
+	rm -rf libs/openal/cmakeout/
+	rm -rf libs/stb/cmakeout/
 
 clean-build:
 	rm -rf libs/glfw/out/
-	rm -rf libs/glad/out/
+	rm -rf libs/glad-rf/out/
+	rm -rf libs/cglm/out/
+	rm -rf libs/openal/out/
+	rm -rf libs/stb/out/
 	rm -rf out

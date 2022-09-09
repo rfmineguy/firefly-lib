@@ -5,7 +5,7 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal.1
+LIBRARY_DEPENDENCIES = -lc -lglfw -lcglm -lglad -lopenal
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \

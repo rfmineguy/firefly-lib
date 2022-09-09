@@ -54,7 +54,7 @@ OPENAL_LIB_BUILD = libs/openal/out/libopenal.1.dylib
 OPENAL_LIB_DIR = libs/openal/out/
 OPENAL_LIB = openal.1
 
-DYLIB_CMD = -rpath $(shell pwd)/libs/openal/out/
+DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
 
 #
 # NOTE: The OpenAL linking problem is mostly likely due to the dylib not being in a standard location.

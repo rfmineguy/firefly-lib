@@ -1,13 +1,5 @@
 CC = gcc
 CFLAGS = -Wall
-PLATFORM := $(shell uname)
-
-ifeq ($(PLATFORM), Darwin)
-	DYLIB_SUFFIX := dylib
-endif
-ifeq ($(PLATFORM), Linux)
-	DYLIB_SUFFIX := so
-endif
 
 ifeq ($(PREFIX),)
 	PREFIX := /usr/local
@@ -54,11 +46,11 @@ GLAD_LIB_BUILD = libs/glad-rf/out/libglad.a
 GLAD_LIB_DIR = libs/glad-rf/out/
 GLAD_LIB = glad
 
-CGLM_LIB_BUILD = libs/cglm/out/libcglm.$(DYLIB_SUFFIX)
+CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
 CGLM_LIB_DIR = libs/cglm/out/
 CGLM_LIB = cglm
 
-OPENAL_LIB_BUILD = libs/openal/out/libopenal.1.$(DYLIB_SUFFIX)
+OPENAL_LIB_BUILD = libs/openal/out/libopenal.1.dylib
 OPENAL_LIB_DIR = libs/openal/out/
 OPENAL_LIB = openal.1
 
@@ -95,7 +87,6 @@ out/libfirefly.so: $(SOURCES)
 	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES) $(DYLIB_CMD)
 
 libinfo:
-	echo $(DYLIB_SUFFIX)
 	nm out/libfirefly.so >> libinfo.txt
 	echo "wrote info to 'libinfo.txt'"
 

@@ -1,7 +1,7 @@
 #include "../include/Resource/Shader.h"
 #include "../include/IO/File.h"
 #include "../include/IO/Log.h"
-#include "../libs/glad-rf/include/glad/glad.h"
+#include <glad/glad.h>
 #include <string.h>
 
 void ProcessShaderInternal(unsigned int* id, char* contents, GLenum shaderType) {

@@ -1,6 +1,7 @@
 #include "../include/Resource/Geometry.h"
+#include <_types/_uint32_t.h>
 #include <stdint.h>
-#include "../libs/glad-rf/include/glad/glad.h"
+#include <glad/glad.h>
 #include <string.h>
 
 void BindGeometry(Geometry* pGeometry) {

@@ -184,8 +184,11 @@ void SoundSourceFull(SoundSource *pSource, float gain, float pitch, vec3 pos) {
 }
 
 void SoundSourceSetGain(SoundSource *pSource, float gain) {
-  if (gain > 1)
+  if (gain > 1) {
+    float chosen = gain;
     gain = 1;
+    LOG_WARN("Audio gain level [%0.4f] chosen. This is a dangerous volume, so its been lowered to %0.4f.", chosen, gain);    
+  }
   alSourcef(pSource->id, AL_GAIN, gain);
 }
 

@@ -184,6 +184,8 @@ void SoundSourceFull(SoundSource *pSource, float gain, float pitch, vec3 pos) {
 }
 
 void SoundSourceSetGain(SoundSource *pSource, float gain) {
+  if (gain > 1)
+    gain = 1;
   alSourcef(pSource->id, AL_GAIN, gain);
 }
 

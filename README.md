@@ -3,6 +3,7 @@
 
 # firefly-lib
 This is an intalled library
+For usage of the library you can view [FireflyLibTests](https://github.com/rfmineguy/firefly-lib-tests)
 
 ## Build instructions
 ### MacOS

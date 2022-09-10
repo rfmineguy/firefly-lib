@@ -21,8 +21,8 @@ The wiki page here will also be being worked on.
 ### Linux
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>
 `cd firefly-lib`<br>
-`make install`<br>
-*If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
+`sudo make install`<br>
+*The only reason this is sudo is because files get installed to /usr/local/lib/ and /usr/local/include/*
 
 ## Usage instructions
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>

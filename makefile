@@ -56,6 +56,7 @@ CGLM_LIB_DIR = libs/cglm/out/
 CGLM_LIB = cglm
 
 OPENAL_LIB_BUILD = libs/openal/out/libopenal.dylib
+OPENAL_LIB_INSTALL = /usr/local/lib/libopenal.dylib
 OPENAL_LIB_DIR = libs/openal/out/
 OPENAL_LIB = openal
 
@@ -67,7 +68,7 @@ DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
 
 build: prepare out/libfirefly.so
 
-build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_BUILD)
+build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_INSTALL)
 $(GLFW_LIB_BUILD):
 	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make && sudo make install
 	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
@@ -80,10 +81,10 @@ $(CGLM_LIB_BUILD):
 	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make && sudo make install
 	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.dylib libs/cglm/out/
 
-$(OPENAL_LIB_BUILD):
+$(OPENAL_LIB_INSTALL):
 	rm -rf libs/openal/cmakeout
 	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make && sudo make install
-	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/libopenal.1.dylib
+	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/libopenal.dylib
 
 prepare: build_libs
 	rm -rf out

@@ -8,8 +8,10 @@ endif
 LIBRARY_DEPENDENCIES = -lc -lglad -lglfw -lcglm
 ifeq ($(uname), darwin)
 	LIBRARY_DEPENDENCIES += -lopenal.1
+	DYLIB_SUFF := dylib
 else
 	LIBRARY_DEPENDENCIES += -lopenal
+	DYLIB_SUFF := so
 endif	
 
 # external lib details (in addition to the default search paths)
@@ -55,8 +57,8 @@ CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
 CGLM_LIB_DIR = libs/cglm/out/
 CGLM_LIB = cglm
 
-OPENAL_LIB_BUILD = libs/openal/out/libopenal.dylib
-OPENAL_LIB_INSTALL = /usr/local/lib/libopenal.dylib
+OPENAL_LIB_BUILD = libs/openal/out/libopenal.$(DYLIB_SUFF)
+OPENAL_LIB_INSTALL = /usr/local/lib/libopenal.$(DYLIB_SUFF)
 OPENAL_LIB_DIR = libs/openal/out/
 OPENAL_LIB = openal
 

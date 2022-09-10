@@ -16,6 +16,7 @@ The wiki page here will also be being worked on.
 
 ### Windows
 *UNTESTED*<br>
+*Currently not planned either*<br>
 
 ### Linux
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>

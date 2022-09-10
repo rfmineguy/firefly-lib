@@ -5,6 +5,8 @@
 This is an intalled library
 For usage of the library you can view [FireflyLibTests](https://github.com/rfmineguy/firefly-lib-tests)
 
+The wiki page here will also be being worked on.
+
 ## Build instructions
 ### MacOS
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>

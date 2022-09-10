@@ -1,9 +1,9 @@
 #ifndef FL_COREINPUT_H
 #define FL_COREINPUT_H
 #include "Vec.h"
+#include "HashTable.h"
 #include <stdbool.h>
 
-typedef struct _KeyBind KeyBind;
 typedef struct {
     bool down;
     bool prevPressed, pressed, repeat;    
@@ -11,8 +11,13 @@ typedef struct {
 } KeyS;
 
 typedef struct {
+    int primary, secondary;
+} KeyBind;
+
+typedef struct {
     //Keyboard data
     KeyS keys[500];
+    ht_t* keybinds;
     
     //Mouse data
     bool mouse[12];
@@ -149,11 +154,14 @@ typedef enum {
  	KEY_RIGHT_ALT         = 346,
  	KEY_RIGHT_SUPER       = 347,
  	KEY_MENU              = 348,
+  KEY_NONE              = 1000,
  	KEY_LAST              = KEY_MENU 
 } Key;
 
 //Input device functions (Input.h)
 Input* GetInputPtr();
+void InitKeybindHT();
+void DeinitKeybindHT();
 
 void KeyBindRegister(const char*, int, int);
 void KeyBindModify(const char*, int, int);

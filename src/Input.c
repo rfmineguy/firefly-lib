@@ -1,10 +1,63 @@
 #include "../include/Core/Input.h"
+#include "../include/IO/Log.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-static Input gInput;
+static Input gInput;// = {.keybinds=ht_create() };
 
 Input* GetInputPtr() {
     return &gInput;
+}
+
+void InitKeybindHT() {
+    static bool initialized = false;
+    if (!initialized) {
+        GetInputPtr()->keybinds = ht_create();
+        initialized = true;
+    }
+}
+
+void DeinitKeybindHT() {
+    ht_free(GetInputPtr()->keybinds);
+}
+
+void KeyBindRegister(const char* name, int primary_key, int secondary_key) {
+    if (ht_get(GetInputPtr()->keybinds, name) != NULL)
+        return;
+    KeyBind* k = malloc(sizeof(KeyBind));
+    k->primary = primary_key;
+    k->secondary = secondary_key;
+    ht_set(GetInputPtr()->keybinds, name, k);
+}
+
+void KeyBindModify(const char* name, int new_primary_key, int new_secondary_key) {
+    KeyBind* k = ht_get(GetInputPtr()->keybinds, name);
+    if (k == NULL) {
+        return;
+    }
+    k->primary = new_primary_key;
+    k->secondary = new_secondary_key;
+}
+
+bool IsKeyBindDown(const char* name) {
+    KeyBind* k = ht_get(GetInputPtr()->keybinds, name);
+    if (k == NULL) {
+        LOG_CRITICAL("Keybind [%s] not registered", name);
+        return false;
+    }
+    return (k->primary != KEY_NONE && IsKeyDown(k->primary)) || (k->secondary != KEY_NONE && IsKeyDown(k->secondary));
+}
+
+bool IsKeyBindPressed(const char* name) {
+    KeyBind* k = ht_get(GetInputPtr()->keybinds, name);
+    if (k == NULL) {
+        LOG_CRITICAL("Keybind [%s] not registered", name);
+        return false;
+    }
+    bool primary_pressed = k->primary != KEY_NONE && IsKeyPressed(k->primary);
+    bool secondary_pressed = k->secondary != KEY_NONE && IsKeyPressed(k->secondary);
+    return primary_pressed || secondary_pressed;
+    return (k->primary != KEY_NONE && IsKeyPressed(k->primary)) || (k->secondary != KEY_NONE && IsKeyPressed(k->secondary));
 }
 
 bool IsKeyDown(int key) {

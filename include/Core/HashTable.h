@@ -1,6 +1,6 @@
 #ifndef FL_COREHASHTABLE_H
 #define FL_COREHASHTABLE_H
-
+#include <stdbool.h>
 
 enum Type {INT, FLOAT, DOUBLE, C_STR};
 

@@ -17,7 +17,7 @@ void LogFL(LogLevel lvl, char* file, int line, const char* msg, ...) {
     if (activeLogStream == NULL)
         return;
 
-    char buffer[267] = {};
+    char buffer[500] = {};
     char msgbuffer[255] = {};
     char levelStr[12] = {};
     if (lvl == DEBUG)    strcat(levelStr, "DEBUG");

@@ -14,7 +14,7 @@ endif
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
-				-Llibs/glad-rf/out/ \
+				#-Llibs/glad-rf/out/ \
 				-Llibs/glfw/out/ \
 				-Llibs/cglm/out/ \
 				-Llibs/openal/out/

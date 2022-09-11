@@ -7,6 +7,8 @@ For usage of the library you can view [FireflyLibTests](https://github.com/rfmin
 
 The wiki page here will also be being worked on.
 
+I will most likely **not** provide prebuilt binaries of this library as the build process is set up in a way that makes installation easy and usage easy as well.
+
 ## Build instructions
 ### MacOS
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>

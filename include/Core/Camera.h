@@ -3,6 +3,10 @@
 #include <cglm/cglm.h>
 #include <cglm/cam.h>
 
+typedef enum _ProjectionType {
+  ORTHOGRAPHIC, PERSPECTIVE 
+} ProjectionType;
+
 typedef struct _Camera {
   vec3 camPos;
   vec3 camTarget;
@@ -15,13 +19,13 @@ typedef struct _Camera {
   mat4 view;
   mat4 proj;
   
-  bool isOrtho;
   float fov;
   vec2 size;
+  
+  ProjectionType projection_type;
 } Camera;
 
-void InitCameraOrtho(Camera*);
-void InitCameraIso(Camera*);
+void InitCamera(Camera*, ProjectionType);
 
 void UpdateCamera(Camera*);
 void RecalcCamera(Camera*);

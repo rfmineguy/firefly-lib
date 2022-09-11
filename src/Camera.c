@@ -21,8 +21,7 @@ void UpdateCameraVectors(Camera* pCamera) {
   glm_normalize_to(crossRightFront, pCamera->camUp);
 }
 
-void InitCameraIso(Camera* pCamera) {
-  pCamera->isOrtho = false;
+void SetDefaultParams(Camera* pCamera) {
   pCamera->fov = 45.f;
   glm_vec2_copy((vec2){600, 600}, pCamera->size);
   glm_vec3_copy((vec3){0, 0, 20}, pCamera->camPos);
@@ -31,13 +30,30 @@ void InitCameraIso(Camera* pCamera) {
   glm_vec3_copy((vec3){0, 0, 0}, pCamera->camRight);
   glm_vec3_copy((vec3){0, 1, 0}, pCamera->camUp);
   glm_vec3_copy((vec3){0, 0, -1}, pCamera->camFront);
-
-  glm_perspective(glm_rad(pCamera->fov), pCamera->size[0] / pCamera->size[1], 0.1f, 100.f, pCamera->proj);
-  UpdateCameraVectors(pCamera);
 }
 
-void InitCameraOrtho(Camera* pCamera) {
-  pCamera->isOrtho = true;
+void UpdateCameraProj(Camera* pCamera, int width, int height) {
+  pCamera->size[0] = width;
+  pCamera->size[1] = height;
+  switch (pCamera->projection_type) {
+    case ORTHOGRAPHIC: {
+      LOG_INFO("Orthographic");
+      glm_ortho(0, pCamera->size[0], 0, pCamera->size[1], -1.0f, 1.0f, pCamera->proj);
+      break;
+    }
+    case PERSPECTIVE: {
+      LOG_INFO("Perspective");
+      glm_perspective(glm_rad(pCamera->fov), pCamera->size[0] / pCamera->size[1], 0.1f, 100.f, pCamera->proj);
+      UpdateCameraVectors(pCamera);
+      break;
+    }
+  }
+}
+
+void InitCamera(Camera* pCamera, ProjectionType type) {
+  pCamera->projection_type = type;
+  SetDefaultParams(pCamera);
+  UpdateCameraProj(pCamera, 600, 600);
 }
 
 void UpdateCamera(Camera *pCamera) {

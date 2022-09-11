@@ -28,7 +28,9 @@ The wiki page here will also be being worked on.
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>
 `gcc src/main.c -lfirefly`
 
-## Disclaimer
+## Disclaimers
 This has *ONLY* been tested on macos and as of now. If you have any issues with building for other platforms please notify me via the Issues tab.
 
 I attempted to get it building on Windows, but failed as I'm not familiar with that build system. If someone figures out how to build it leave an issue with the details please.
+
+I also have no idea if this will build successfully under the Wayland protocol.

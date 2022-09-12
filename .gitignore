@@ -2,3 +2,4 @@ out/
 libfirefly.so
 .ccls
 .cache/
+out.txt

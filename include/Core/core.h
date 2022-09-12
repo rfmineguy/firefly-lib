@@ -5,5 +5,6 @@
 #include "Timer.h"
 #include "Vec.h"
 #include "Window.h"
+#include "Random.h"
 
 #endif

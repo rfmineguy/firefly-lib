@@ -91,19 +91,19 @@ bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_si
   fread(data, 1, 4, f);
   fread(&data_size, 4, 1, f);
 
-  LOG_INFO("riff =[%c%c%c%c]", riff[0], riff[1], riff[2], riff[3]);
-  LOG_INFO("wave =[%c%c%c%c]", wave[0], wave[1], wave[2], wave[3]);
-  LOG_INFO("fmt =[%c%c%c%c]", fmt[0], fmt[1], fmt[2], fmt[3]);
-  LOG_INFO("file_size = [%d]", file_size);
-  LOG_INFO("format_len = [%d]", format_length);
-  LOG_INFO("format_type = [%d]", format_type);
-  LOG_INFO("num_channels = [%d]", num_channels);
-  LOG_INFO("sample_rate = [%d]", sample_rate);
-  LOG_INFO("bytes_per_second = [%d]", bytes_per_second);
-  LOG_INFO("block_align = [%d]", block_align);
-  LOG_INFO("bits_per_sample = [%d]", bits_per_sample);
-  LOG_INFO("data = [%c%c%c%c]", data[0], data[1], data[2], data[3]);
-  LOG_INFO("data_size = [%d]", data_size);
+  //LOG_INFO("riff =[%c%c%c%c]", riff[0], riff[1], riff[2], riff[3]);
+  //LOG_INFO("wave =[%c%c%c%c]", wave[0], wave[1], wave[2], wave[3]);
+  //LOG_INFO("fmt =[%c%c%c%c]", fmt[0], fmt[1], fmt[2], fmt[3]);
+  //LOG_INFO("file_size = [%d]", file_size);
+  //LOG_INFO("format_len = [%d]", format_length);
+  //LOG_INFO("format_type = [%d]", format_type);
+  //LOG_INFO("num_channels = [%d]", num_channels);
+  //LOG_INFO("sample_rate = [%d]", sample_rate);
+  //LOG_INFO("bytes_per_second = [%d]", bytes_per_second);
+  //LOG_INFO("block_align = [%d]", block_align);
+  //LOG_INFO("bits_per_sample = [%d]", bits_per_sample);
+  //LOG_INFO("data = [%c%c%c%c]", data[0], data[1], data[2], data[3]);
+  //LOG_INFO("data_size = [%d]", data_size);
   pSound->data = malloc(data_size);
   if (pSound->data == NULL) {
     LOG_CRITICAL("Failed to allocate memory for sound data");
@@ -138,12 +138,10 @@ Sound* LoadSound(const char* path) {
   int32_t sample_rate, data_size;
 
   ReadWAV(pSound, path, &format, &data_size, &sample_rate);
-  LOG_INFO("actual = %d, actual + MONO8 = %d", format, format + AL_FORMAT_MONO8);
   alGenBuffers(1, &pSound->buffer);
   alBufferData(pSound->buffer, format + AL_FORMAT_MONO8, pSound->data, data_size, sample_rate);
   
-  ALenum err = alGetError();
-  LOG_ERROR("Errror :%s", alGetString(err));
+  LOG_INFO("Loaded sound from [%s]", path);
 
   free(pSound->data);
   pSound->data = NULL;

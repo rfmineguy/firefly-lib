@@ -57,7 +57,7 @@ bool IsKeyBindPressed(const char* name) {
     bool primary_pressed = k->primary != KEY_NONE && IsKeyPressed(k->primary);
     bool secondary_pressed = k->secondary != KEY_NONE && IsKeyPressed(k->secondary);
     return primary_pressed || secondary_pressed;
-    return (k->primary != KEY_NONE && IsKeyPressed(k->primary)) || (k->secondary != KEY_NONE && IsKeyPressed(k->secondary));
+    //return (k->primary != KEY_NONE && IsKeyPressed(k->primary)) || (k->secondary != KEY_NONE && IsKeyPressed(k->secondary));
 }
 
 bool IsKeyDown(int key) {

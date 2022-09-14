@@ -1,5 +1,13 @@
 #include "../include/Core/Random.h"
-#include <stdlib.h>
+#include <time.h>
+
+void RandomSeedTime() {
+  srand(time(NULL));
+}
+
+void RandomSeedLong(uint32_t seed) {
+  srand(seed);
+}
 
 int RandomRangeInt(int lower, int upper) {
   uint32_t r = arc4random_uniform(upper - lower);
@@ -7,8 +15,7 @@ int RandomRangeInt(int lower, int upper) {
 }
 
 int RandomInt() {
-  int num = arc4random();
-  return num;
+  return RandomRangeInt(0, 1);
 }
 
 float RandomRangeFloat(float lower, float upper) {

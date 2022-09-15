@@ -12,11 +12,6 @@
  */
 
 //Resource Pool
-typedef enum {
-	ALL=0, SHADER=1, TEXTURE=2, ATLAS=4, SOUND=8
-} ResourceType;
-
-// abstract type
 typedef struct _ResourcePool ResourcePool;
 
 bool InitResourcePool();

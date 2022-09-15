@@ -105,7 +105,7 @@ bool IsSoundResourceLoaded(const char* name) {
 
 Sound* GetSoundResource(const char* name) {
     if (!IsSoundResourceLoaded(name)) {
-        LOG_CRITICAL("Texture [%s] not loaded", name);
+        LOG_CRITICAL("Sound [%s] not loaded", name);
         return NULL;
     }
     return (Sound*) ht_get(pool.sound_table, name);

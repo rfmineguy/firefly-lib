@@ -4,6 +4,10 @@
 #include "HashTable.h"
 #include <stdbool.h>
 
+#ifndef FF_API
+#define FF_API
+#endif
+
 typedef struct {
     bool down;
     bool prevPressed, pressed, repeat;    
@@ -159,43 +163,43 @@ typedef enum {
 } Key;
 
 //Input device functions (Input.h)
-Input* GetInputPtr();
-void InitKeybindHT();
-void DeinitKeybindHT();
+Input* FF_int_GetInputPtr();
+void FF_InitKeybindHT();
+void FF_DeinitKeybindHT();
 
-void KeyBindRegister(const char*, int, int);
-void KeyBindModify(const char*, int, int);
-bool IsKeyBindDown(const char*);
-bool IsKeyBindPressed(const char*);
+void FF_KeyBindRegister(const char*, int, int);
+void FF_KeyBindModify(const char*, int, int);
+bool FF_IsKeyBindDown(const char*);
+bool FF_IsKeyBindPressed(const char*);
 
-bool IsKeyDown(int);                // implemented
-bool IsControlDown();               // implemented
-bool IsAltDown();                   // implemented
-bool IsShiftDown();                 // implemented
-bool IsKeyPressed(int);             // implemented
+bool FF_IsKeyDown(int);                // implemented
+bool FF_IsControlDown();               // implemented
+bool FF_IsAltDown();                   // implemented
+bool FF_IsShiftDown();                 // implemented
+bool FF_IsKeyPressed(int);             // implemented
 
-bool IsMouseButtonDown(int);        // implemented
-bool IsMouseButtonPressed(int);     // implemented
-bool IsMouseMoving();               // implemented (may not be very useful)
-Vec2f GetMousePosition();           // implemented 
-double GetMousePositionX();         // implemented
-double GetMousePositionY();         // implemented
-Vec2f GetMouseSpeed();              // implemented
-double GetMouseSpeedX();            // implemented
-double GetMouseSpeedY();            // implemented
-double GetMouseYaw();               // implemented
-double GetMousePitch();             // implemented
+bool FF_IsMouseButtonDown(int);        // implemented
+bool FF_IsMouseButtonPressed(int);     // implemented
+bool FF_IsMouseMoving();               // implemented (may not be very useful)
+Vec2f FF_GetMousePosition();           // implemented 
+double FF_GetMousePositionX();         // implemented
+double FF_GetMousePositionY();         // implemented
+Vec2f FF_GetMouseSpeed();              // implemented
+double FF_GetMouseSpeedX();            // implemented
+double FF_GetMouseSpeedY();            // implemented
+double FF_GetMouseYaw();               // implemented
+double FF_GetMousePitch();             // implemented
 
-bool IsScroll();
-bool IsScrollUp();
-bool IsScrollDown();
-bool IsScrollRight();
-bool IsScrollLeft();
-Vec2f GetScrollDirection();
+bool FF_IsScroll();
+bool FF_IsScrollUp();
+bool FF_IsScrollDown();
+bool FF_IsScrollRight();
+bool FF_IsScrollLeft();
+Vec2f FF_GetScrollDirection();
 
 //FUTURE
-bool IsControllerConneced(int);
-bool IsControllerButtonDown(int, int);
-bool IsControllerButtonPressed(int, int);
+bool FF_IsControllerConneced(int);
+bool FF_IsControllerButtonDown(int, int);
+bool FF_IsControllerButtonPressed(int, int);
 
 #endif

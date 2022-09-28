@@ -5,33 +5,33 @@
 
 static Input gInput;// = {.keybinds=ht_create() };
 
-Input* GetInputPtr() {
+Input* FF_int_GetInputPtr() {
     return &gInput;
 }
 
-void InitKeybindHT() {
+void FF_initKeybindHT() {
     static bool initialized = false;
     if (!initialized) {
-        GetInputPtr()->keybinds = ht_create();
+        FF_int_GetInputPtr()->keybinds = ht_create();
         initialized = true;
     }
 }
 
-void DeinitKeybindHT() {
-    ht_free(GetInputPtr()->keybinds);
+void FF_DeinitKeybindHT() {
+    ht_free(FF_int_GetInputPtr()->keybinds);
 }
 
-void KeyBindRegister(const char* name, int primary_key, int secondary_key) {
-    if (ht_get(GetInputPtr()->keybinds, name) != NULL)
+void FF_KeyBindRegister(const char* name, int primary_key, int secondary_key) {
+    if (ht_get(FF_int_GetInputPtr()->keybinds, name) != NULL)
         return;
     KeyBind* k = malloc(sizeof(KeyBind));
     k->primary = primary_key;
     k->secondary = secondary_key;
-    ht_set(GetInputPtr()->keybinds, name, k);
+    ht_set(FF_int_GetInputPtr()->keybinds, name, k);
 }
 
-void KeyBindModify(const char* name, int new_primary_key, int new_secondary_key) {
-    KeyBind* k = ht_get(GetInputPtr()->keybinds, name);
+void FF_KeyBindModify(const char* name, int new_primary_key, int new_secondary_key) {
+    KeyBind* k = ht_get(FF_int_GetInputPtr()->keybinds, name);
     if (k == NULL) {
         return;
     }
@@ -39,123 +39,123 @@ void KeyBindModify(const char* name, int new_primary_key, int new_secondary_key)
     k->secondary = new_secondary_key;
 }
 
-bool IsKeyBindDown(const char* name) {
-    KeyBind* k = ht_get(GetInputPtr()->keybinds, name);
+bool FF_IsKeyBindDown(const char* name) {
+    KeyBind* k = ht_get(FF_int_GetInputPtr()->keybinds, name);
     if (k == NULL) {
         LOG_CRITICAL("Keybind [%s] not registered", name);
         return false;
     }
-    return (k->primary != KEY_NONE && IsKeyDown(k->primary)) || (k->secondary != KEY_NONE && IsKeyDown(k->secondary));
+    return (k->primary != KEY_NONE && FF_IsKeyDown(k->primary)) || (k->secondary != KEY_NONE && FF_IsKeyDown(k->secondary));
 }
 
-bool IsKeyBindPressed(const char* name) {
-    KeyBind* k = ht_get(GetInputPtr()->keybinds, name);
+bool FF_IsKeyBindPressed(const char* name) {
+    KeyBind* k = ht_get(FF_int_GetInputPtr()->keybinds, name);
     if (k == NULL) {
         LOG_CRITICAL("Keybind [%s] not registered", name);
         return false;
     }
-    bool primary_pressed = k->primary != KEY_NONE && IsKeyPressed(k->primary);
-    bool secondary_pressed = k->secondary != KEY_NONE && IsKeyPressed(k->secondary);
+    bool primary_pressed = k->primary != KEY_NONE && FF_IsKeyPressed(k->primary);
+    bool secondary_pressed = k->secondary != KEY_NONE && FF_IsKeyPressed(k->secondary);
     return primary_pressed || secondary_pressed;
     //return (k->primary != KEY_NONE && IsKeyPressed(k->primary)) || (k->secondary != KEY_NONE && IsKeyPressed(k->secondary));
 }
 
-bool IsKeyDown(int key) {
-    return GetInputPtr()->keys[key].down;
+bool FF_IsKeyDown(int key) {
+    return FF_int_GetInputPtr()->keys[key].down;
 }
 
-bool IsKeyPressed(int key) {
-    bool pressed = GetInputPtr()->keys[key].pressed;//IsKeyDown(key);
-    GetInputPtr()->keys[key].pressed = false;
-    return pressed && !GetInputPtr()->keys[key].repeat;
+bool FF_IsKeyPressed(int key) {
+    bool pressed = FF_int_GetInputPtr()->keys[key].pressed;//IsKeyDown(key);
+    FF_int_GetInputPtr()->keys[key].pressed = false;
+    return pressed && !FF_int_GetInputPtr()->keys[key].repeat;
 }
 
-bool IsControlDown() {
-    return IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
+bool FF_IsControlDown() {
+    return FF_IsKeyDown(KEY_LEFT_CONTROL) || FF_IsKeyDown(KEY_RIGHT_CONTROL);
 }
 
-bool IsShiftDown() {
-    return IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+bool FF_IsShiftDown() {
+    return FF_IsKeyDown(KEY_LEFT_SHIFT) || FF_IsKeyDown(KEY_RIGHT_SHIFT);
 }
 
-bool IsAltDown() {
-    return IsKeyDown(KEY_LEFT_ALT) || IsKeyDown(KEY_RIGHT_ALT);
+bool FF_IsAltDown() {
+    return FF_IsKeyDown(KEY_LEFT_ALT) || FF_IsKeyDown(KEY_RIGHT_ALT);
 }
 
-bool IsMouseButtonDown(int button) {
-    return GetInputPtr()->mouse_pressed && GetInputPtr()->mouse[button];
+bool FF_IsMouseButtonDown(int button) {
+    return FF_int_GetInputPtr()->mouse_pressed && FF_int_GetInputPtr()->mouse[button];
 }
 
-bool IsMouseButtonPressed(int button) {
-    if (IsMouseButtonDown(button)) {
-        GetInputPtr()->mouse_pressed = false;
+bool FF_IsMouseButtonPressed(int button) {
+    if (FF_IsMouseButtonDown(button)) {
+        FF_int_GetInputPtr()->mouse_pressed = false;
         return true;
     }
     return false;
 }
 
 //may not be very useful
-bool IsMouseMoving() {
-    return GetInputPtr()->mouse_offset.x != 0 || GetInputPtr()->mouse_offset.y != 0;
+bool FF_IsMouseMoving() {
+    return FF_int_GetInputPtr()->mouse_offset.x != 0 || FF_int_GetInputPtr()->mouse_offset.y != 0;
 }
 
-Vec2f GetMousePosition() {
-    return GetInputPtr()->mouse_pos;
+Vec2f FF_GetMousePosition() {
+    return FF_int_GetInputPtr()->mouse_pos;
 }
 
-double GetMousePositionX() {
-    return GetInputPtr()->mouse_pos.x; 
+double FF_GetMousePositionX() {
+    return FF_int_GetInputPtr()->mouse_pos.x; 
 }
 
-double GetMousePositionY() {
-    return GetInputPtr()->mouse_pos.y; 
+double FF_GetMousePositionY() {
+    return FF_int_GetInputPtr()->mouse_pos.y; 
 }
 
-Vec2f GetMouseSpeed() {
-    return GetInputPtr()->mouse_offset;
+Vec2f FF_GetMouseSpeed() {
+    return FF_int_GetInputPtr()->mouse_offset;
 }
 
-double GetMouseSpeedX() {
-    return GetInputPtr()->mouse_offset.x;
+double FF_GetMouseSpeedX() {
+    return FF_int_GetInputPtr()->mouse_offset.x;
 }
 
-double GetMouseSpeedY() {
-    return GetInputPtr()->mouse_offset.y;
+double FF_GetMouseSpeedY() {
+    return FF_int_GetInputPtr()->mouse_offset.y;
 }
 
-double GetMouseYaw() {
-    return GetInputPtr()->yaw;
+double FF_GetMouseYaw() {
+    return FF_int_GetInputPtr()->yaw;
 }
 
-double GetMousePitch() {
-    return GetInputPtr()->pitch;
+double FF_GetMousePitch() {
+    return FF_int_GetInputPtr()->pitch;
 }
 
-bool IsScroll() {
-    return IsScrollUp() || IsScrollDown() || IsScrollRight() || IsScrollLeft();
+bool FF_IsScroll() {
+    return FF_IsScrollUp() || FF_IsScrollDown() || FF_IsScrollRight() || FF_IsScrollLeft();
 }
 
-bool IsScrollUp() {
-    return GetInputPtr()->scroll_offset.y > 0.1;
+bool FF_IsScrollUp() {
+    return FF_int_GetInputPtr()->scroll_offset.y > 0.1;
 }
 
-bool IsScrollDown() {
-    return GetInputPtr()->scroll_offset.y < -0.1;
+bool FF_IsScrollDown() {
+    return FF_int_GetInputPtr()->scroll_offset.y < -0.1;
 }
 
-bool IsScrollRight() {
-    return GetInputPtr()->scroll_offset.x < -0.11;
+bool FF_IsScrollRight() {
+    return FF_int_GetInputPtr()->scroll_offset.x < -0.11;
 }
 
-bool IsScrollLeft() {
-    return GetInputPtr()->scroll_offset.x > 0.11;
+bool FF_IsScrollLeft() {
+    return FF_int_GetInputPtr()->scroll_offset.x > 0.11;
 }
 
-Vec2f GetScrollDirection() {
+Vec2f FF_GetScrollDirection() {
     float xDir = 0, yDir = 0;
-    if (IsScrollDown()) yDir = -1;
-    if (IsScrollUp()) yDir = 1;
-    if (IsScrollRight()) xDir = 1;
-    if (IsScrollLeft()) xDir = -1;
+    if (FF_IsScrollDown()) yDir = -1;
+    if (FF_IsScrollUp()) yDir = 1;
+    if (FF_IsScrollRight()) xDir = 1;
+    if (FF_IsScrollLeft()) xDir = -1;
     return (Vec2f){.x=xDir, .y=yDir};
 }

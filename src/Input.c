@@ -9,7 +9,7 @@ Input* FF_int_GetInputPtr() {
     return &gInput;
 }
 
-void FF_initKeybindHT() {
+void FF_InitKeybindHT() {
     static bool initialized = false;
     if (!initialized) {
         FF_int_GetInputPtr()->keybinds = ht_create();

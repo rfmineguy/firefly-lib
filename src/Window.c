@@ -16,7 +16,7 @@ typedef struct _Window {
 } FF_Window;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    Input* i = GetInputPtr();
+    Input* i = FF_int_GetInputPtr();
     i->keys[key].prevPressed = i->keys[key].pressed;
     i->keys[key].repeat = action == GLFW_REPEAT;
 
@@ -41,7 +41,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 }
 
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-    Input* i = GetInputPtr();
+    Input* i = FF_int_GetInputPtr();
     i->mouse_pressed = action == GLFW_PRESS;
     if (i->mouse_pressed) {
         i->mouse[button] = true;
@@ -52,7 +52,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 }
 
 static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
-    Input* i = GetInputPtr();
+    Input* i = FF_int_GetInputPtr();
     static bool firstMouse = true;
     if (firstMouse) {
         i->last_mouse_pos.x = (float) xpos;
@@ -87,8 +87,8 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
 //}
 
 static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
-    GetInputPtr()->scroll_offset.x = xoff;
-    GetInputPtr()->scroll_offset.y = yoff;
+    FF_int_GetInputPtr()->scroll_offset.x = xoff;
+    FF_int_GetInputPtr()->scroll_offset.y = yoff;
 }
 
 Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {

@@ -1,27 +1,37 @@
 #include "../include/Core/Timer.h"
 #include "../include/Core/Window.h"
 
-void TimerStartInterval(Timer *pTimer, double interval) {
-  TimerStartIntervalEx(pTimer, interval, MILLISECOND);
+Timer FF_Timer(double interval, TimerUnit unit) {
+  return (Timer){
+    .start_time = 0, 
+    .current_time = 0, 
+    .interval = interval, 
+    .running = false, 
+    .unit = unit
+  };
 }
 
-void TimerStartIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
+void FF_TimerStartIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
   pTimer->unit = unit;
   if (!pTimer->running) {
-    pTimer->start_time = WindowGetTime();
+    pTimer->start_time = FF_GetTime();
     pTimer->current_time = pTimer->start_time;
     pTimer->interval = interval;
   }
   pTimer->running = true;
 }
-
-void ResetTimer(Timer *pTimer) {
-  pTimer->running = false;
-  TimerStartInterval(pTimer, pTimer->interval);
+//Deprecated
+void TimerStartInterval(Timer *pTimer, double interval) {
+  FF_TimerStartIntervalEx(pTimer, interval, MILLISECOND);
 }
 
-bool TimerElapsed(Timer *pTimer) {
-  pTimer->current_time = WindowGetTime();
+void FF_TimerReset(Timer *pTimer) {
+  pTimer->running = false;
+  FF_TimerStartIntervalEx(pTimer, pTimer->interval, pTimer->unit);
+}
+
+bool FF_TimerElapsed(Timer *pTimer) {
+  pTimer->current_time = FF_GetTime();
   double factor;
   switch (pTimer->unit) {
     case MILLISECOND: factor = 1000;
@@ -33,6 +43,6 @@ bool TimerElapsed(Timer *pTimer) {
   }
   bool elapsed = pTimer->current_time - pTimer->start_time > pTimer->interval / factor;
   if (elapsed)
-      ResetTimer(pTimer);
+      FF_TimerReset(pTimer);
   return elapsed;
 }

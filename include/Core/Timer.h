@@ -12,9 +12,9 @@ typedef struct {
     TimerUnit unit;
 } Timer;
 
-void TimerStartInterval(Timer*, double);
-void TimerStartIntervalEx(Timer*, double, TimerUnit);
-void ResetTimer(Timer*);
-bool TimerElapsed(Timer*);
+Timer FF_Timer(double, TimerUnit);
+void FF_TimerStart(Timer*);
+void FF_TimerReset(Timer*);
+bool FF_TimerElapsed(Timer*);
 
 #endif

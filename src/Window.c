@@ -13,9 +13,7 @@ typedef struct _Window {
     bool resized, cursorLocked;
     
     float deltaTime, currentTime, lastTime;
-} Window;
-
-static Window gWindow;
+} FF_Window;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     Input* i = GetInputPtr();
@@ -82,156 +80,129 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
     //}
 }
 
-static void window_size_callback(GLFWwindow* window, int width, int height) {
-    gWindow.resized = true;
-    gWindow.width = width;
-    gWindow.height = height;
-}
+//static void window_size_callback(GLFWwindow* window, int width, int height) {
+//    gWindow.resized = true;
+//    gWindow.width = width;
+//    gWindow.height = height;
+//}
 
 static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
     GetInputPtr()->scroll_offset.x = xoff;
     GetInputPtr()->scroll_offset.y = yoff;
 }
 
-void InitWindowAPI(API api) {
-    gWindow.closeKey = GLFW_KEY_ESCAPE;
-    if (api == OPENGL) InitWindowGL();
-    if (api == VULKAN) InitWindowVK();
-    if (api == METAL) InitWindowMTL();
-    gWindow.cursorLocked = false;
-}
-
-void InitWindowAPIEx(API api, const char* title, int width, int height) {
-    if (api == OPENGL) InitWindowGLEx(title, width, height);
-    if (api == VULKAN) InitWindowVKEx(title, width, height);
-    if (api == METAL) InitWindowMTLEx(title, width, height);
-}
-
-void InitWindowGL() {
-    InitWindowGLEx("Default Window (OpenGL)", 600, 600);
-}
-
-void InitWindowGLEx(const char* title, int width, int height) {
+Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
     if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize glfw\n");
-        exit(-1);
+        LOG_WARN("Could not initialize glfw");
+        return NULL;
     }
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__ 
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-
-    gWindow.windowPtr = glfwCreateWindow(width, height, title, NULL, NULL);
-    if (!gWindow.windowPtr) {
-        fprintf(stderr, "Failed to create window\n");
-        glfwTerminate();
-        exit(-1);
+    
+   FF_Window* pWindow = malloc(sizeof(Window));
+    pWindow->windowPtr = glfwCreateWindow(width, height, name, NULL, NULL);
+    if (!pWindow->windowPtr) {
+        LOG_WARN("Could not create window");
+        free(pWindow);
+        pWindow = NULL;
+        return NULL;
     }
-    glfwMakeContextCurrent(gWindow.windowPtr);
-    glfwSetKeyCallback(gWindow.windowPtr, key_callback);
-    glfwSetMouseButtonCallback(gWindow.windowPtr, mouse_button_callback);
-    glfwSetCursorPosCallback(gWindow.windowPtr, mouse_cursor_position_callback);
-    glfwSetWindowSizeCallback(gWindow.windowPtr, window_size_callback);
-    glfwSetScrollCallback(gWindow.windowPtr, scroll_callback);
-
+    glfwMakeContextCurrent(pWindow->windowPtr);
+    glfwSetKeyCallback(pWindow->windowPtr, key_callback);
+    glfwSetMouseButtonCallback(pWindow->windowPtr, mouse_button_callback);
+    glfwSetCursorPosCallback(pWindow->windowPtr, mouse_cursor_position_callback);
+    glfwSetScrollCallback(pWindow->windowPtr, scroll_callback);
+    
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        fprintf(stderr, "Failed to initialize glad\n");
-        exit(-1);
+        LOG_WARN("Failed to initialize glad");
+        free(pWindow);
+        pWindow = NULL;
+        return NULL;
     }
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
+    return pWindow;
 }
 
-void InitWindowVK() {
-    InitWindowVKEx("Default Window (Vulkan)", 600, 600);
+void FF_DestroyWindowGL(Window *pWindow) {
+    glfwDestroyWindow(pWindow->windowPtr);
+    pWindow->windowPtr = NULL;
+    free(pWindow);
+    pWindow = NULL;
 }
 
-void InitWindowVKEx(const char* title, int width, int height) {
-    fprintf(stderr, "Initializing Vulkan is not implemented\n");
-    exit(1);
+void FF_WindowClearBackground(Window *pWindow) {
+    glfwMakeContextCurrent(pWindow->windowPtr);
+    FF_WindowClearBackgroundEx(pWindow, 0.4f, 0.4f, 0.4f, 1.0f);
 }
 
-void InitWindowMTL() {
-    InitWindowMTLEx("Default Window (Metal)", 600, 600);
-}
-
-void InitWindowMTLEx(const char* title, int width, int height) {
-    fprintf(stderr, "Initializing Metal is not implemented\n");
-    exit(1);
-}
-
-void DestroyWindowGL() {
-    glfwDestroyWindow(gWindow.windowPtr);
-    glfwTerminate();
-}
-
-void WindowClearBackground() {
-    WindowClearBackgroundEx(0.4f, 0.4f, 0.4f, 1.0f);
-}
-
-void WindowClearBackgroundEx(float r, float g, float b, float a) {
+void FF_WindowClearBackgroundEx(Window* pWindow, float r, float g, float b, float a) {
+    glfwMakeContextCurrent(pWindow->windowPtr);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void SetWindowShouldClose(bool shouldClose) {
-    glfwSetWindowShouldClose(gWindow.windowPtr, GLFW_TRUE);
+void FF_SetWindowShouldClose(Window* pWindow, bool shouldClose) {
+    glfwSetWindowShouldClose(pWindow->windowPtr, GLFW_TRUE);
 }
 
-void WindowPollEvents() {
+void FF_WindowPollEvents(Window* pWindow) {
     glfwPollEvents();
-    if (glfwGetKey(gWindow.windowPtr, gWindow.closeKey)) {
+    if (glfwGetKey(pWindow->windowPtr, pWindow->closeKey)) {
         LOG_DEBUG("Pressed the window close key");
-        SetWindowShouldClose(true);
+        FF_SetWindowShouldClose(pWindow, true);
     }
 }
 
-double WindowGetTime() {
+double FF_GetTime() {
     return glfwGetTime();
 }
 
-double WindowDeltaTime() {
-    return gWindow.deltaTime;
+double FF_WindowDeltaTime(Window* pWindow) {
+    return pWindow->deltaTime;
 }
 
-bool WindowShouldClose() {
-    gWindow.currentTime = WindowGetTime();
-    gWindow.deltaTime = gWindow.currentTime - gWindow.lastTime;
-    gWindow.lastTime = gWindow.currentTime;
-    glfwSwapBuffers(gWindow.windowPtr);    
-    return glfwWindowShouldClose(gWindow.windowPtr);
+bool FF_WindowShouldClose(Window *pWindow) {
+    pWindow->currentTime = FF_GetTime();
+    pWindow->deltaTime = pWindow->currentTime - pWindow->lastTime;
+    pWindow->lastTime = pWindow->currentTime;
+    glfwSwapBuffers(pWindow->windowPtr);    
+    return glfwWindowShouldClose(pWindow->windowPtr);
 }
 
-void SetWindowCloseKey(int key) {
-    gWindow.closeKey = key;
+void FF_SetWindowCloseKey(Window *pWindow, int key) {
+    pWindow->closeKey = key;
 }
 
-bool WasWindowResized() {
-    bool resized = gWindow.resized;
-    gWindow.resized = false;
+bool FF_WasWindowResized(Window *pWindow) {
+    bool resized = pWindow->resized;
+    pWindow->resized = false;
     return resized;
 }
 
-int WindowGetWidth() {
-    return gWindow.width;
+int FF_WindowGetWidth(Window *pWindow) {
+    return pWindow->width;
 }
 
-int WindowGetHeight() {
-    return gWindow.height;
+int FF_WindowGetHeight(Window *pWindow) {
+    return pWindow->height;
 }
 
-void ToggleCursorLocked() {
-    gWindow.cursorLocked = !gWindow.cursorLocked;
-    if (gWindow.cursorLocked) {
-        glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+void FF_ToggleCursorLocked(Window *pWindow) {
+    pWindow->cursorLocked = !pWindow->cursorLocked;
+    if (pWindow->cursorLocked) {
+        glfwSetInputMode(pWindow->windowPtr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     else {
-        glfwSetInputMode(gWindow.windowPtr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(pWindow->windowPtr, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
 
-bool IsCursorLocked() {
-    return gWindow.cursorLocked;
+bool FF_IsCursorLocked(Window *pWindow) {
+    return pWindow->cursorLocked;
 }

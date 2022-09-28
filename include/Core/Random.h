@@ -2,14 +2,14 @@
 #define FF_CORE_RANDOM_H
 #include <stdlib.h>
 
-void RandomSeedTime();
-void RandomSeedLong(uint32_t);
+void FF_RandomSeedTime();
+void FF_RandomSeedLong(uint32_t);
 
 //not inclusive
-int RandomRangeInt(int, int);
-int RandomInt();
+int FF_RandomRangeInt(int, int);
+int FF_RandomInt();
 
-float RandomRangeFloat(float, float);
-float RandomFloat();
+float FF_RandomRangeFloat(float, float);
+float FF_RandomFloat();
 
 #endif

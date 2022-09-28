@@ -5,7 +5,7 @@
 
 void UpdateCameraVectors(Camera* pCamera) {
   vec3 front;
-  Input* i = GetInputPtr();
+  Input* i = FF_int_GetInputPtr();
   front[0] = cos(glm_rad(i->yaw)) * cos(glm_rad(i->pitch));
   front[1] = sin(glm_rad(i->pitch));
   front[2] = sin(glm_rad(i->yaw)) * cos(glm_rad(i->pitch));
@@ -59,27 +59,27 @@ void InitCamera(Camera* pCamera, ProjectionType type) {
 void UpdateCamera(Camera *pCamera) {
   RecalcCamera(pCamera);
   const float camSpeed = 0.05f;
-  if (IsKeyDown(KEY_W)) {
+  if (FF_IsKeyDown(KEY_W)) {
     glm_vec3_muladds(pCamera->camFront, camSpeed, pCamera->camPos);  //?
   }
-  if (IsKeyDown(KEY_S)) {
+  if (FF_IsKeyDown(KEY_S)) {
     glm_vec3_muladds(pCamera->camFront, -camSpeed, pCamera->camPos); //?
   }
-  if (IsKeyDown(KEY_A)) {
+  if (FF_IsKeyDown(KEY_A)) {
     vec3 cross;
     glm_vec3_cross(pCamera->camFront, pCamera->camUp, cross);
     glm_normalize(cross);
     glm_vec3_muladds(cross, -camSpeed, pCamera->camPos);
   }
-  if (IsKeyDown(KEY_D)) {
+  if (FF_IsKeyDown(KEY_D)) {
     vec3 cross;
     glm_vec3_cross(pCamera->camFront, pCamera->camUp, cross);
     glm_normalize(cross);
     glm_vec3_muladds(cross, camSpeed, pCamera->camPos);
   }
-  Vec2f scrollDir = GetScrollDirection();
+  Vec2f scrollDir = FF_GetScrollDirection();
   pCamera->fov += scrollDir.y;
-  if (IsScroll())
+  if (FF_IsScroll())
     UpdateProjectionCamera(pCamera, pCamera->size[0], pCamera->size[1]);
   if (pCamera->fov < 1.f) {
     pCamera->fov = 1.f;

@@ -16,15 +16,15 @@ I will most likely **not** provide prebuilt binaries of this library as the buil
 `make install`<br>
 *If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
 
-### Windows
-*UNTESTED*<br>
-*Currently not planned either*<br>
-
 ### Linux
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>
 `cd firefly-lib`<br>
 `sudo make install`<br>
 *If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
+
+### Windows
+*UNTESTED*<br>
+*Currently not planned either*<br>
 
 ## Usage instructions
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>

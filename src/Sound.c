@@ -30,7 +30,7 @@ bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_si
   
   f = fopen(path, "rb");
   if (f == NULL) {
-    LOG_CRITICAL("Failed to open wav file {%s}", path);
+    LOG_CRITICAL("[Sound] => Failed to open wav file {%s}", path);
     return false;
   }
   
@@ -47,23 +47,28 @@ bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_si
   fread(&bits_per_sample, 2, 1, f);
   fread(data, 1, 4, f);
   fread(&data_size, 4, 1, f);
+  
+  // check RIFF
+  if (riff[0] != 'R' || riff[1] != 'I' || riff[2] != 'F' || riff[3] != 'F') {
+    LOG_CRITICAL("[Sound] => \"RIFF\" portion of wav file incorrect. It is [%c%c%c%c]", riff[0], riff[1], riff[2], riff[3]);
+    return false;
+  }
+  
+  //check WAVE
+  if (wave[0] != 'W' || wave[1] != 'A' || wave[2] != 'V' || wave[3] != 'E') {
+    LOG_CRITICAL("[Sound] => \"WAVE\" portion of wav file incorrect. It is [%c%c%c%c]", wave[0], wave[1], wave[2], wave[3]);
+    return false;
+  }
+  
+  //check FMT
+  if (fmt[0] != 'f' || fmt[1] != 'm' || fmt[2] != 't' || fmt[3] != ' ') {
+    LOG_CRITICAL("[Sound] => \"fmt \" portion of wav file incorrect. It is [%c%c%c%c]", fmt[0], fmt[1], fmt[2], fmt[3]);
+    return false;
+  }
 
-  //LOG_INFO("riff =[%c%c%c%c]", riff[0], riff[1], riff[2], riff[3]);
-  //LOG_INFO("wave =[%c%c%c%c]", wave[0], wave[1], wave[2], wave[3]);
-  //LOG_INFO("fmt =[%c%c%c%c]", fmt[0], fmt[1], fmt[2], fmt[3]);
-  //LOG_INFO("file_size = [%d]", file_size);
-  //LOG_INFO("format_len = [%d]", format_length);
-  //LOG_INFO("format_type = [%d]", format_type);
-  //LOG_INFO("num_channels = [%d]", num_channels);
-  //LOG_INFO("sample_rate = [%d]", sample_rate);
-  //LOG_INFO("bytes_per_second = [%d]", bytes_per_second);
-  //LOG_INFO("block_align = [%d]", block_align);
-  //LOG_INFO("bits_per_sample = [%d]", bits_per_sample);
-  //LOG_INFO("data = [%c%c%c%c]", data[0], data[1], data[2], data[3]);
-  //LOG_INFO("data_size = [%d]", data_size);
   pSound->data = malloc(data_size);
   if (pSound->data == NULL) {
-    LOG_CRITICAL("Failed to allocate memory for sound data");
+    LOG_CRITICAL("[Sound] => Failed to allocate memory for sound data");
     free(pSound->data);
     pSound->data = NULL;
     free(pSound);
@@ -72,7 +77,7 @@ bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_si
   }
   
   if (fread(pSound->data, 1, data_size, f) != data_size) {
-    LOG_CRITICAL("Failed to read data bytes from [%s]", path);
+    LOG_CRITICAL("[Sound] => Failed to read data bytes from [%s]", path);
     free(pSound->data);
     pSound->data = NULL;
     free(pSound);
@@ -96,7 +101,7 @@ void FF_InitAudioSystem() {
   gSoundMaster.pDevice = alcOpenDevice(NULL);
   gSoundMaster.pContext = NULL;
   if (!gSoundMaster.pDevice) {
-    LOG_CRITICAL("Failed to open OpenAL device");
+    LOG_CRITICAL("[Sound] => Failed to open OpenAL device");
     return;
   }
   gSoundMaster.pContext = alcCreateContext(gSoundMaster.pDevice, NULL);
@@ -105,17 +110,17 @@ void FF_InitAudioSystem() {
       alcDestroyContext(gSoundMaster.pContext);
     }
     alcCloseDevice(gSoundMaster.pDevice);
-    LOG_CRITICAL("Failed to set OpenAL context");
+    LOG_CRITICAL("[Sound] => Failed to set OpenAL context");
     return;
   }
-  LOG_INFO("Initialized OpenAL");
+  LOG_INFO("[Sound] => Initialized OpenAL");
 }
 
 void FF_DeinitAudioSystem() {
   for (int i = 0; i < FF_int_GetSoundMaster()->idCount; i++) {
     ALuint id = FF_int_GetSoundMaster()->sourceIds[i];
     alDeleteSources(1, &id);
-    LOG_DEBUG("Deleted sound source id [%d]", id);
+    LOG_DEBUG("[Sound] => Deleted sound source id [%d]", id);
   }
   
   ALCdevice *device;
@@ -141,7 +146,7 @@ Sound FF_LoadSound(const char* path) {
   alGenBuffers(1, &s.buffer);
   alBufferData(s.buffer, format + AL_FORMAT_MONO8, s.data, data_size, sample_rate);
   
-  LOG_INFO("[Internal] => Loaded Sound from \"%s\"", path);
+  LOG_INFO("[Sound] => Loaded Sound from \"%s\"", path);
   free(s.data);
   s.data = NULL;
   return s;
@@ -166,7 +171,7 @@ SoundSource FF_SoundSourceEx(float pitch, float gain, vec3 pos, bool looping) {
   SoundSource source = (SoundSource){.pitch=pitch, .gain=gain, .position[0] = pos[0], .position[1] = pos[1], .position[2] = pos[2], .looping=looping};
   alGenSources(1, &source.id);
   FF_int_GetSoundMaster()->sourceIds[FF_int_GetSoundMaster()->idCount++] = source.id;
-  LOG_INFO("Creating sound Source with id %d", source.id);
+  LOG_INFO("[Sound] => Creating sound Source with id %d", source.id);
   return source;
 }
 
@@ -192,7 +197,6 @@ void FF_SoundSourceSetLooping(SoundSource *src, bool looping) {
 
 void FF_SoundSourcePlay(SoundSource src, Sound sound) {
   FF_SoundSourceStop(src);
-  LOG_INFO("Play: %d", src.id);
   alSourcei(src.id, AL_BUFFER, sound.buffer);
   alSourcePlay(src.id);
   src.curr_sound = sound;
@@ -220,7 +224,7 @@ void InitSoundMaster() {
   gSoundMaster.pDevice = alcOpenDevice(NULL);
   gSoundMaster.pContext = NULL;
   if (!gSoundMaster.pDevice) {
-    LOG_CRITICAL("Failed to OpenAL device");
+    LOG_CRITICAL("[Internal] => Failed to OpenAL device");
     return;
   }
   gSoundMaster.pContext = alcCreateContext(gSoundMaster.pDevice, NULL);
@@ -229,10 +233,10 @@ void InitSoundMaster() {
       alcDestroyContext(gSoundMaster.pContext);
     }
     alcCloseDevice(gSoundMaster.pDevice);
-    LOG_CRITICAL("Failed to set an OpenAL context {pContext=%p, pDevice=%p}", gSoundMaster.pContext, gSoundMaster.pDevice);
+    LOG_CRITICAL("[Internal] => Failed to set an OpenAL context {pContext=%p, pDevice=%p}", gSoundMaster.pContext, gSoundMaster.pDevice);
     return;
   }
-  LOG_INFO("Initialized OpenAL");
+  LOG_INFO("[Internal] => Initialized OpenAL");
 }
 
 void DeinitSoundMaster() {
@@ -259,7 +263,7 @@ Sound* LoadSound(const char* path) {
   alGenBuffers(1, &pSound->buffer);
   alBufferData(pSound->buffer, format + AL_FORMAT_MONO8, pSound->data, data_size, sample_rate);
   
-  LOG_INFO("Loaded sound from [%s]", path);
+  LOG_INFO("[Internal] => Loaded sound from [%s]", path);
 
   free(pSound->data);
   pSound->data = NULL;
@@ -304,7 +308,7 @@ void SoundSourceSetGain(SoundSource *pSource, float gain) {
   if (gain > 1) {
     float chosen = gain;
     gain = 1;
-    LOG_WARN("Audio gain level [%0.4f] chosen. This is a dangerous volume, so its been lowered to %0.4f.", chosen, gain);    
+    LOG_WARN("[Internal] => Audio gain level [%0.4f] chosen. This is a dangerous volume, so its been lowered to %0.4f.", chosen, gain);    
   }
   alSourcef(pSource->id, AL_GAIN, gain);
 }

@@ -1,62 +1,19 @@
 #include "../include/Resource/Sound.h"
 #include "../include/IO/Log.h"
-#include "../libs/openal/include/AL/al.h"
-#include "../libs/openal/include/AL/alc.h"
 #include <stdio.h>
 #include <stdlib.h>
+#define MAX_SOUND_SOURCES 100
 
 // #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources
-
-typedef struct _Sound {
-  uint32_t samples;
-  int16_t *data;
-  ALuint buffer;
-} Sound;
-
-typedef struct _SoundSource {
-  vec3 position;
-  float gain, pitch;
-  ALuint id;
-} SoundSource;
 
 typedef struct _SoundMaster {
   ALCdevice* pDevice;
   ALCcontext* pContext;
+  ALuint sourceIds[MAX_SOUND_SOURCES];
+  int idCount;
 } SoundMaster;
 
-SoundMaster gSoundMaster;
-
-void InitSoundMaster() {
-  gSoundMaster.pDevice = alcOpenDevice(NULL);
-  gSoundMaster.pContext = NULL;
-  if (!gSoundMaster.pDevice) {
-    LOG_CRITICAL("Failed to OpenAL device");
-    return;
-  }
-  gSoundMaster.pContext = alcCreateContext(gSoundMaster.pDevice, NULL);
-  if (!gSoundMaster.pContext || alcMakeContextCurrent(gSoundMaster.pContext) == AL_FALSE) {
-    if (gSoundMaster.pContext != NULL) {
-      alcDestroyContext(gSoundMaster.pContext);
-    }
-    alcCloseDevice(gSoundMaster.pDevice);
-    LOG_CRITICAL("Failed to set an OpenAL context {pContext=%p, pDevice=%p}", gSoundMaster.pContext, gSoundMaster.pDevice);
-    return;
-  }
-  LOG_INFO("Initialized OpenAL");
-}
-void DeinitSoundMaster() {
-  ALCdevice *device;
-  ALCcontext *context;
-  
-  context = alcGetCurrentContext();
-  if (context == NULL)
-    return;
-  device = alcGetContextsDevice(context);
-  
-  alcMakeContextCurrent(NULL);
-  alcDestroyContext(context);
-  alcCloseDevice(device); 
-}
+SoundMaster gSoundMaster = (SoundMaster){0};
 
 bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_size_out, int32_t *sample_rate_out) {
   FILE *f;
@@ -129,6 +86,167 @@ bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_si
   *data_size_out = data_size;
   fclose(f);
   return true;
+}
+
+SoundMaster* FF_int_GetSoundMaster() {
+  return &gSoundMaster;
+}
+
+void FF_InitAudioSystem() {
+  gSoundMaster.pDevice = alcOpenDevice(NULL);
+  gSoundMaster.pContext = NULL;
+  if (!gSoundMaster.pDevice) {
+    LOG_CRITICAL("Failed to open OpenAL device");
+    return;
+  }
+  gSoundMaster.pContext = alcCreateContext(gSoundMaster.pDevice, NULL);
+  if (!gSoundMaster.pContext || alcMakeContextCurrent(gSoundMaster.pContext) == AL_FALSE) {
+    if (gSoundMaster.pContext != NULL) {
+      alcDestroyContext(gSoundMaster.pContext);
+    }
+    alcCloseDevice(gSoundMaster.pDevice);
+    LOG_CRITICAL("Failed to set OpenAL context");
+    return;
+  }
+  LOG_INFO("Initialized OpenAL");
+}
+
+void FF_DeinitAudioSystem() {
+  for (int i = 0; i < FF_int_GetSoundMaster()->idCount; i++) {
+    ALuint id = FF_int_GetSoundMaster()->sourceIds[i];
+    alDeleteSources(1, &id);
+    LOG_DEBUG("Deleted sound source id [%d]", id);
+  }
+  
+  ALCdevice *device;
+  ALCcontext *ctx;
+  ctx = alcGetCurrentContext();
+  if (ctx == NULL)
+    return;
+  
+  device = alcGetContextsDevice(ctx);
+  if (device == NULL)
+    return;
+  
+  alcMakeContextCurrent(NULL);
+  alcDestroyContext(ctx);
+  alcCloseDevice(device);
+}
+
+Sound FF_LoadSound(const char* path) {
+  Sound s;
+  int16_t format;
+  int32_t sample_rate, data_size;
+  ReadWAV(&s, path, &format, &data_size, &sample_rate);
+  alGenBuffers(1, &s.buffer);
+  alBufferData(s.buffer, format + AL_FORMAT_MONO8, s.data, data_size, sample_rate);
+  
+  LOG_INFO("[Internal] => Loaded Sound from \"%s\"", path);
+  free(s.data);
+  s.data = NULL;
+  return s;
+}
+
+void FF_FreeSound(Sound s) {
+  alDeleteBuffers(1, &s.buffer);
+  free(s.data);
+  s.data = NULL;
+}
+
+void FF_SoundListener(vec3 pos, vec3 vel) {
+  alListener3f(AL_POSITION, pos[0], pos[1], pos[2]);
+  alListener3f(AL_VELOCITY, vel[0], vel[1], vel[2]);
+}
+
+SoundSource FF_SoundSource() {
+  return FF_SoundSourceEx(1.0f, 1.0f, (vec3){0, 0, 0}, false);
+}
+
+SoundSource FF_SoundSourceEx(float pitch, float gain, vec3 pos, bool looping) {
+  SoundSource source = (SoundSource){.pitch=pitch, .gain=gain, .position[0] = pos[0], .position[1] = pos[1], .position[2] = pos[2], .looping=looping};
+  alGenSources(1, &source.id);
+  FF_int_GetSoundMaster()->sourceIds[FF_int_GetSoundMaster()->idCount++] = source.id;
+  LOG_INFO("Creating sound Source with id %d", source.id);
+  return source;
+}
+
+void FF_SoundSourceSetGain(SoundSource *src, float gain) {
+  src->gain = gain;
+  alSourcef(src->id, AL_GAIN, gain);
+}
+
+void FF_SoundSourceSetPitch(SoundSource *src, float pitch) {
+  src->pitch = pitch;
+  alSourcef(src->id, AL_PITCH, pitch);
+}
+
+void FF_SoundSourceSetPos(SoundSource *src, vec3 pos) {
+  glm_vec3_copy(pos, src->position);
+  alSource3f(src->id, AL_POSITION, pos[0], pos[1], pos[2]);
+}
+
+void FF_SoundSourceSetLooping(SoundSource *src, bool looping) {
+  src->looping = looping;
+  alSourcei(src->id, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
+}
+
+void FF_SoundSourcePlay(SoundSource src, Sound sound) {
+  FF_SoundSourceStop(src);
+  LOG_INFO("Play: %d", src.id);
+  alSourcei(src.id, AL_BUFFER, sound.buffer);
+  alSourcePlay(src.id);
+  src.curr_sound = sound;
+}
+
+void FF_SoundSourcePause(SoundSource src) {
+  alSourcePause(src.id);
+}
+
+void FF_SoundSourceUnpause(SoundSource src) {
+  alSourcei(src.id, AL_BUFFER, src.curr_sound.buffer);
+  alSourcePlay(src.id);
+}
+
+void FF_SoundSourceStop(SoundSource src) {
+  alSourceStop(src.id);
+}
+
+bool FF_SoundSourcePlaying(SoundSource src) {
+  ALint state;
+  alGetSourcei(src.id, AL_SOURCE_STATE, &state);
+  return state == AL_PLAYING;
+}
+void InitSoundMaster() {
+  gSoundMaster.pDevice = alcOpenDevice(NULL);
+  gSoundMaster.pContext = NULL;
+  if (!gSoundMaster.pDevice) {
+    LOG_CRITICAL("Failed to OpenAL device");
+    return;
+  }
+  gSoundMaster.pContext = alcCreateContext(gSoundMaster.pDevice, NULL);
+  if (!gSoundMaster.pContext || alcMakeContextCurrent(gSoundMaster.pContext) == AL_FALSE) {
+    if (gSoundMaster.pContext != NULL) {
+      alcDestroyContext(gSoundMaster.pContext);
+    }
+    alcCloseDevice(gSoundMaster.pDevice);
+    LOG_CRITICAL("Failed to set an OpenAL context {pContext=%p, pDevice=%p}", gSoundMaster.pContext, gSoundMaster.pDevice);
+    return;
+  }
+  LOG_INFO("Initialized OpenAL");
+}
+
+void DeinitSoundMaster() {
+  ALCdevice *device;
+  ALCcontext *context;
+  
+  context = alcGetCurrentContext();
+  if (context == NULL)
+    return;
+  device = alcGetContextsDevice(context);
+  
+  alcMakeContextCurrent(NULL);
+  alcDestroyContext(context);
+  alcCloseDevice(device); 
 }
 
 Sound* LoadSound(const char* path) {

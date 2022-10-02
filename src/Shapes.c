@@ -7,23 +7,23 @@ static Geometry quad, cube;
 static Shader* camShader;
 
 void InitShapes() {
-    static bool init = false;
-    if (!init) {
-        PopulateQuad(&quad);
-        PopulateCube(&cube);
-        camShader = LoadShader("res/shader/", "camera");
-        init = true;
-    }
+//    static bool init = false;
+//    if (!init) {
+//        GenerateQuad(&quad);
+//        GenerateCube(&cube);
+//        camShader = LoadShader("res/shader/", "camera");
+//        init = true;
+//    }
 }
 
 void FreeShapes() {
-    static bool free = false;
-    if (!free) {
-        FreeGeometry(&quad);
-        FreeGeometry(&cube);
-        FreeShader(camShader);
-        free = true;
-    }
+//    static bool free = false;
+//    if (!free) {
+//        FreeGeometry(&quad);
+//        FreeGeometry(&cube);
+//        FreeShader(camShader);
+//        free = true;
+//    }
 }
 
 void DrawQuad() {

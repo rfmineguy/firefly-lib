@@ -171,7 +171,7 @@ bool FF_WindowShouldClose(Window *pWindow) {
     pWindow->currentTime = FF_GetTime();
     pWindow->deltaTime = pWindow->currentTime - pWindow->lastTime;
     pWindow->lastTime = pWindow->currentTime;
-    glfwSwapBuffers(pWindow->windowPtr);    
+    glfwSwapBuffers(pWindow->windowPtr);
     return glfwWindowShouldClose(pWindow->windowPtr);
 }
 

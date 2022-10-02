@@ -25,6 +25,10 @@ typedef struct _Camera {
   ProjectionType projection_type;
 } Camera;
 
+Camera FF_OrthoCamera();
+Camera FF_PerspectiveCamera();
+void FF_UpdateCamera(Camera);
+
 void InitCamera(Camera*, ProjectionType);
 
 void UpdateCamera(Camera*);

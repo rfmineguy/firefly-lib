@@ -50,6 +50,22 @@ void UpdateCameraProj(Camera* pCamera, int width, int height) {
   }
 }
 
+Camera FF_OrthoCamera() {
+  Camera c;
+  c.projection_type = ORTHOGRAPHIC;
+  SetDefaultParams(&c);
+  UpdateCameraProj(&c, 600, 600);
+  return c;
+}
+
+Camera FF_PerspectiveCamera() {
+  Camera c;
+  c.projection_type = PERSPECTIVE;
+  SetDefaultParams(&c);
+  UpdateCameraProj(&c, 600, 600);
+  return c;
+}
+
 void InitCamera(Camera* pCamera, ProjectionType type) {
   pCamera->projection_type = type;
   SetDefaultParams(pCamera);

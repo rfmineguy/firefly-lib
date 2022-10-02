@@ -4,7 +4,7 @@
 #include <cglm/cam.h>
 
 typedef enum _ProjectionType {
-  ORTHOGRAPHIC, PERSPECTIVE 
+  ORTHOGRAPHIC, PERSPECTIVE
 } ProjectionType;
 
 typedef struct _Camera {

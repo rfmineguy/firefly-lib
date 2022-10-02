@@ -33,10 +33,13 @@ void FF_RendererDrawGeometryEx(Geometry g, Camera c, vec3 pos, vec3 scale, vec3 
   glm_translate(transform, pos);
   glm_scale(transform, scale);
   glm_rotate(transform, glm_rad(angle), rotAxis);
-
+  
+  BindShader(all_encompassing_shader);
   SetUniform4fv(all_encompassing_shader, "view", c.view[0]);
   SetUniform4fv(all_encompassing_shader, "projection", c.proj[0]);
 
   SetUniform4fv(all_encompassing_shader, "model", transform[0]);
   BindGeometry(&g);
+  
+  glDrawElements(GL_TRIANGLES, g.indice_count, GL_UNSIGNED_INT, 0);
 }

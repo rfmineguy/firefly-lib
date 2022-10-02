@@ -1,6 +1,7 @@
 #ifndef FF_CORE_RANDOM_H
 #define FF_CORE_RANDOM_H
 #include <stdlib.h>
+#include <stdint.h>
 
 void FF_RandomSeedTime();
 void FF_RandomSeedLong(uint32_t);

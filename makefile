@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall
+CFLAGS = -Wall -g
 
 ifeq ($(PREFIX),)
 	PREFIX := /usr/local
@@ -10,14 +10,15 @@ ifeq ($(uname), darwin)
 	LIBRARY_DEPENDENCIES += -lopenal.1
 else
 	LIBRARY_DEPENDENCIES += -lopenal
-endif	
+endif
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
 				#-Llibs/glad-rf/out/ \
 				-Llibs/glfw/out/ \
 				-Llibs/cglm/out/ \
-				-Llibs/openal/out/
+				-Llibs/openal/out/ \
+				-Lexample_resources/
 
 DYLIB_PATH = $(shell pwd)/libs/openal/out/
 
@@ -61,12 +62,17 @@ OPENAL_LIB_DIR = libs/openal/out/
 OPENAL_LIB = openal
 
 DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
-
-#
-# NOTE: The OpenAL linking problem is mostly likely due to the dylib not being in a standard location.
-#
+RESOURCES = $(wildcard example_resources/out/*.o)
 
 build: prepare out/libfirefly.so
+
+prepare: build_libs build_resources
+	rm -rf out
+	mkdir out
+
+.PHONY: build_resources
+build_resources:
+	make -C example_resources
 
 build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_INSTALL)
 $(GLFW_LIB_BUILD):
@@ -85,15 +91,11 @@ $(OPENAL_LIB_INSTALL):
 	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make && sudo make install
 	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/libopenal.dylib
 
-prepare: build_libs
-	rm -rf out
-	mkdir out
-
 out/libfirefly.so: $(SOURCES)
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES) $(DYLIB_CMD)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES) $(RESOURCES) $(DYLIB_CMD)
 
 libinfo:
-	nm out/libfirefly.so >> libinfo.txt
+	objdump -t out/libfirefly.so >> libinfo.txt
 	echo "wrote info to 'libinfo.txt'"
 
 linked_libraries:
@@ -142,4 +144,3 @@ clean-build:
 	rm -rf libs/cglm/out/
 	rm -rf libs/openal/out/
 	rm -rf libs/stb/out/
-	rm -rf out

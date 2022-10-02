@@ -10,6 +10,7 @@ typedef struct Shader {
 
 // #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources
 Shader* LoadShader(const char*, const char*);
+Shader* LoadShaderRaw(char*, const int, char*, const int);
 void FreeShader(Shader*);
 
 void BindShader(Shader*);

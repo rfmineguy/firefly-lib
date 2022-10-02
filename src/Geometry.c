@@ -11,26 +11,27 @@ void UnbindGeometry() {
     glBindVertexArray(0);
 }
 
-void PopulateQuad(Geometry* pGeometry) {
-    pGeometry->vertices = (Vertex*) malloc(sizeof(Vertex) * 4);
-    pGeometry->indices = (uint32_t*) malloc(sizeof(uint32_t) * 6);
+Geometry GenerateQuad() {
+    Geometry g;
+    g.vertices = (Vertex*) malloc(sizeof(Vertex) * 4);
+    g.indices = (uint32_t*) malloc(sizeof(uint32_t) * 6);
 
-    pGeometry->vertices[0] = (Vertex){ .position={ 0.5f,  0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={1.0f, 1.0f} };
-    pGeometry->vertices[1] = (Vertex){ .position={ 0.5f, -0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={1.0f, 0.0f} };
-    pGeometry->vertices[2] = (Vertex){ .position={-0.5f, -0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={0.0f, 0.0f} };
-    pGeometry->vertices[3] = (Vertex){ .position={-0.5f,  0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={0.0f, 1.0f} };
+    g.vertices[0] = (Vertex){ .position={ 0.5f,  0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={1.0f, 1.0f} };
+    g.vertices[1] = (Vertex){ .position={ 0.5f, -0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={1.0f, 0.0f} };
+    g.vertices[2] = (Vertex){ .position={-0.5f, -0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={0.0f, 0.0f} };
+    g.vertices[3] = (Vertex){ .position={-0.5f,  0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={0.0f, 1.0f} };
 
-    memcpy(pGeometry->indices, (uint32_t[]){0, 1, 3, 1, 2, 3}, sizeof(uint32_t) * 6);
-    glGenVertexArrays(1, &pGeometry->vao);
-    glGenBuffers(1, &pGeometry->vbo);
-    glGenBuffers(1, &pGeometry->ebo);
+    memcpy(g.indices, (uint32_t[]){0, 1, 3, 1, 2, 3}, sizeof(uint32_t) * 6);
+    glGenVertexArrays(1, &g.vao);
+    glGenBuffers(1, &g.vbo);
+    glGenBuffers(1, &g.ebo);
 
-    glBindVertexArray(pGeometry->vao);
-    glBindBuffer(GL_ARRAY_BUFFER, pGeometry->vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, pGeometry->vertices, GL_STATIC_DRAW);
+    glBindVertexArray(g.vao);
+    glBindBuffer(GL_ARRAY_BUFFER, g.vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, g.vertices, GL_STATIC_DRAW);
     
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pGeometry->ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * 6, pGeometry->indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g.ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * 6, g.indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) offsetof(Vertex, position));
     glEnableVertexAttribArray(0);
@@ -43,9 +44,10 @@ void PopulateQuad(Geometry* pGeometry) {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    return g;
 }
 
-void PopulateCube(Geometry* pGeometry) {
+void GenerateCube(Geometry* pGeometry) {
     pGeometry->vertices = (Vertex*) malloc(sizeof(Vertex) * 8);
     pGeometry->indices = (uint32_t*) malloc(sizeof(uint32_t) * 36);
 
@@ -89,9 +91,9 @@ void PopulateCube(Geometry* pGeometry) {
     glBindVertexArray(0);
 }
 
-void FreeGeometry(Geometry* pGeometry) {
-    free(pGeometry->vertices);
-    pGeometry->vertices = NULL;
-    free(pGeometry->indices);
-    pGeometry->indices = NULL;
+void FreeGeometry(Geometry pGeometry) {
+    free(pGeometry.vertices);
+    pGeometry.vertices = NULL;
+    free(pGeometry.indices);
+    pGeometry.indices = NULL;
 }

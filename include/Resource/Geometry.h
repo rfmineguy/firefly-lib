@@ -11,14 +11,16 @@ typedef struct _Vertex {
 typedef struct _Geometry {
     unsigned int vao, ebo, vbo;
     Vertex* vertices;
+    uint32_t vertex_count;
     uint32_t* indices;
+    uint32_t indice_count;
 } Geometry;
 
 void BindGeometry(Geometry*);
 void UnbindGeometry();
-void FreeGeometry(Geometry*);
+void FreeGeometry(Geometry);
 
-void PopulateQuad(Geometry*);
-void PopulateCube(Geometry*);
+Geometry GenerateQuad();
+void GenerateCube(Geometry*);
 
 #endif

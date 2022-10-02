@@ -6,11 +6,8 @@
 
 void ProcessShaderInternal(unsigned int* id, char* contents, GLenum shaderType, const int length) {
     *id = glCreateShader(shaderType);
-    LOG_DEBUG("Processing shader: %d", *id);
     glShaderSource(*id, 1, (const char *const *)&contents, &length);
-    LOG_DEBUG("Loaded the shader source");
     glCompileShader(*id);
-    LOG_DEBUG("Compiled shader");
 
     GLint success;
     char infoLog[500];
@@ -27,6 +24,7 @@ void ProcessShaderInternal(unsigned int* id, char* contents, GLenum shaderType, 
             LOG_CRITICAL("\t%s", infoLog);
         }
     }
+    LOG_INFO("[%s] shader compiled successfully", shaderType == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
 }
 
 void LinkShaderInteral(Shader* pShader) {
@@ -45,6 +43,7 @@ void LinkShaderInteral(Shader* pShader) {
 
     glDeleteShader(pShader->vertId);
     glDeleteShader(pShader->fragId);
+    LOG_DEBUG("Linked the shader:: id: [%d]", pShader->programId);
 }
 
 Shader* LoadShader(const char* root_path, const char* name) {
@@ -68,8 +67,7 @@ Shader* LoadShader(const char* root_path, const char* name) {
 
     //strlen is allowed as these source strings will be null terminated
     Shader *pShader = LoadShaderRaw(vert_source, strlen(vert_source), frag_source, strlen(frag_source));
-    LOG_DEBUG("Linked the shader [%s] from [%s]", name, root_path);
-
+    
     free(vert_source);
     vert_source = NULL;
     free(frag_source);
@@ -78,16 +76,10 @@ Shader* LoadShader(const char* root_path, const char* name) {
 }
 
 Shader* LoadShaderRaw(char *raw_vert_source, const int vert_length, char *raw_frag_source, const int frag_length) {
-    LOG_DEBUG("LoadShaderRaw()");
-    //fwrite(raw_frag_source, sizeof(char), frag_length, stdout);
-    //fwrite(raw_vert_source, sizeof(char), vert_length, stdout);
-
     Shader *pShader = malloc(sizeof(*pShader));
     memset(pShader, 0, sizeof(*pShader));
-    LOG_DEBUG("Begin Processing Shader");
     ProcessShaderInternal(&pShader->vertId, raw_vert_source, GL_VERTEX_SHADER, vert_length);
     ProcessShaderInternal(&pShader->fragId, raw_frag_source, GL_FRAGMENT_SHADER, frag_length);
-    LOG_DEBUG("End Processing Shader");
     LinkShaderInteral(pShader);
     return pShader;
 }

@@ -72,7 +72,7 @@ prepare: build_libs build_resources
 
 .PHONY: build_resources
 build_resources:
-	make -C example_resources
+	make -C example_resources cam.fragment.o cam.vertex.o
 
 build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_INSTALL)
 $(GLFW_LIB_BUILD):

@@ -14,7 +14,9 @@ void UnbindGeometry() {
 Geometry GenerateQuad() {
     Geometry g;
     g.vertices = (Vertex*) malloc(sizeof(Vertex) * 4);
+    g.vertex_count = 4;
     g.indices = (uint32_t*) malloc(sizeof(uint32_t) * 6);
+    g.indice_count = 6;
 
     g.vertices[0] = (Vertex){ .position={ 0.5f,  0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={1.0f, 1.0f} };
     g.vertices[1] = (Vertex){ .position={ 0.5f, -0.5f, 0.0f}, .color={1.f, 1.f, 1.f}, .tex_coord={1.0f, 0.0f} };

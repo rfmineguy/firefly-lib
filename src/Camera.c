@@ -13,7 +13,7 @@ void UpdateCameraVectors(Camera* pCamera) {
   glm_vec3_normalize_to(front, pCamera->camFront);
   
   vec3 crossFrontUp;
-  glm_cross(pCamera->camFront, pCamera->up, crossFrontUp);
+  glm_cross(pCamera->camFront, pCamera->worldUp, crossFrontUp);
   glm_normalize_to(crossFrontUp, pCamera->camRight);
   
   vec3 crossRightFront;
@@ -26,7 +26,7 @@ void SetDefaultParams(Camera* pCamera) {
   glm_vec2_copy((vec2){600, 600}, pCamera->size);
   glm_vec3_copy((vec3){0, 0, 20}, pCamera->camPos);
   glm_vec3_copy((vec3){0, 0, 0}, pCamera->camTarget);
-  glm_vec3_copy((vec3){0, 1, 0}, pCamera->up);
+  glm_vec3_copy((vec3){0, 1, 0}, pCamera->worldUp);
   glm_vec3_copy((vec3){0, 0, 0}, pCamera->camRight);
   glm_vec3_copy((vec3){0, 1, 0}, pCamera->camUp);
   glm_vec3_copy((vec3){0, 0, -1}, pCamera->camFront);
@@ -109,7 +109,7 @@ void UpdateCamera(Camera *pCamera) {
 void RecalcCamera(Camera *pCamera) {
   vec3 posPlusFront;
   glm_vec3_add(pCamera->camPos, pCamera->camFront, posPlusFront);
-  glm_lookat(pCamera->camPos, posPlusFront, pCamera->up, pCamera->view);
+  glm_lookat(pCamera->camPos, posPlusFront, pCamera->camUp, pCamera->view);
 }
 
 void UpdateProjectionCamera(Camera *pCamera, int width, int height) {

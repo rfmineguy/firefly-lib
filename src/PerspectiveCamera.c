@@ -12,7 +12,7 @@ void FF_PerspectiveCameraUpdateCameraVectors(Camera* pCamera) {
   glm_vec3_normalize_to(front, pCamera->camFront);
   
   vec3 crossFrontUp;
-  glm_cross(pCamera->camFront, pCamera->up, crossFrontUp);
+  glm_cross(pCamera->camFront, pCamera->worldUp, crossFrontUp);
   glm_normalize_to(crossFrontUp, pCamera->camRight);
   
   vec3 crossRightFront;
@@ -32,8 +32,7 @@ Camera FF_PerpsectiveCamera() {
   c.fov = 45.f;
   glm_vec2_copy((vec2){600, 600}, c.size);
   glm_vec3_copy((vec3){0, 0, 20}, c.camPos);
-  glm_vec3_copy((vec3){0, 0, 0}, c.camTarget);
-  glm_vec3_copy((vec3){0, 1, 0}, c.up);
+  glm_vec3_copy((vec3){0, 1, 0}, c.worldUp);
   glm_vec3_copy((vec3){0, 0, 0}, c.camRight);
   glm_vec3_copy((vec3){0, 1, 0}, c.camUp);
   glm_vec3_copy((vec3){0, 0, -1}, c.camFront);
@@ -44,7 +43,7 @@ Camera FF_PerpsectiveCamera() {
 void FF_PerspectiveCameraUpdate(Camera camera) {
   vec3 posPlusFront;
   glm_vec3_add(camera.camPos, camera.camFront, posPlusFront);
-  glm_lookat(camera.camPos, posPlusFront, camera.up, camera.view);
+  glm_lookat(camera.camPos, posPlusFront, camera.camUp, camera.view);
   
   const float camSpeed = 0.05f;
   if (FF_IsKeyDown(KEY_W)) {

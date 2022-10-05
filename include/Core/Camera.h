@@ -10,7 +10,6 @@ typedef enum _ProjectionType {
 typedef struct _Camera {
   vec3 camPos;
   vec3 camTarget;
-  vec3 up;
   vec3 camRight;
   vec3 camUp;
   vec3 worldUp;

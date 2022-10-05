@@ -3,3 +3,5 @@ libfirefly.so
 .ccls
 .cache/
 out.txt
+compile_commands.json
+libinfo.txt

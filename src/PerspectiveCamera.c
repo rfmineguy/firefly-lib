@@ -37,7 +37,7 @@ Camera FF_PerpsectiveCamera() {
   glm_vec3_copy((vec3){0, 0, 0}, c.camRight);
   glm_vec3_copy((vec3){0, 1, 0}, c.camUp);
   glm_vec3_copy((vec3){0, 0, -1}, c.camFront);
-  FF_PerspectiveCameraUpdateProj(c, 600, 600);
+  FF_PerspectiveCameraUpdateCameraVectors(&c);
   return c;
 }
 
@@ -71,6 +71,4 @@ void FF_PerspectiveCameraUpdate(Camera camera) {
   }
   
   FF_PerspectiveCameraUpdateCameraVectors(&camera);
-  //LOG_DEBUG("cam_front_x: %0.4f, cam_front_y: %0.4f, cam_front_z: %0.4f", camera.camFront[0], camera.camFront[1], camera.camFront[2]);
-  //LOG_DEBUG("cam_x: %0.4f, cam_y: %0.4f, cam_z: %0.4f", camera.camPos[0], camera.camPos[1], camera.camPos[2]);
 }

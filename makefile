@@ -8,8 +8,10 @@ endif
 LIBRARY_DEPENDENCIES = -lc -lglad -lglfw -lcglm
 ifeq ($(uname), darwin)
 	LIBRARY_DEPENDENCIES += -lopenal.1
+	LIBRARY_LIST += 
 else
 	LIBRARY_DEPENDENCIES += -lopenal
+	LIBRARY_LIST += ldd out/libfirefly.so
 endif
 
 # external lib details (in addition to the default search paths)
@@ -72,26 +74,53 @@ prepare: build_libs build_resources
 
 .PHONY: build_resources
 build_resources:
+	$(info =========================================================)
+	$(info Building the resource files \(text files, images, etc.\))
+	$(info =========================================================)
+	$(info )
+	make -C example_resources clean-build prepare
 	make -C example_resources cam.fragment.o cam.vertex.o
+	#make -C example_resources texture.fragment.o texture.vertex.o
+	make -C example_resources clean-working-dir
 
 build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_INSTALL)
 $(GLFW_LIB_BUILD):
+	$(info =========================================================)
+	$(info Building and installing glfw)
+	$(info =========================================================)
+	$(info )
 	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make && sudo make install
 	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
-	
+
 $(GLAD_LIB_BUILD):
+	$(info =========================================================)
+	$(info Building and installing glad)
+	$(info =========================================================)
+	$(info )
 	cmake -S libs/glad-rf/ -B libs/glad-rf/cmakeout/ && cd libs/glad-rf/cmakeout && make && sudo make install
 	-mkdir libs/glad-rf/out/ && cp libs/glad-rf/cmakeout/libglad.a libs/glad-rf/out/
 
 $(CGLM_LIB_BUILD):
+	$(info =========================================================)
+	$(info Building and installing cglm)
+	$(info =========================================================)
+	$(info )
 	cmake -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make && sudo make install
 	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.dylib libs/cglm/out/
 
 $(OPENAL_LIB_INSTALL):
+	$(info =========================================================)
+	$(info Building and installing openal)
+	$(info =========================================================)
+	$(info )
 	cmake -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make && sudo make install
 	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.dylib libs/openal/out/libopenal.dylib
 
 out/libfirefly.so: $(SOURCES)
+	$(info =========================================================)
+	$(info Building libfirefly.so to out/)
+	$(info =========================================================)
+	$(info )
 	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES) $(RESOURCES) $(DYLIB_CMD)
 
 libinfo:
@@ -100,13 +129,12 @@ libinfo:
 
 linked_libraries:
 	otool -L out/libfirefly.so
-	
-#
-# The make code below this line is pivotal that it does not change
-#    if you change anything you *may* break other locally installed
-#    libraries
-#
+
 install: build
+	$(info =========================================================)
+	$(info Installing libfirefly.so to $(DESTDIR)$(PREFIX)/lib/ and its headers to $(DESTDIR)$(PREFIX)/include/firefly/)
+	$(info =========================================================)
+	$(info )
 	sudo install -d $(DESTDIR)$(PREFIX)/lib/
 	sudo install -m 644 out/libfirefly.so $(DESTDIR)$(PREFIX)/lib/
 
@@ -124,6 +152,9 @@ install: build
 	sudo install -m 664 $(H_RENDERING) $(DESTDIR)$(PREFIX)/include/firefly/Rendering/
 
 uninstall:
+	$(info =========================================================)
+	$(info Uninstalling libfirefly.so and its headers)
+	$(info =========================================================)
 	sudo rm $(DESTDIR)$(PREFIX)/lib/libfirefly.so
 	sudo rm -rf $(DESTDIR)$(PREFIX)/include/firefly/
 

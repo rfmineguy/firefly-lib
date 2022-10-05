@@ -1,4 +1,6 @@
-all:
+.PHONY: prepare
+prepare:
+	-mkdir out
 
 %.vertex.o: %.vert
 	xxd -a -i $^ > $^ex.c
@@ -10,6 +12,8 @@ all:
 	gcc -c $^ment.c -o $@
 	mv $@ out
 
-clean:
+clean-working-dir:
 	-rm *.c
-	-rm *.o
+
+clean-build:
+	rm -rf out

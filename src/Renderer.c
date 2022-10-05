@@ -41,5 +41,6 @@ void FF_RendererDrawGeometryEx(Geometry g, Camera c, vec3 pos, vec3 scale, vec3 
   SetUniform4fv(all_encompassing_shader, "model", transform[0]);
   BindGeometry(&g);
   
+  LOG_INFO("%d, %d", g.vertex_count, g.indice_count);
   glDrawElements(GL_TRIANGLES, g.indice_count, GL_UNSIGNED_INT, 0);
 }

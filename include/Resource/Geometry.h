@@ -21,6 +21,6 @@ void UnbindGeometry();
 void FreeGeometry(Geometry);
 
 Geometry GenerateQuad();
-void GenerateCube(Geometry*);
+Geometry GenerateCube();
 
 #endif

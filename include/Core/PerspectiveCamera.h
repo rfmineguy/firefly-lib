@@ -3,6 +3,6 @@
 #include "Camera.h"
 
 Camera FF_PerpsectiveCamera();
-void FF_PerspectiveCameraUpdate(Camera);
+void FF_PerspectiveCameraUpdate(Camera*);
 
 #endif

@@ -3,15 +3,15 @@
 #include <stdio.h>
 
 typedef enum {
-    DEBUG, INFO, WARN, ERROR, CRITICAL
+    DEBUG_, INFO_, WARN_, ERROR_, CRITICAL_
 } LogLevel;
 
 #ifndef NDEBUG
-#define LOG_DEBUG(x, ...) LogFL(DEBUG, __FILE__, __LINE__, x, ##__VA_ARGS__)
-#define LOG_INFO(x, ...) LogFL(INFO, __FILE__, __LINE__, x, ##__VA_ARGS__)
-#define LOG_WARN(x, ...) LogFL(WARN, __FILE__, __LINE__, x, ##__VA_ARGS__)
-#define LOG_ERROR(x, ...) LogFL(ERROR, __FILE__, __LINE__, x, ##__VA_ARGS__)
-#define LOG_CRITICAL(x, ...) LogFL(CRITICAL, __FILE__, __LINE__, x, ##__VA_ARGS__)
+#define LOG_DEBUG(x, ...)    LogFL(DEBUG_, __FILE__, __LINE__, x, ##__VA_ARGS__)
+#define LOG_INFO(x, ...)     LogFL(INFO_, __FILE__, __LINE__, x, ##__VA_ARGS__)
+#define LOG_WARN(x, ...)     LogFL(WARN_, __FILE__, __LINE__, x, ##__VA_ARGS__)
+#define LOG_ERROR(x, ...)    LogFL(ERROR_, __FILE__, __LINE__, x, ##__VA_ARGS__)
+#define LOG_CRITICAL(x, ...) LogFL(CRITICAL_, __FILE__, __LINE__, x, ##__VA_ARGS__)
 #endif
 #ifdef NDEBUG
 #define LOG_INFO(x, ...)

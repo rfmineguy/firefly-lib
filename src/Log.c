@@ -28,23 +28,23 @@ void LogFL(LogLevel lvl, char* file, int line, const char* msg, ...) {
     char levelStr[12] = {};
     char color[9] = {};
     switch (lvl) {
-    case DEBUG:
+    case DEBUG_:
         strcat(color, LOG_DEBUG_COLOR_CYAN);
         strcat(levelStr, "DEBUG");
         break;
-    case INFO:
+    case INFO_:
         strcat(color, LOG_INFO_COLOR_GREEN);
         strcat(levelStr, "INFO");
         break;
-    case WARN:
+    case WARN_:
         strcat(color, LOG_WARN_COLOR_YELLOW);
         strcat(levelStr, "WARN");
         break;
-    case ERROR:
+    case ERROR_:
         strcat(color, LOG_ERROR_COLOR_RED);
         strcat(levelStr, "ERROR");
         break;
-    case CRITICAL:
+    case CRITICAL_:
         strcat(color, LOG_CRITICAL_COLOR_MAG);
         strcat(levelStr, "CRIT");
         break;

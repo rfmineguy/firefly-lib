@@ -4,5 +4,6 @@
 
 Camera FF_PerpsectiveCamera();
 void FF_PerspectiveCameraUpdate(Camera*);
+void FF_PerspectiveCameraUpdateProj(Camera* camera, int width, int height);
 
 #endif

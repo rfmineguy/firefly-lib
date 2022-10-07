@@ -20,10 +20,10 @@ void FF_PerspectiveCameraUpdateCameraVectors(Camera* pCamera) {
   glm_normalize_to(crossRightFront, pCamera->camUp);
 }
 
-void FF_PerspectiveCameraUpdateProj(Camera camera, int width, int height) {
-  camera.size[0] = width;
-  camera.size[1] = height;
-  glm_perspective(glm_rad(camera.fov), (float)camera.size[0] / (float)camera.size[1], 0.1f, 100.0f, camera.proj);
+void FF_PerspectiveCameraUpdateProj(Camera* camera, int width, int height) {
+  camera->size[0] = width;
+  camera->size[1] = height;
+  glm_perspective(glm_rad(camera->fov), (float)camera->size[0] / (float)camera->size[1], 0.1f, 100.0f, camera->proj);
 }
 
 Camera FF_PerpsectiveCamera() {
@@ -49,24 +49,18 @@ void FF_PerspectiveCameraUpdate(Camera* camera) {
   
   const float camSpeed = 0.05f;
   if (FF_IsKeyDown(KEY_W)) {
-    LOG_DEBUG("Move forward");
-    //camera.camPos += camera.camFront * camSpeed;
     glm_vec3_muladds(camera->camFront, camSpeed, camera->camPos);  //?
   }
   if (FF_IsKeyDown(KEY_S)) {
-    LOG_DEBUG("Move backward");
-    //camera->camPos += camera->camFront * -camSpeed;
     glm_vec3_muladds(camera->camFront, -camSpeed, camera->camPos); //?
   }
   if (FF_IsKeyDown(KEY_A)) {
-    LOG_DEBUG("Move left");
     vec3 cross;
     glm_vec3_cross(camera->camFront, camera->camUp, cross);
     glm_normalize(cross);
     glm_vec3_muladds(cross, -camSpeed, camera->camPos);
   }
   if (FF_IsKeyDown(KEY_D)) {
-    LOG_DEBUG("Move right");
     vec3 cross;
     glm_vec3_cross(camera->camFront, camera->camUp, cross);
     glm_normalize(cross);

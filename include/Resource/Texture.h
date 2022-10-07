@@ -19,13 +19,4 @@ void FF_BindTexture(Texture);
 void FF_BindTextureToUnit(Texture, int);
 void FF_UnbindTexture();
 
-Texture* LoadTexture(const char*);
-Texture* LoadTextureEx(const char*, GLint, GLint);
-void FreeTexture(Texture*);
-
-void BindTexture(Texture*);
-void BindTextureToUnit(Texture*, int);
-
-void UnbindTexture();
-
 #endif

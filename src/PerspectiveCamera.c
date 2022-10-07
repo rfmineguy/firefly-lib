@@ -42,20 +42,6 @@ Camera FF_PerpsectiveCamera() {
 
 void FF_PerspectiveCameraUpdate(Camera* camera) {
   FF_PerspectiveCameraUpdateCameraVectors(camera);
-
-  LOG_INFO("====================================");
-  LOG_DEBUG("CamPos: x=%0.4f, y=%0.4f, z=%0.4f", camera->camPos[0], camera->camPos[1], camera->camPos[2]);
-  LOG_DEBUG("CamFront: x=%0.4f, y=%0.4f, z=%0.4f", camera->camFront[0], camera->camFront[1], camera->camFront[2]);
-  LOG_DEBUG("CamUp: x=%0.4f, y=%0.4f, z=%0.4f", camera->camUp[0], camera->camUp[1], camera->camUp[2]);
-  LOG_INFO("====================================");
-   
-  LOG_INFO("====================================");
-  LOG_DEBUG("View: %0.4f, %0.4f, %0.4f, %0.4f", camera->view[0][0], camera->view[1][0], camera->view[2][0], camera->view[3][0]);
-  LOG_DEBUG("View: %0.4f, %0.4f, %0.4f, %0.4f", camera->view[0][1], camera->view[1][1], camera->view[2][1], camera->view[3][1]);
-  LOG_DEBUG("View: %0.4f, %0.4f, %0.4f, %0.4f", camera->view[0][2], camera->view[1][2], camera->view[2][2], camera->view[3][2]);
-  LOG_DEBUG("View: %0.4f, %0.4f, %0.4f, %0.4f", camera->view[0][3], camera->view[1][3], camera->view[2][3], camera->view[3][3]);
-  LOG_INFO("====================================");
-  
   glm_mat4_identity(camera->view);
   vec3 posPlusFront;
   glm_vec3_add(camera->camPos, camera->camFront, posPlusFront);
@@ -86,5 +72,4 @@ void FF_PerspectiveCameraUpdate(Camera* camera) {
     glm_normalize(cross);
     glm_vec3_muladds(cross, camSpeed, camera->camPos);
   }
-  // LOG_DEBUG("CamPos: x=%0.4f, y=%0.4f, z=%0.4f", camera->camPos[0], camera->camPos[1], camera->camPos[2]);
 }

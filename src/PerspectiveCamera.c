@@ -26,7 +26,7 @@ void FF_PerspectiveCameraUpdateProj(Camera* camera, int width, int height) {
   glm_perspective(glm_rad(camera->fov), (float)camera->size[0] / (float)camera->size[1], 0.1f, 100.0f, camera->proj);
 }
 
-Camera FF_PerpsectiveCamera() {
+Camera FF_PerspectiveCamera() {
   Camera c;
   c.projection_type = PERSPECTIVE;
   c.fov = 45.f;

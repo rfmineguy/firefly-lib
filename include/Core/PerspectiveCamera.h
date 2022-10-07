@@ -2,7 +2,7 @@
 #define FF_CORE_PERSPCAM_H
 #include "Camera.h"
 
-Camera FF_PerpsectiveCamera();
+Camera FF_PerspectiveCamera();
 void FF_PerspectiveCameraUpdate(Camera*);
 void FF_PerspectiveCameraUpdateProj(Camera*, int, int);
 

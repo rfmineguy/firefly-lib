@@ -44,29 +44,4 @@ void FF_SoundSourceUnpause(SoundSource);
 void FF_SoundSourceStop(SoundSource);
 bool FF_SoundSourcePlaying(SoundSource);
 
-
-//
-// OLD
-//
-void InitSoundMaster();
-void SoundMasterSetListener(vec3, vec3);
-void DeinitSoundMaster();
-
-Sound* LoadSound(const char*); //setup sound with default settings
-void FreeSound(Sound*);
-
-SoundSource* SoundSourceCreate();
-void SoundSourceDestroy(SoundSource*);
-
-void SoundSourceFull(SoundSource*, float, float, vec3, bool);
-void SoundSourceSetGain(SoundSource*, float);
-void SoundSourceSetPitch(SoundSource*, float);
-void SoundSourceSetPos(SoundSource*, vec3);
-void SoundSourceSetLooping(SoundSource*, bool);
-void SoundSourcePlay(SoundSource*, Sound*);
-void SoundSourcePause(SoundSource*);
-void SoundSourceUnpause(SoundSource*);
-void SoundSourceStop(SoundSource*);
-bool SoundSourcePlaying(SoundSource*);
-
 #endif

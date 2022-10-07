@@ -3,24 +3,24 @@
 #include "../libs/stb/stb_image.h"
 #include <stdlib.h>
 
-Texture* LoadTexture(const char* path) {
-  return LoadTextureEx(path, GL_REPEAT, GL_NEAREST);
+Texture FF_LoadTexture(const char* path) {
+  return FF_LoadTextureEx(path, GL_REPEAT, GL_NEAREST);
 }
 
-Texture* LoadTextureEx(const char *path, GLint wrapValue, GLint filterValue) {
-  Texture *t = malloc(sizeof(*t));
-  glGenTextures(1, &t->handle);
-  glBindTexture(GL_TEXTURE_2D, t->handle);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapValue);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapValue);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterValue);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterValue);
+Texture FF_LoadTextureEx(const char* path, GLint wrap, GLint filter) {
+  Texture t;
+  glGenTextures(1, &t.handle);
+  glBindTexture(GL_TEXTURE_2D, t.handle);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 
-  unsigned char* data = stbi_load(path, &t->width, &t->height, &t->channels, 0);
+  unsigned char* data = stbi_load(path, &t.width, &t.height, &t.channels, 0);
   if (data) {
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t->width, t->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, t.width, t.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
-    LOG_INFO("Loaded texture [%s] [width:%d, height:%d, channels:%d]", path, t->width, t->height, t->channels);
+    LOG_INFO("Loaded texture [%s] [width:%d, height:%d, channels:%d]", path, t.width, t.height, t.channels);
   }
   else {
     LOG_CRITICAL("Failed to read file [%s]", path);
@@ -29,23 +29,20 @@ Texture* LoadTextureEx(const char *path, GLint wrapValue, GLint filterValue) {
   return t;
 }
 
-void FreeTexture(Texture *pTexture) {
-  UnbindTexture(pTexture);
-  glDeleteTextures(1, &pTexture->handle);
-  free(pTexture);
-  pTexture = NULL;
+void FF_FreeTexture(Texture t) {
+  FF_UnbindTexture(t);
+  glDeleteTextures(1, &t.handle);
 }
 
-void BindTexture(Texture *pTexture) {
-  BindTextureToUnit(pTexture, 0);
+void FF_BindTexture(Texture t) {
+  FF_BindTextureToUnit(t, 0);
 }
 
-void BindTextureToUnit(Texture *pTexture, int unit) {
+void FF_BindTextureToUnit(Texture t, int unit) {
   glActiveTexture(GL_TEXTURE0 + unit);
-  glBindTexture(GL_TEXTURE_2D, pTexture->handle);
-  //BindTexture(pTexture);
+  glBindTexture(GL_TEXTURE_2D, t.handle);
 }
 
-void UnbindTexture() {
+void FF_UnbindTexture() {
   glBindTexture(GL_TEXTURE_2D, 0);
 }

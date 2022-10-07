@@ -11,6 +11,14 @@ typedef struct Texture {
 
 // #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources
 
+Texture FF_LoadTexture(const char*);
+Texture FF_LoadTextureEx(const char*, GLint, GLint);
+void FF_FreeTexture(Texture);
+
+void FF_BindTexture(Texture);
+void FF_BindTextureToUnit(Texture, int);
+void FF_UnbindTexture();
+
 Texture* LoadTexture(const char*);
 Texture* LoadTextureEx(const char*, GLint, GLint);
 void FreeTexture(Texture*);

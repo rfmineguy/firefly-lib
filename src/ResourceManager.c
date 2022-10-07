@@ -12,6 +12,61 @@ typedef struct _ResourcePool {
 
 static ResourcePool pool;
 
+ResourcePool* FF_int_GetResourcePool() {
+    return &pool;
+}
+
+void FF_InitResourceManager() {
+    pool.shader_table = ht_create();
+    pool.texture_table = ht_create();
+    //pool.atlas_table = ht_create();
+    pool.sound_table = ht_create();
+    
+}
+
+void FF_DeinitResourceManager() {
+    ht_free(pool.shader_table);
+    ht_free(pool.texture_table);
+    ht_free(pool.sound_table);
+}
+
+void FF_PutTexture(Texture texture, const char* nameId) {
+   
+}
+
+void FF_PutShader(Shader shader, const char* nameId) {
+    
+}
+
+void FF_PutSound(Sound sound, const char* nameId) {
+    
+}
+
+Texture FF_GetTexture(const char* nameId) {
+    
+}
+
+Shader FF_GetShader(const char* nameId) {
+    
+}
+
+Sound FF_GetSound(const char* nameId) {
+    
+}
+
+bool FF_IsTextureLoaded(const char* nameId) {
+    
+}
+
+bool FF_IsShaderLoaded(const char* nameId) {
+    
+}
+
+bool FF_IsSoundLoaded(const char* nameId) {
+    
+}
+
+
 bool InitResourcePool() {
     pool.shader_table = ht_create();
     pool.texture_table = ht_create();

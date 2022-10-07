@@ -14,6 +14,32 @@
 //Resource Pool
 typedef struct _ResourcePool ResourcePool;
 
+typedef enum {
+	FF_TEXTURE, FF_SHADER, FF_SOUND
+} ResourceType;
+//
+// New api
+//
+
+ResourcePool* FF_int_GetResourcePool();
+void FF_InitResourceManager();
+void FF_DeinitResourceManager();
+
+void FF_PutTexture(Texture, const char*);
+void FF_PutShader(Shader, const char*);
+void FF_PutSound(Sound, const char*);
+
+Texture FF_GetTexture(const char*);
+Shader FF_GetShader(const char*);
+Sound FF_GetSound(const char*);
+
+bool FF_IsTextureLoaded(const char*);
+bool FF_IsShaderLoaded(const char*);
+bool FF_IsSoundLoaded(const char*);
+
+//
+// Old api
+//
 bool InitResourcePool();
 void DestroyResourcePool();
 

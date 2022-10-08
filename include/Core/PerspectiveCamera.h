@@ -5,5 +5,6 @@
 Camera FF_PerspectiveCamera();
 void FF_PerspectiveCameraUpdate(Camera*);
 void FF_PerspectiveCameraUpdateProj(Camera*, int, int);
+void FF_PerspectiveCameraPrintValues(Camera*);
 
 #endif

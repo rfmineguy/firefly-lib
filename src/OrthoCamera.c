@@ -6,7 +6,7 @@ void RecalcView(Camera* pCamera) {
   mat4 transform;
   glm_mat4_identity(transform);
   glm_translate(transform, pCamera->camPos);
-  //glm_rotate(transform, 0, (vec3){0, 0, 1});
+  glm_rotate(transform, 0, (vec3){0, 0, 1});
   glm_mat4_inv(transform, pCamera->view);
 }
 
@@ -15,6 +15,7 @@ Camera FF_OrthoCamera() {
   c.projection_type = ORTHOGRAPHIC;
   glm_vec3_copy((vec3){0, 0, 1}, c.camPos);
   glm_mat4_identity(c.view);
+  glm_mat4_identity(c.proj);
   FF_OrthoCameraUpdateProj(&c, 600, 600);
   return c;
 }
@@ -32,6 +33,12 @@ void FF_OrthoCameraUpdate(Camera* pCamera) {
   }
   if (FF_IsKeyDown(KEY_D)) {
     pCamera->camPos[0] += camSpeed;
+  }
+  if (FF_IsScrollUp()) {
+    pCamera->camPos[2] += camSpeed;
+  }
+  if (FF_IsScrollDown()) {
+    pCamera->camPos[2] -= camSpeed;
   }
   RecalcView(pCamera);
   LOG_INFO("camPos: x=%0.4f y=%0.4f z=%0.4f", pCamera->camPos[0], pCamera->camPos[1], pCamera->camPos[2]);

@@ -125,6 +125,7 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
         return NULL;
     }
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glfwSwapInterval(1);
     return pWindow;
 }

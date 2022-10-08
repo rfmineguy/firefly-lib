@@ -2,6 +2,11 @@
 #include "../include/Core/Input.h"
 #include "../include/IO/Log.h"
 
+void PerspectiveCameraPrintValues(Camera* pCamera) {
+  LOG_INFO("camPos {x: %0.4f, y: %0.4f, z: %0.4f}", pCamera->camPos[0], pCamera->camPos[1], pCamera->camPos[2]);
+  LOG_INFO("camFront {x: %0.4f, y: %0.4f, z: %0.4f}", pCamera->camFront[0], pCamera->camFront[1], pCamera->camFront[2]);
+}
+
 void FF_PerspectiveCameraUpdateCameraVectors(Camera* pCamera) {
   vec3 front;
   Input* i = FF_int_GetInputPtr();
@@ -42,6 +47,9 @@ Camera FF_PerspectiveCamera() {
 
 void FF_PerspectiveCameraUpdate(Camera* camera) {
   FF_PerspectiveCameraUpdateCameraVectors(camera);
+  
+  PerspectiveCameraPrintValues(camera);
+  
   glm_mat4_identity(camera->view);
   vec3 posPlusFront;
   glm_vec3_add(camera->camPos, camera->camFront, posPlusFront);

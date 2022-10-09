@@ -7,8 +7,8 @@
 
 typedef struct _Window {
     GLFWwindow* windowPtr;
-    int width;
-    int height;
+    uint16_t width;
+    uint16_t height;
     int closeKey;
     bool resized, cursorLocked;
     
@@ -80,11 +80,12 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
     //}
 }
 
-//static void window_size_callback(GLFWwindow* window, int width, int height) {
-//    gWindow.resized = true;
-//    gWindow.width = width;
-//    gWindow.height = height;
-//}
+static void window_size_callback(GLFWwindow* window, int width, int height) {
+    Window* w = glfwGetWindowUserPointer(window);
+    w->width = width;
+    w->height = height;
+    w->resized = true;
+}
 
 static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
     FF_int_GetInputPtr()->scroll_offset.x = xoff;
@@ -106,17 +107,25 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
     
    FF_Window* pWindow = malloc(sizeof(Window));
     pWindow->windowPtr = glfwCreateWindow(width, height, name, NULL, NULL);
+    
+    pWindow->width = width;
+    pWindow->height = height;
+    
     if (!pWindow->windowPtr) {
         LOG_WARN("Could not create window");
         free(pWindow);
         pWindow = NULL;
         return NULL;
     }
+    
+    glfwSetWindowUserPointer(pWindow->windowPtr, pWindow);
+    
     glfwMakeContextCurrent(pWindow->windowPtr);
     glfwSetKeyCallback(pWindow->windowPtr, key_callback);
     glfwSetMouseButtonCallback(pWindow->windowPtr, mouse_button_callback);
     glfwSetCursorPosCallback(pWindow->windowPtr, mouse_cursor_position_callback);
     glfwSetScrollCallback(pWindow->windowPtr, scroll_callback);
+    glfwSetWindowSizeCallback(pWindow->windowPtr, window_size_callback);
     
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         LOG_WARN("Failed to initialize glad");
@@ -127,6 +136,7 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glfwSwapInterval(1);
+    
     return pWindow;
 }
 

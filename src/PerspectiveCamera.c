@@ -2,14 +2,9 @@
 #include "../include/Core/Input.h"
 #include "../include/IO/Log.h"
 
-void FF_PerspectiveCameraPrintValues(Camera* pCamera) {
+void PerspectiveCameraPrintValues(Camera* pCamera) {
   LOG_INFO("camPos {x: %0.4f, y: %0.4f, z: %0.4f}", pCamera->camPos[0], pCamera->camPos[1], pCamera->camPos[2]);
   LOG_INFO("camFront {x: %0.4f, y: %0.4f, z: %0.4f}", pCamera->camFront[0], pCamera->camFront[1], pCamera->camFront[2]);
-  
-  LOG_INFO("camView {%0.4f, %0.4f, %0.4f, %0.4f}", pCamera->view[0][0], pCamera->view[1][0], pCamera->view[2][0], pCamera->view[3][0]);
-  LOG_INFO("camView {%0.4f, %0.4f, %0.4f, %0.4f}", pCamera->view[0][1], pCamera->view[1][1], pCamera->view[2][1], pCamera->view[3][1]);
-  LOG_INFO("camView {%0.4f, %0.4f, %0.4f, %0.4f}", pCamera->view[0][2], pCamera->view[1][2], pCamera->view[2][2], pCamera->view[3][2]);
-  LOG_INFO("camView {%0.4f, %0.4f, %0.4f, %0.4f}", pCamera->view[0][3], pCamera->view[1][3], pCamera->view[2][3], pCamera->view[3][3]);
 }
 
 void FF_PerspectiveCameraUpdateCameraVectors(Camera* pCamera) {
@@ -35,6 +30,7 @@ void FF_PerspectiveCameraUpdateProj(Camera* camera, int width, int height) {
   camera->size[1] = height;
   glm_mat4_identity(camera->proj);
   glm_perspective(glm_rad(camera->fov), (float)camera->size[0] / (float)camera->size[1], 0.1f, 100.0f, camera->proj);
+  glViewport(0, 0, width, height);
 }
 
 Camera FF_PerspectiveCamera() {
@@ -47,15 +43,17 @@ Camera FF_PerspectiveCamera() {
   glm_vec3_copy((vec3){0, 0, 0}, c.camRight);
   glm_vec3_copy((vec3){0, 1, 0}, c.camUp);
   glm_vec3_copy((vec3){0, 0, -1}, c.camFront);
-  FF_PerspectiveCameraUpdateProj(&c, 600, 600);
   FF_PerspectiveCameraUpdateCameraVectors(&c);
+  FF_PerspectiveCameraUpdateProj(&c, 600, 600);
   return c;
 }
 
 void FF_PerspectiveCameraUpdate(Camera* camera) {
   glm_mat4_identity(camera->view);
   FF_PerspectiveCameraUpdateCameraVectors(camera);
-
+  
+  PerspectiveCameraPrintValues(camera);
+  
   vec3 posPlusFront;
   glm_vec3_add(camera->camPos, camera->camFront, posPlusFront);
   glm_lookat(camera->camPos, posPlusFront, camera->camUp, camera->view);

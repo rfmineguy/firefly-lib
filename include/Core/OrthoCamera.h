@@ -3,7 +3,7 @@
 #include "Camera.h"
 
 Camera FF_OrthoCamera();
-void FF_OrthoCameraUpdate(Camera*);
+void FF_OrthoCameraUpdate(Camera*, bool);
 void FF_OrthoCameraUpdateProj(Camera*, int, int);
 
 #endif

@@ -25,13 +25,19 @@ Camera FF_OrthoCamera() {
   glm_mat4_identity(c.view);
   glm_mat4_identity(c.proj);
   // WHY?!
-  FF_PerspectiveCameraUpdateProj(&c, 600, 600);
-  //FF_OrthoCameraUpdateProj(&c, 600, 600);
+  //FF_PerspectiveCameraUpdateProj(&c, c.size[0], c.size[1]);
+  FF_OrthoCameraUpdateProj(&c, 600, 600);
   return c;
 }
 
-void FF_OrthoCameraUpdate(Camera* pCamera) {
-  const float camSpeed = 0.05f;
+void FF_OrthoCameraUpdate(Camera* pCamera, bool movement) {
+  float camSpeed;
+  if (movement) {
+    camSpeed = 0.05f;
+  } else {
+    camSpeed = 0;
+  }
+
   if (FF_IsKeyDown(KEY_W)) {
     pCamera->camPos[1] -= camSpeed;
   }
@@ -44,6 +50,7 @@ void FF_OrthoCameraUpdate(Camera* pCamera) {
   if (FF_IsKeyDown(KEY_D)) {
     pCamera->camPos[0] += camSpeed;
   }
+
   RecalcView(pCamera);
   LOG_INFO("camPos: x=%0.4f y=%0.4f z=%0.4f", pCamera->camPos[0], pCamera->camPos[1], pCamera->camPos[2]);
 

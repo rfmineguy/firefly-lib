@@ -30,7 +30,6 @@ void FF_PerspectiveCameraUpdateProj(Camera* camera, int width, int height) {
   camera->size[1] = height;
   glm_mat4_identity(camera->proj);
   glm_perspective(glm_rad(camera->fov), (float)camera->size[0] / (float)camera->size[1], 0.1f, 100.0f, camera->proj);
-  glViewport(0, 0, width, height);
 }
 
 Camera FF_PerspectiveCamera() {
@@ -52,7 +51,7 @@ void FF_PerspectiveCameraUpdate(Camera* camera) {
   glm_mat4_identity(camera->view);
   FF_PerspectiveCameraUpdateCameraVectors(camera);
   
-  PerspectiveCameraPrintValues(camera);
+  //PerspectiveCameraPrintValues(camera);
   
   vec3 posPlusFront;
   glm_vec3_add(camera->camPos, camera->camFront, posPlusFront);

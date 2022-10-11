@@ -85,6 +85,7 @@ static void window_size_callback(GLFWwindow* window, int width, int height) {
     w->width = width;
     w->height = height;
     w->resized = true;
+    glViewport(0, 0, width, height);
 }
 
 static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
@@ -134,7 +135,6 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
         return NULL;
     }
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
     glfwSwapInterval(1);
     
     return pWindow;

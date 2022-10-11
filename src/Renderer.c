@@ -32,7 +32,7 @@ void FF_RendererDrawGeometryEx(Geometry g, Camera c, vec3 pos, vec3 scale, vec3 
   glm_mat4_identity(transform);
   glm_translate(transform, pos);
   glm_scale(transform, scale);
-  glm_rotate(transform, glm_rad(angle), rotAxis);
+  //glm_rotate(transform, glm_rad(angle), rotAxis);
   
   BindShader(all_encompassing_shader);
   SetUniform4fv(all_encompassing_shader, "view", c.view[0]);

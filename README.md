@@ -13,7 +13,7 @@ I will most likely **not** provide prebuilt binaries of this library as the buil
 ### MacOS
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>
 `cd firefly-lib`<br>
-`make install`<br>
+`sudo make install`<br>
 *If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
 
 ### Linux

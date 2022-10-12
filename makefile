@@ -22,8 +22,6 @@ LIBRARY_PATHS = -L/opt/homebrew/lib/ \
 				-Llibs/openal/out/ \
 				-Lexample_resources/
 
-DYLIB_PATH = $(shell pwd)/libs/openal/out/
-
 INCLUDE_DIRS := -I/include/ \
 			    -I/opt/homebrew/include/ \
 				-I/libs/glad/include/ \

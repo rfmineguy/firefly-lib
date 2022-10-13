@@ -9,19 +9,19 @@ typedef enum {
 } API;
 typedef struct _Window Window;
 
-API FF_DetectAPI();
-void FF_InitWindow();
-void FF_InitWindowEx(const char*, int, int);
-void FF_InitWindowAPI(API);
-void FF_InitWindowAPIEx(API, const char*, int, int);
-void FF_InitWindowGL();
-void FF_InitWindowGLEx(const char*, int, int);
-void FF_InitWindowVK();
-void FF_InitWindowVKEx(const char*, int, int);
-void FF_InitWindowMTL();
-void FF_InitWindowMTLEx(const char*, int, int);
+//API FF_DetectAPI();
+//void FF_InitWindow();
+//void FF_InitWindowEx(const char*, int, int);
+//void FF_InitWindowAPI(API);
+//void FF_InitWindowAPIEx(API, const char*, int, int);
+//void FF_InitWindowGL();
+//void FF_InitWindowGLEx(const char*, int, int);
+//void FF_InitWindowVK();
+//void FF_InitWindowVKEx(const char*, int, int);
+//void FF_InitWindowMTL();
+//void FF_InitWindowMTLEx(const char*, int, int);
 
-Window* FF_CreateWindowGL(const char*, uint16_t, uint16_t);
+Window* FF_CreateWindowGL(const char*, uint16_t, uint16_t, bool);
 void FF_DestroyWindowGL(Window*);
 
 void FF_DestroyWindow();

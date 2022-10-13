@@ -93,7 +93,7 @@ static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
     FF_int_GetInputPtr()->scroll_offset.y = yoff;
 }
 
-Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
+Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, bool resizable) {
     if (!glfwInit()) {
         LOG_WARN("Could not initialize glfw");
         return NULL;
@@ -105,6 +105,7 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height) {
 #ifdef __APPLE__ 
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
+    glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
     
    FF_Window* pWindow = malloc(sizeof(Window));
     pWindow->windowPtr = glfwCreateWindow(width, height, name, NULL, NULL);

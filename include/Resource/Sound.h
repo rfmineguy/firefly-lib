@@ -16,7 +16,7 @@ typedef struct _SoundSource {
   float gain, pitch;
   ALuint id;
   bool looping;
-  Sound curr_sound;
+  ALuint playing_buffer_id;
 } SoundSource;
 
 typedef struct _SoundMaster SoundMaster;

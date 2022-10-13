@@ -199,7 +199,7 @@ void FF_SoundSourcePlay(SoundSource src, Sound sound) {
   FF_SoundSourceStop(src);
   alSourcei(src.id, AL_BUFFER, sound.buffer);
   alSourcePlay(src.id);
-  src.curr_sound = sound;
+  src.playing_buffer_id = sound.buffer;
 }
 
 void FF_SoundSourcePause(SoundSource src) {
@@ -207,7 +207,7 @@ void FF_SoundSourcePause(SoundSource src) {
 }
 
 void FF_SoundSourceUnpause(SoundSource src) {
-  alSourcei(src.id, AL_BUFFER, src.curr_sound.buffer);
+  alSourcei(src.id, AL_BUFFER, src.playing_buffer_id);
   alSourcePlay(src.id);
 }
 

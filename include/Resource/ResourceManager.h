@@ -27,11 +27,11 @@ void FF_DeinitResourceManager();
 
 void FF_PutTexture(Texture, const char*);
 void FF_PutShader(Shader, const char*);
-void FF_PutSound(Sound, const char*);
+void FF_PutSound(FF_Sound, const char*);
 
 Texture FF_GetTexture(const char*);
 Shader FF_GetShader(const char*);
-Sound FF_GetSound(const char*);
+FF_Sound FF_GetSound(const char*);
 
 bool FF_IsTextureLoaded(const char*);
 bool FF_IsShaderLoaded(const char*);
@@ -58,9 +58,9 @@ bool IsAtlasResourceLoaded(const char*);
 Atlas* GetAtlasResource(const char*);
 void FreeAtlasResource(const char*);
 
-void PutSoundResource(Sound*, const char*);
+void PutSoundResource(FF_Sound*, const char*);
 bool IsSoundResourceLoaded(const char*);
-Sound* GetSoundResource(const char*);
+FF_Sound* GetSoundResource(const char*);
 void FreeSoundResource(const char*);
 
 #endif

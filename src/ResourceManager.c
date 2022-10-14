@@ -38,7 +38,7 @@ void FF_PutShader(Shader shader, const char* nameId) {
     
 }
 
-void FF_PutSound(Sound sound, const char* nameId) {
+void FF_PutSound(FF_Sound sound, const char* nameId) {
     
 }
 
@@ -50,7 +50,7 @@ Shader FF_GetShader(const char* nameId) {
     
 }
 
-Sound FF_GetSound(const char* nameId) {
+FF_Sound FF_GetSound(const char* nameId) {
     
 }
 
@@ -148,7 +148,7 @@ void FreeAtlasResource(const char* name) {
     ht_del(pool.atlas_table, name);
 }
 
-void PutSoundResource(Sound *s, const char *name) {
+void PutSoundResource(FF_Sound *s, const char *name) {
     if (s == NULL)
         return;
     ht_set(pool.sound_table, name, s);
@@ -158,12 +158,12 @@ bool IsSoundResourceLoaded(const char* name) {
     return ht_get(pool.sound_table, name) != NULL;
 }
 
-Sound* GetSoundResource(const char* name) {
+FF_Sound* GetSoundResource(const char* name) {
     if (!IsSoundResourceLoaded(name)) {
         LOG_CRITICAL("Sound [%s] not loaded", name);
         return NULL;
     }
-    return (Sound*) ht_get(pool.sound_table, name);
+    return (FF_Sound*) ht_get(pool.sound_table, name);
 }
 
 void FreeSoundResource(const char* name) {

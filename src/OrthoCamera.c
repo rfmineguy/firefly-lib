@@ -69,7 +69,5 @@ void FF_OrthoCameraUpdateProj(Camera* pCamera, int width, int height) {
   pCamera->size[0] = width;
   pCamera->size[1] = height;
   glm_mat4_identity(pCamera->proj);
-  LOG_DEBUG("width: %d, height: %d", width, height);
-  //glm_ortho((float)-width, (float)width, (float)-height, (float)height, -100.0f, 100.0f, pCamera->proj);
   glm_ortho(0, (float)width, (float)height, 0, -100.0f, 100.0f, pCamera->proj);
 }

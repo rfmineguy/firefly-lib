@@ -12,11 +12,6 @@ FF_Renderer* FF_CreateRenderer(FF_Window*);
 void FF_DestroyRenderer(FF_Renderer*);
 
 void FF_RendererDrawGeometry(FF_Renderer*, Geometry, Camera, vec3, vec3, vec3, float);
-
-//void FF_InitRenderer();
-//void FF_DeinitRenderer();
-
-//void FF_RendererDrawGeometry(Geometry);
-//void FF_RendererDrawGeometryEx(Geometry, Camera, vec3, vec3, vec3, float);
+//void FF_RendererDrawText(FF_Renderer*, FF_Font, Camera, const char*);
 
 #endif

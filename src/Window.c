@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-typedef struct _Window {
+typedef struct _FF_Window {
     GLFWwindow* windowPtr;
     uint16_t width;
     uint16_t height;
@@ -81,7 +81,7 @@ static void mouse_cursor_position_callback(GLFWwindow* window, double xpos, doub
 }
 
 static void window_size_callback(GLFWwindow* window, int width, int height) {
-    Window* w = glfwGetWindowUserPointer(window);
+    FF_Window* w = glfwGetWindowUserPointer(window);
     w->width = width;
     w->height = height;
     w->resized = true;
@@ -93,7 +93,7 @@ static void scroll_callback(GLFWwindow* window, double xoff, double yoff) {
     FF_int_GetInputPtr()->scroll_offset.y = yoff;
 }
 
-Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, bool resizable) {
+FF_Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, bool resizable) {
     if (!glfwInit()) {
         LOG_WARN("Could not initialize glfw");
         return NULL;
@@ -107,7 +107,7 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, boo
 #endif
     glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
     
-   FF_Window* pWindow = malloc(sizeof(Window));
+   FF_Window* pWindow = malloc(sizeof(FF_Window));
     pWindow->windowPtr = glfwCreateWindow(width, height, name, NULL, NULL);
     
     pWindow->width = width;
@@ -141,29 +141,29 @@ Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, boo
     return pWindow;
 }
 
-void FF_DestroyWindowGL(Window *pWindow) {
+void FF_DestroyWindowGL(FF_Window *pWindow) {
     glfwDestroyWindow(pWindow->windowPtr);
     pWindow->windowPtr = NULL;
     free(pWindow);
     pWindow = NULL;
 }
 
-void FF_WindowClearBackground(Window *pWindow) {
+void FF_WindowClearBackground(FF_Window *pWindow) {
     glfwMakeContextCurrent(pWindow->windowPtr);
     FF_WindowClearBackgroundEx(pWindow, 0.4f, 0.4f, 0.4f, 1.0f);
 }
 
-void FF_WindowClearBackgroundEx(Window* pWindow, float r, float g, float b, float a) {
+void FF_WindowClearBackgroundEx(FF_Window* pWindow, float r, float g, float b, float a) {
     glfwMakeContextCurrent(pWindow->windowPtr);
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void FF_SetWindowShouldClose(Window* pWindow, bool shouldClose) {
+void FF_SetWindowShouldClose(FF_Window* pWindow, bool shouldClose) {
     glfwSetWindowShouldClose(pWindow->windowPtr, GLFW_TRUE);
 }
 
-void FF_WindowPollEvents(Window* pWindow) {
+void FF_WindowPollEvents(FF_Window* pWindow) {
     glfwPollEvents();
     if (glfwGetKey(pWindow->windowPtr, pWindow->closeKey)) {
         LOG_DEBUG("Pressed the window close key");
@@ -175,11 +175,11 @@ double FF_GetTime() {
     return glfwGetTime();
 }
 
-double FF_WindowDeltaTime(Window* pWindow) {
+double FF_WindowDeltaTime(FF_Window* pWindow) {
     return pWindow->deltaTime;
 }
 
-bool FF_WindowShouldClose(Window *pWindow) {
+bool FF_WindowShouldClose(FF_Window *pWindow) {
     pWindow->currentTime = FF_GetTime();
     pWindow->deltaTime = pWindow->currentTime - pWindow->lastTime;
     pWindow->lastTime = pWindow->currentTime;
@@ -187,25 +187,25 @@ bool FF_WindowShouldClose(Window *pWindow) {
     return glfwWindowShouldClose(pWindow->windowPtr);
 }
 
-void FF_SetWindowCloseKey(Window *pWindow, int key) {
+void FF_SetWindowCloseKey(FF_Window *pWindow, int key) {
     pWindow->closeKey = key;
 }
 
-bool FF_WasWindowResized(Window *pWindow) {
+bool FF_WasWindowResized(FF_Window *pWindow) {
     bool resized = pWindow->resized;
     pWindow->resized = false;
     return resized;
 }
 
-int FF_WindowGetWidth(Window *pWindow) {
+int FF_WindowGetWidth(FF_Window *pWindow) {
     return pWindow->width;
 }
 
-int FF_WindowGetHeight(Window *pWindow) {
+int FF_WindowGetHeight(FF_Window *pWindow) {
     return pWindow->height;
 }
 
-void FF_ToggleCursorLocked(Window *pWindow) {
+void FF_ToggleCursorLocked(FF_Window *pWindow) {
     pWindow->cursorLocked = !pWindow->cursorLocked;
     if (pWindow->cursorLocked) {
         glfwSetInputMode(pWindow->windowPtr, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -215,6 +215,6 @@ void FF_ToggleCursorLocked(Window *pWindow) {
     }
 }
 
-bool FF_IsCursorLocked(Window *pWindow) {
+bool FF_IsCursorLocked(FF_Window *pWindow) {
     return pWindow->cursorLocked;
 }

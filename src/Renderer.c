@@ -2,42 +2,41 @@
 #include "../include/IO/Log.h"
 #include "../include/Resource/Shader.h"
 #include <glad/glad.h>
+#include <string.h>
 
 extern char cam_frag[];
 extern unsigned int cam_frag_len;
 extern char cam_vert[];
 extern unsigned int cam_vert_len;
 
-static Shader* all_encompassing_shader = NULL;
+typedef struct int_FF_Renderer {
+  Shader* camShader;
+} FF_Renderer;
 
-void FF_InitRenderer() {
-  SetLogStream(stdout);
-  LOG_INFO("[Renderer] Init");
-  all_encompassing_shader = LoadShaderRaw(cam_vert, cam_vert_len, cam_frag, cam_frag_len);
+FF_Renderer* FF_CreateRenderer(FF_Window* windowPtr) {
+  FF_Renderer* r = malloc(sizeof(*r));
+  r->camShader = LoadShaderRaw(cam_vert, cam_vert_len, cam_frag, cam_frag_len);
+  return r;
 }
 
-void FF_DeinitRenderer() {
-  FreeShader(all_encompassing_shader);
+void FF_DestroyRenderer(FF_Renderer* rendererPtr) {
+  FreeShader(rendererPtr->camShader);
+  free(rendererPtr);
+  rendererPtr = NULL;
 }
 
-void FF_RendererDrawGeometry(Geometry g) {
-  BindGeometry(&g);
-  BindShader(all_encompassing_shader);
-  glDrawElements(GL_TRIANGLES, g.indice_count, GL_UNSIGNED_INT, 0);
-}
-
-void FF_RendererDrawGeometryEx(Geometry g, Camera c, vec3 pos, vec3 scale, vec3 rotAxis, float angle) {
+void FF_RendererDrawGeometry(FF_Renderer* r, Geometry g, Camera c, vec3 pos, vec3 scale, vec3 rotAx, float rot) {
   mat4 transform;
   glm_mat4_identity(transform);
   glm_translate(transform, pos);
   glm_scale(transform, scale);
-  glm_rotate(transform, glm_rad(angle), rotAxis);
+  glm_rotate(transform, glm_rad(rot), rotAx);
   
-  BindShader(all_encompassing_shader);
-  SetUniform4fv(all_encompassing_shader, "view", c.view[0]);
-  SetUniform4fv(all_encompassing_shader, "projection", c.proj[0]);
+  BindShader(r->camShader);
+  SetUniform4fv(r->camShader, "view", c.view[0]);
+  SetUniform4fv(r->camShader, "projection", c.proj[0]);
 
-  SetUniform4fv(all_encompassing_shader, "model", transform[0]);
+  SetUniform4fv(r->camShader, "model", transform[0]);
   
   BindGeometry(&g);
   

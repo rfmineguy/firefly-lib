@@ -13,9 +13,14 @@ typedef struct _SoundMaster {
   int idCount;
 } SoundMaster;
 
-SoundMaster gSoundMaster = (SoundMaster){0};
+typedef struct _FF_AudioSystem {
+  ALCdevice *pDevice;
+  ALCcontext *pContext;
+  FF_SoundSource sources[MAX_SOUND_SOURCES];
+  int sourcesCount;
+} FF_AudioSystem;
 
-bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_size_out, int32_t *sample_rate_out) {
+bool ReadWAV(FF_Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_size_out, int32_t *sample_rate_out) {
   FILE *f;
   char riff[4], wave[4], fmt[4], data[4];
   int32_t file_size;
@@ -93,130 +98,139 @@ bool ReadWAV(Sound *pSound, const char* path, int16_t *fmt_out, int32_t *data_si
   return true;
 }
 
-SoundMaster* FF_int_GetSoundMaster() {
-  return &gSoundMaster;
-}
+FF_AudioSystem* FF_CreateAudioSystem() {
+  FF_AudioSystem* pAudioSystem = malloc(sizeof(FF_AudioSystem));
 
-void FF_InitAudioSystem() {
-  gSoundMaster.pDevice = alcOpenDevice(NULL);
-  gSoundMaster.pContext = NULL;
-  if (!gSoundMaster.pDevice) {
-    LOG_CRITICAL("[Sound] => Failed to open OpenAL device");
-    return;
+  // Device creation
+  pAudioSystem->pDevice = alcOpenDevice(NULL);
+  pAudioSystem->pContext = NULL;
+  if (!pAudioSystem->pDevice) {
+    LOG_CRITICAL("[AudioSystem] Failed to open OpenAL device, %p");
+    alcCloseDevice(pAudioSystem->pDevice);
+    free(pAudioSystem);
+    pAudioSystem = NULL;
+    return NULL;
   }
-  gSoundMaster.pContext = alcCreateContext(gSoundMaster.pDevice, NULL);
-  if (!gSoundMaster.pContext || alcMakeContextCurrent(gSoundMaster.pContext) == AL_FALSE) {
-    if (gSoundMaster.pContext != NULL) {
-      alcDestroyContext(gSoundMaster.pContext);
+  
+  // Context creation
+  pAudioSystem->pContext = alcCreateContext(pAudioSystem->pDevice, NULL);
+  if (!pAudioSystem->pContext || alcMakeContextCurrent(pAudioSystem->pContext) == AL_FALSE) {
+    LOG_CRITICAL("[AudioSystem] Failed to set OpenAL context");
+    if (pAudioSystem->pContext != NULL) {
+      alcDestroyContext(pAudioSystem->pContext);
     }
-    alcCloseDevice(gSoundMaster.pDevice);
-    LOG_CRITICAL("[Sound] => Failed to set OpenAL context");
-    return;
-  }
-  LOG_INFO("[Sound] => Initialized OpenAL");
-}
-
-void FF_DeinitAudioSystem() {
-  for (int i = 0; i < FF_int_GetSoundMaster()->idCount; i++) {
-    ALuint id = FF_int_GetSoundMaster()->sourceIds[i];
-    alDeleteSources(1, &id);
-    LOG_DEBUG("[Sound] => Deleted sound source id [%d]", id);
+    alcCloseDevice(pAudioSystem->pDevice);
+    free(pAudioSystem);
+    pAudioSystem = NULL;
+    return NULL;
   }
   
-  ALCdevice *device;
-  ALCcontext *ctx;
-  ctx = alcGetCurrentContext();
-  if (ctx == NULL)
-    return;
-  
-  device = alcGetContextsDevice(ctx);
-  if (device == NULL)
-    return;
-  
-  alcMakeContextCurrent(NULL);
-  alcDestroyContext(ctx);
-  alcCloseDevice(device);
+  FF_SetAudioListener(pAudioSystem, (vec3){0, 0, 0},  (vec3){0, 0, 0});
+  LOG_INFO("[AudioSystem] Created successfully.");
+  return pAudioSystem;
 }
 
-Sound FF_LoadSound(const char* path) {
-  Sound s;
-  int16_t format;
-  int32_t sample_rate, data_size;
-  ReadWAV(&s, path, &format, &data_size, &sample_rate);
-  alGenBuffers(1, &s.buffer);
-  alBufferData(s.buffer, format + AL_FORMAT_MONO8, s.data, data_size, sample_rate);
+void FF_DestroyAudioSystem(FF_AudioSystem* pAudioSystem) {
+  for (int i = 0; i < pAudioSystem->sourcesCount; i++) {
+    FF_SoundSourceStop(pAudioSystem->sources[i]);
+    alDeleteSources(1, &pAudioSystem->sources[i].id);
+  }
   
-  LOG_INFO("[Sound] => Loaded Sound from \"%s\"", path);
-  free(s.data);
-  s.data = NULL;
-  return s;
+  alcMakeContextCurrent(pAudioSystem->pContext);
+  alcDestroyContext(pAudioSystem->pContext);
+  pAudioSystem->pContext = NULL;
+  alcCloseDevice(pAudioSystem->pDevice);
+  pAudioSystem->pDevice = NULL;
+  
+  free(pAudioSystem);
+  pAudioSystem = NULL;
+  LOG_INFO("[AudioSystem] Destroyed successfully.");
 }
 
-void FF_FreeSound(Sound s) {
-  alDeleteBuffers(1, &s.buffer);
-  free(s.data);
-  s.data = NULL;
-}
-
-void FF_SoundListener(vec3 pos, vec3 vel) {
+void FF_SetAudioListener(FF_AudioSystem* pAudioSystem, vec3 pos, vec3 vel) {
   alListener3f(AL_POSITION, pos[0], pos[1], pos[2]);
   alListener3f(AL_VELOCITY, vel[0], vel[1], vel[2]);
 }
 
-SoundSource FF_SoundSource() {
-  return FF_SoundSourceEx(1.0f, 1.0f, (vec3){0, 0, 0}, false);
+FF_Sound FF_LoadSound(const char* filepath) {
+  FF_Sound sound;
+  int16_t format;
+  int32_t sampleRate, dataSize;
+  ReadWAV(&sound, filepath, &format, &dataSize, &sampleRate);
+  alGenBuffers(1, &sound.buffer);
+  alBufferData(sound.buffer, format + AL_FORMAT_MONO8, sound.data, dataSize, sampleRate);
+  free(sound.data);
+  sound.data = NULL;
+  return sound;
 }
 
-SoundSource FF_SoundSourceEx(float pitch, float gain, vec3 pos, bool looping) {
-  SoundSource source = (SoundSource){.pitch=pitch, .gain=gain, .position[0] = pos[0], .position[1] = pos[1], .position[2] = pos[2], .looping=looping};
+void FF_FreeSound(FF_Sound sound) {
+  alDeleteBuffers(1, &sound.buffer);
+  free(sound.data);
+  sound.data = NULL;
+}
+
+FF_SoundSource FF_CreateSoundSource(FF_AudioSystem* pAudioSystem) {
+  return FF_CreateSoundSourceEx(pAudioSystem, 1.0f, 1.0f, (vec3){0}, false);
+}
+
+FF_SoundSource FF_CreateSoundSourceEx(FF_AudioSystem* pAudioSystem, float pitch, float gain, vec3 pos, bool looping) {
+  FF_SoundSource source;
   alGenSources(1, &source.id);
-  FF_int_GetSoundMaster()->sourceIds[FF_int_GetSoundMaster()->idCount++] = source.id;
-  LOG_INFO("[Sound] => Creating sound Source with id %d", source.id);
+  FF_SoundSourceSetGain(&source, gain);
+  FF_SoundSourceSetPitch(&source, pitch);
+  FF_SoundSourceSetPos(&source, pos);
+  FF_SoundSourceSetLooping(&source, looping);
+  source.gain = gain;
+  pAudioSystem->sources[pAudioSystem->sourcesCount++] = source;
   return source;
 }
 
-void FF_SoundSourceSetGain(SoundSource *src, float gain) {
-  src->gain = gain;
-  alSourcef(src->id, AL_GAIN, gain);
+void FF_SoundSourceSetGain(FF_SoundSource* pSource, float gain) {
+  if (gain > 1) {
+    gain = 1;
+  }
+  pSource->gain = gain;
+  alSourcef(pSource->id, AL_GAIN, gain);
 }
 
-void FF_SoundSourceSetPitch(SoundSource *src, float pitch) {
-  src->pitch = pitch;
-  alSourcef(src->id, AL_PITCH, pitch);
+void FF_SoundSourceSetPitch(FF_SoundSource* pSource, float pitch) {
+  pSource->pitch = pitch;
+  alSourcef(pSource->id, AL_PITCH, pitch);
 }
 
-void FF_SoundSourceSetPos(SoundSource *src, vec3 pos) {
-  glm_vec3_copy(pos, src->position);
-  alSource3f(src->id, AL_POSITION, pos[0], pos[1], pos[2]);
+void FF_SoundSourceSetPos(FF_SoundSource* pSource, vec3 pos) {
+  glm_vec3_copy(pSource->position, pos);
+  alSource3f(pSource->id, AL_POSITION, pos[0], pos[1], pos[2]);
 }
 
-void FF_SoundSourceSetLooping(SoundSource *src, bool looping) {
-  src->looping = looping;
-  alSourcei(src->id, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
+void FF_SoundSourceSetLooping(FF_SoundSource* pSource, bool looping) {
+  pSource->looping = looping;
+  alSourcei(pSource->id, AL_LOOPING, looping ? AL_TRUE : AL_FALSE);
 }
 
-void FF_SoundSourcePlay(SoundSource src, Sound sound) {
-  FF_SoundSourceStop(src);
-  alSourcei(src.id, AL_BUFFER, sound.buffer);
-  alSourcePlay(src.id);
-  src.playing_buffer_id = sound.buffer;
+void FF_SoundSourcePlay(FF_SoundSource source, FF_Sound sound) {
+  FF_SoundSourceStop(source);
+  alSourcei(source.id, AL_BUFFER, sound.buffer);
+  alSourcePlay(source.id);
+  source.playing_buffer_id = sound.buffer;
 }
 
-void FF_SoundSourcePause(SoundSource src) {
-  alSourcePause(src.id);
+void FF_SoundSourcePause(FF_SoundSource source) {
+  alSourcePause(source.id);
 }
 
-void FF_SoundSourceUnpause(SoundSource src) {
-  alSourcei(src.id, AL_BUFFER, src.playing_buffer_id);
-  alSourcePlay(src.id);
+void FF_SoundSourceUnpause(FF_SoundSource source) {
+  alSourcei(source.id, AL_BUFFER, source.playing_buffer_id);
+  alSourcePlay(source.id);
 }
 
-void FF_SoundSourceStop(SoundSource src) {
-  alSourceStop(src.id);
+void FF_SoundSourceStop(FF_SoundSource source) {
+  alSourceStop(source.id);
 }
 
-bool FF_SoundSourcePlaying(SoundSource src) {
+bool FF_SoundSourcePlaying(FF_SoundSource source) {
   ALint state;
-  alGetSourcei(src.id, AL_SOURCE_STATE, &state);
+  alGetSourcei(source.id, AL_SOURCE_STATE, &state);
   return state == AL_PLAYING;
 }

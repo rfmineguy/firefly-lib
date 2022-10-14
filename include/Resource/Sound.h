@@ -5,43 +5,43 @@
 #include <AL/al.h>
 #include <stdbool.h>
 
-typedef struct _Sound {
+typedef struct _FF_Sound {
   uint32_t samples;
   int16_t *data;
   ALuint buffer;
-} Sound;
+} FF_Sound;
 
-typedef struct _SoundSource {
+typedef struct _FF_SoundSource {
   vec3 position;
   float gain, pitch;
   ALuint id;
   bool looping;
   ALuint playing_buffer_id;
-} SoundSource;
+} FF_SoundSource;
 
+// Opaque type
+typedef struct _FF_AudioSystem FF_AudioSystem;
 typedef struct _SoundMaster SoundMaster;
 
-// #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources
+FF_AudioSystem* FF_CreateAudioSystem();
+void FF_DestroyAudioSystem(FF_AudioSystem*);
+void FF_SetAudioListener(FF_AudioSystem*, vec3, vec3);
 
-void FF_InitAudioSystem();
-void FF_DeinitAudioSystem();
-SoundMaster* FF_int_GetSoundMaster();
+FF_Sound FF_LoadSound(const char*);
+void FF_FreeSound(FF_Sound);
 
-Sound FF_LoadSound(const char*);
-void FF_FreeSound(Sound);
+FF_SoundSource FF_CreateSoundSource(FF_AudioSystem*);
+FF_SoundSource FF_CreateSoundSourceEx(FF_AudioSystem*, float, float, vec3, bool);
+void FF_SoundSourceSetGain(FF_SoundSource*, float);
+void FF_SoundSourceSetPitch(FF_SoundSource*, float);
+void FF_SoundSourceSetPos(FF_SoundSource*, vec3);
+void FF_SoundSourceSetLooping(FF_SoundSource*, bool);
 
-void FF_SoundListener(vec3, vec3);
-SoundSource FF_SoundSource();        //store sound source ids in the SoundMaster
-SoundSource FF_SoundSourceEx(float, float, vec3, bool);
-void FF_SoundSourceSetGain(SoundSource*, float);
-void FF_SoundSourceSetPitch(SoundSource*, float);
-void FF_SoundSourceSetPos(SoundSource*, vec3);
-void FF_SoundSourceSetLooping(SoundSource*, bool);
+void FF_SoundSourcePlay(FF_SoundSource, FF_Sound);
+void FF_SoundSourcePause(FF_SoundSource);
+void FF_SoundSourceUnpause(FF_SoundSource);
+void FF_SoundSourceStop(FF_SoundSource);
 
-void FF_SoundSourcePlay(SoundSource, Sound);
-void FF_SoundSourcePause(SoundSource);
-void FF_SoundSourceUnpause(SoundSource);
-void FF_SoundSourceStop(SoundSource);
-bool FF_SoundSourcePlaying(SoundSource);
+bool FF_SoundSourcePlaying(FF_SoundSource);
 
 #endif

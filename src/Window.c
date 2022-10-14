@@ -138,6 +138,7 @@ FF_Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, 
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(1);
     
+    LOG_INFO("[Window] Created successfully");
     return pWindow;
 }
 
@@ -146,6 +147,7 @@ void FF_DestroyWindowGL(FF_Window *pWindow) {
     pWindow->windowPtr = NULL;
     free(pWindow);
     pWindow = NULL;
+    LOG_INFO("[Window] Destroyed successfully");
 }
 
 void FF_WindowClearBackground(FF_Window *pWindow) {

@@ -9,6 +9,10 @@ extern unsigned int cam_frag_len;
 extern char cam_vert[];
 extern unsigned int cam_vert_len;
 
+typedef struct _Character {
+  
+} Character;
+
 typedef struct int_FF_Renderer {
   Shader* camShader;
 } FF_Renderer;

@@ -4,9 +4,7 @@
 #include "../Core/Camera.h"
 #include "../Core/Window.h"
 
-typedef struct int_FF_Renderer FF_Renderer;/* {
-  
-} FF_Renderer;*/
+typedef struct int_FF_Renderer FF_Renderer;
 
 FF_Renderer* FF_CreateRenderer(FF_Window*);
 void FF_DestroyRenderer(FF_Renderer*);

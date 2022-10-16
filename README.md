@@ -25,15 +25,19 @@ cglm
 
 ## Build instructions
 ### MacOS
-`git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>
-`cd firefly-lib`<br>
-`sudo make out/libfirefly.so install`<br>
+```
+git clone https://github.com/rfmineguy/firefly-lib --recursive
+cd firefly-lib
+sudo make out/libfirefly.so install
+```
 *If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
 
 ### Linux
-`git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>
-`cd firefly-lib`<br>
-`sudo make out/libfirefly.so install`<br>
+```
+git clone https://github.com/rfmineguy/firefly-lib --recursive
+cd firefly-lib
+sudo make out/libfirefly.so install
+```
 *If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
 
 ### Windows

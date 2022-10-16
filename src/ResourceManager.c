@@ -43,27 +43,27 @@ void FF_PutSound(FF_Sound sound, const char* nameId) {
 }
 
 Texture FF_GetTexture(const char* nameId) {
-    
+    return (Texture){};
 }
 
 Shader FF_GetShader(const char* nameId) {
-    
+    return (Shader){};
 }
 
 FF_Sound FF_GetSound(const char* nameId) {
-    
+    return (FF_Sound){};
 }
 
 bool FF_IsTextureLoaded(const char* nameId) {
-    
+    return false;
 }
 
 bool FF_IsShaderLoaded(const char* nameId) {
-    
+    return false;
 }
 
 bool FF_IsSoundLoaded(const char* nameId) {
-    
+    return false;
 }
 
 

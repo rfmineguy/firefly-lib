@@ -14,21 +14,6 @@ else
 	LIBRARY_LIST += ldd out/libfirefly.so
 endif
 
-# external lib details (in addition to the default search paths)
-LIBRARY_PATHS = -L/opt/homebrew/lib/ \
-				#-Llibs/glad-rf/out/ \
-				-Llibs/glfw/out/ \
-				-Llibs/cglm/out/ \
-				-Llibs/openal/out/ \
-				-Lexample_resources/
-
-INCLUDE_DIRS := -I/include/ \
-			    -I/opt/homebrew/include/ \
-				-I/libs/glad/include/ \
-				-I/libs/stb/include/ \
-				-I/libs/cglm/include/ \
-				-I/libs/openal/include/
-
 # INCLUDE DIRECTORIES FOR THIS FireflyLib
 LOCAL_CORE_INCLUDE = include/Core
 LOCAL_IO_INCLUDE = include/IO
@@ -42,26 +27,22 @@ H_IO = $(LOCAL_IO_INCLUDE)/*.h
 H_RESOURCE = $(LOCAL_RESOURCE_INCLUDE)/*.h
 H_RENDERING = $(LOCAL_RENDERING_INCLUDE)/*.h
 HEADERS = $(H_CORE) $(H_IO) $(H_RESOURCE) $(H_RENDERING)
-
 OBJECTS := $(patsubst src/%.c, obj/%.o, $(SOURCES))
 
-# LIBRARY DIRECTORIES AND FILES FOR THIS FireflyLib
-GLFW_LIB_BUILD = libs/glfw/out/libglfw3.a
-GLFW_LIB_DIR = libs/glfw/out/
-GLFW_LIB = glfw3
+FREETYPE_LIB := $(shell pkg-config --libs freetype2)
+FREETYPE_CFLAGS := $(shell pkg-config --cflags freetype2)
 
-GLAD_LIB_BUILD = libs/glad-rf/out/libglad.a
-GLAD_LIB_DIR = libs/glad-rf/out/
-GLAD_LIB = glad
+GLFW_LIB := $(shell pkg-config --libs glfw3)
+GLFW_CFLAGS  := $(shell pkg-config --cflags glfw3)
 
-CGLM_LIB_BUILD = libs/cglm/out/libcglm.dylib
-CGLM_LIB_DIR = libs/cglm/out/
-CGLM_LIB = cglm
+OPENAL_LIB := $(shell pkg-config --libs openal) 
+OPENAL_CFLAGS := $(shell pkg-config --cflags openal)
 
-OPENAL_LIB_BUILD = libs/openal/out/libopenal.a
-OPENAL_LIB_INSTALL = /usr/local/lib/libopenal.a
-OPENAL_LIB_DIR = libs/openal/out/
-OPENAL_LIB = openal
+CGLM_LIB := $(shell pkg-config --libs cglm)
+CGLM_CFLAGS := $(shell pkg-config --cflags cglm)
+
+GLAD_C_SRC := ./libs/glad-rf/src/glad.c
+GLAD_C_CFLAGS := -I/libs/glad-rf/include/
 
 DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
 RESOURCES = $(wildcard example_resources/out/*.o)
@@ -70,66 +51,42 @@ RESOURCES = $(wildcard example_resources/out/*.o)
 build_static: prepare out/libfirefly.a
 
 .PHONY: build_shared
-build_shared: prepare out/libfirefly.so
+build_shared: build_resources pkgconfig out/libfirefly.so
 
-prepare: build_libs build_resources
+pkgconfig:
+	$(info ==============================================================)
+	$(info PACKAGE AVAILABILITY)
+	$(info ==============================================================)
+	$(info FreeType2)
+	$(info  \___ LIBS    ==> $(FREETYPE_LIB))
+	$(info  \___ CFLAGS  ==> $(FREETYPE_CFLAGS))
+	$(info GLFW3)
+	$(info  \___ LIBS    ==> $(GLFW_LIB))
+	$(info  \___ CFLAGS  ==> $(GLFW_CFLAGS))
+	$(info GLAD (local))
+	$(info  \___ SRC     ==> $(GLAD_C_SRC))
+	$(info  \___ CFLAGS  ==> $(GLAD_C_CFLAGS))
+	$(info OpenAL)
+	$(info  \___ LIBS    ==> $(OPENAL_LIB))
+	$(info  \___ CFLAGS  ==> $(OPENAL_CFLAGS))
+	$(info CGLM)
+	$(info  \___ LIBS    ==> $(CGLM_LIB))
+	$(info  \___ CFLAGS  ==> $(CGLM_CFLAGS))
+	$(info ==============================================================)
+
+prepare: build_resources
 	sudo -k
-	rm -rf out obj
-	mkdir out obj
+	mkdir out obj; chmod 755 out obj
 
 .PHONY: build_resources
 build_resources:
 	$(info =========================================================)
 	$(info Building the resource files \(text files, images, etc.\))
 	$(info =========================================================)
-	$(info )
 	make -C example_resources clean-build prepare
 	make -C example_resources cam.fragment.o cam.vertex.o
-	#make -C example_resources texture.fragment.o texture.vertex.o
 	make -C example_resources clean-working-dir
-
-# already a static library
-build_libs: $(GLFW_LIB_BUILD) $(GLAD_LIB_BUILD) $(CGLM_LIB_BUILD) $(OPENAL_LIB_BUILD)
-	$(shell sudo -k)
-
-$(GLFW_LIB_BUILD):
 	$(info =========================================================)
-	$(info Building and installing glfw)
-	$(info =========================================================)
-	$(info )
-	cmake -S libs/glfw/ -B libs/glfw/cmakeout/ && cd libs/glfw/cmakeout && make && sudo make install
-	-mkdir libs/glfw/out/ && cp libs/glfw/cmakeout/src/libglfw3.a libs/glfw/out/
-
-# already a static library
-$(GLAD_LIB_BUILD):
-	$(info =========================================================)
-	$(info Building and installing glad)
-	$(info =========================================================)
-	$(info )
-	cmake -S libs/glad-rf/ -B libs/glad-rf/cmakeout/ && cd libs/glad-rf/cmakeout && make && sudo make install
-	-mkdir libs/glad-rf/out/ && cp libs/glad-rf/cmakeout/libglad.a libs/glad-rf/out/
-
-# build options
-#  Shared Lib => -DCGLM_SHARED=ON  -DCGLM_STATIC=OFF
-#  Static Lib => -DCGLM_SHARED=OFF -DCGLM_STATUC=ON
-$(CGLM_LIB_BUILD):
-	$(info =========================================================)
-	$(info Building and installing cglm)
-	$(info =========================================================)
-	$(info )
-	cmake -DCGLM_SHARED=OFF -DCGLM_STATIC=ON -S libs/cglm/ -B libs/cglm/cmakeout/ && cd libs/cglm/cmakeout && make && sudo make install
-	-mkdir libs/cglm/out/ && cp libs/cglm/cmakeout/libcglm.a libs/cglm/out/libcglm.a
-
-# build options
-#  Shared Lib => -DLIBTYPE=SHARED (default)
-#  Static Lib => -DLIBTYPE=STATIC
-$(OPENAL_LIB_BUILD):
-	$(info =========================================================)
-	$(info Building and installing openal)
-	$(info =========================================================)
-	$(info )
-	cmake -DLIBTYPE=STATIC -S libs/openal/ -B libs/openal/cmakeout/ && cd libs/openal/cmakeout && make && sudo make install
-	-mkdir libs/openal/out/ && cp libs/openal/cmakeout/libopenal.a libs/openal/out/libopenal.a
 
 out/libfirefly.so: $(SOURCES)
 	$(info =========================================================)
@@ -137,7 +94,7 @@ out/libfirefly.so: $(SOURCES)
 	$(info =========================================================)
 	$(info )
 	sudo -k
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(INCLUDE_DIRS) $(LIBRARY_PATHS) $(LIBRARY_DEPENDENCIES) $(RESOURCES) $(DYLIB_CMD)
+	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(GLAD_C_SRC) $(GLAD_C_CFLAGS) $(FREETYPE_LIB) $(FREETYPE_CFLAGS) $(GLFW_LIB) $(GLFW_CFLAGS) $(OPENAL_LIB) $(OPENAL_CFLAGS) $(CGLM_LIB) $(CGLM_CFLAGS) $(RESOURCES)
 
 out/libfirefly.a: $(OBJECTS)
 	$(info =========================================================)
@@ -154,7 +111,7 @@ out/libfirefly.a: $(OBJECTS)
 	rm -rf *.o
 	
 obj/%.o: src/%.c
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ $(INCLUDE_DIRS)
 
 libinfo:
 	objdump -t out/libfirefly.a >> libinfo.txt
@@ -170,7 +127,8 @@ install:
 	$(info )
 	sudo install -d $(DESTDIR)$(PREFIX)/lib/
 	-sudo install -m 644 out/libfirefly.so $(DESTDIR)$(PREFIX)/lib/
-	-sudo install -m 644 out/libfirefly.a $(DESTDIR)$(PREFIX)/lib
+	-sudo install -m 644 out/libfirefly.a $(DESTDIR)$(PREFIX)/lib/
+	-sudo install -m 644 firefly.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
 
 	# Create directories
 	sudo install -d $(DESTDIR)$(PREFIX)/include/firefly
@@ -198,15 +156,10 @@ clean-other:
 	rm -rf libinfo.txt
 
 clean-cmake:
-	rm -rf libs/glfw/cmakeout/
 	rm -rf libs/glad-rf/cmakeout/
-	rm -rf libs/cglm/cmakeout/
-	rm -rf libs/openal/cmakeout/
 	rm -rf libs/stb/cmakeout/
 
 clean-build:
-	rm -rf libs/glfw/out/
+	rm -rf out/libfirefly.so
 	rm -rf libs/glad-rf/out/
-	rm -rf libs/cglm/out/
-	rm -rf libs/openal/out/
 	rm -rf libs/stb/out/

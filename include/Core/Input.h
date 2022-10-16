@@ -36,7 +36,6 @@ typedef struct {
     float yaw, pitch;
 } Input;
 
-
 typedef enum {
   KEY_SPACE             = 32,
  	KEY_APOSTROPHE        = 39, /* ' */

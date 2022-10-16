@@ -9,11 +9,19 @@ The wiki page here will also be being worked on.
 
 I will most likely **not** provide prebuilt binaries of this library as the build process is set up in a way that makes installation easy and usage easy as well.
 
+# Required dependencies
+freetype2
+glfw3
+openal-soft
+cglm
+
+**I think most of these are obtainable via pkg managers**
+
 ## Build instructions
 ### MacOS
 `git clone https://github.com/rfmineguy/firefly-lib --recursive`<br>
 `cd firefly-lib`<br>
-`make install`<br>
+`sudo make install`<br>
 *If it asks you for sudo password, its only because the install puts files in **/usr/local/lib** and **/usr/local/include***
 
 ### Linux

@@ -1,15 +1,9 @@
-[submodule "libs/glfw"]
-	path = libs/glfw
-	url = https://github.com/glfw/glfw
 [submodule "libs/glad-rf"]
 	path = libs/glad-rf
 	url = https://github.com/rfmineguy/glad-rf
 [submodule "libs/stb"]
 	path = libs/stb
 	url = https://github.com/nothings/stb
-[submodule "libs/cglm"]
-	path = libs/cglm
-	url = https://github.com/recp/cglm
-[submodule "libs/openal"]
-	path = libs/openal
-	url = https://github.com/kcat/openal-soft
+[submodule "libs/freetype"]
+	path = libs/freetype
+	url = https://github.com/freetype/freetype.git

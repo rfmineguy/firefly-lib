@@ -5,13 +5,12 @@
 #include FT_FREETYPE_H
 
 typedef struct _Font {
-
+  FT_Face face;
 } Font;
 
-FT_Library library;
+void FF_InitFontSystem();
+void FF_DeinitFontSystem();
 
-void FF_FreeTypeInit();
 Font FF_LoadFont(const char*);
-
 
 #endif

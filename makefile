@@ -31,6 +31,7 @@ OBJECTS := $(patsubst src/%.c, obj/%.o, $(SOURCES))
 
 FREETYPE_LIB := $(shell pkg-config --libs freetype2)
 FREETYPE_CFLAGS := $(shell pkg-config --cflags freetype2)
+FREETYPE_PRESENT := $(shell pkg-config --print-errors freetype2)
 
 GLFW_LIB := $(shell pkg-config --libs glfw3)
 GLFW_CFLAGS  := $(shell pkg-config --cflags glfw3)
@@ -60,6 +61,7 @@ pkgconfig:
 	$(info FreeType2)
 	$(info  \___ LIBS    ==> $(FREETYPE_LIB))
 	$(info  \___ CFLAGS  ==> $(FREETYPE_CFLAGS))
+	$(info  \___ EXISTS  ==> $(FREETYPE_PRESENT))
 	$(info GLFW3)
 	$(info  \___ LIBS    ==> $(GLFW_LIB))
 	$(info  \___ CFLAGS  ==> $(GLFW_CFLAGS))

@@ -12,12 +12,16 @@ The wiki page here will also be being worked on.
 I will most likely **not** provide prebuilt binaries of this library as the build process is set up in a way that makes installation easy and usage easy as well.
 
 # Required dependencies
+```
+You may check if these are present using make pkgconfig
+I think most of these are obtainable via pkg managers
+```
+```
 freetype2
 glfw3
 openal-soft
 cglm
-
-**I think most of these are obtainable via pkg managers**
+```
 
 ## Build instructions
 ### MacOS
@@ -38,7 +42,13 @@ cglm
 
 ## Usage instructions
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>
-`gcc src/main.c -lfirefly`
+A pkg-config is installed alongside the library too
+
+```Makefile
+FF_LIB := $(shell pkg-config --libs firefly)
+FF_CFLAGS := $(shell pkg-config --cflags firefly)
+gcc src/main.c -lfirefly
+```
 
 ## Disclaimers
 1. This has *ONLY* been tested on linux and macos as of now. If you have any issues with building for other platforms please notify me via the Issues tab.

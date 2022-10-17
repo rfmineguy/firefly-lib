@@ -94,6 +94,7 @@ build_resources:
 	$(info =========================================================)
 	make -C example_resources clean-build prepare
 	make -C example_resources cam.fragment.o cam.vertex.o
+	make -C example_resources text.fragment.o text.vertex.o
 	make -C example_resources clean-working-dir
 	$(info =========================================================)
 

@@ -48,6 +48,13 @@ GLAD_C_CFLAGS := -I/libs/glad-rf/include/
 DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
 RESOURCES = $(wildcard example_resources/out/*.o)
 
+default:
+	$(info Default make target not a valid target)
+	$(info Choose the following: )
+	$(info  - out/libfirefly.so)
+	$(info  - install)
+	$(info  - pkgconfig)
+
 .PHONY: build_static
 build_static: prepare out/libfirefly.a
 
@@ -98,22 +105,22 @@ out/libfirefly.so: $(SOURCES)
 	sudo -k
 	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(GLAD_C_SRC) $(GLAD_C_CFLAGS) $(FREETYPE_LIB) $(FREETYPE_CFLAGS) $(GLFW_LIB) $(GLFW_CFLAGS) $(OPENAL_LIB) $(OPENAL_CFLAGS) $(CGLM_LIB) $(CGLM_CFLAGS) $(RESOURCES)
 
-out/libfirefly.a: $(OBJECTS)
-	$(info =========================================================)
-	$(info Building static lib 'libfirefly.a')
-	$(info =========================================================)
-	$(info _)
-	sudo -k
-	ar x /usr/local/lib/libglfw3.a
-	ar x /usr/local/lib/libcglm.a
-	ar x /usr/local/lib/libopenal.a
-	ar x /usr/local/lib/libglad.a
-	echo $(wildcard ./*.o)
-	ar rcs out/libfirefly.a $(wildcard ./*.o) $(wildcard obj/*.o)
-	rm -rf *.o
-	
-obj/%.o: src/%.c
-	$(CC) -c $< -o $@ $(INCLUDE_DIRS)
+#out/libfirefly.a: $(OBJECTS)
+#	$(info =========================================================)
+#	$(info Building static lib 'libfirefly.a')
+#	$(info =========================================================)
+#	$(info _)
+#	sudo -k
+#	ar x /usr/local/lib/libglfw3.a
+#	ar x /usr/local/lib/libcglm.a
+#	ar x /usr/local/lib/libopenal.a
+#	ar x /usr/local/lib/libglad.a
+#	echo $(wildcard ./*.o)
+#	ar rcs out/libfirefly.a $(wildcard ./*.o) $(wildcard obj/*.o)
+#	rm -rf *.o
+#	
+#obj/%.o: src/%.c
+#	$(CC) -c $< -o $@ $(INCLUDE_DIRS)
 
 libinfo:
 	objdump -t out/libfirefly.a >> libinfo.txt

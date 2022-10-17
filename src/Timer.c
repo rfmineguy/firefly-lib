@@ -2,14 +2,17 @@
 #include "../include/Core/Window.h"
 
 Timer FF_Timer(double interval, TimerUnit unit) {
-  return (Timer){
-    .start_time = 0, 
-    .current_time = 0, 
-    .interval = interval, 
-    .running = false, 
-    .unit = unit
-  };
-}
+  Timer t;
+
+  t.start_time = 0, 
+  t.current_time = 0, 
+  t.interval = interval, 
+  t.running = false, 
+  t.unit = unit;
+  
+  FF_TimerStart(&t);
+  return t;
+}  
 
 void FF_TimerStartIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
   pTimer->unit = unit;
@@ -20,9 +23,9 @@ void FF_TimerStartIntervalEx(Timer *pTimer, double interval, TimerUnit unit) {
   }
   pTimer->running = true;
 }
-//Deprecated
-void TimerStartInterval(Timer *pTimer, double interval) {
-  FF_TimerStartIntervalEx(pTimer, interval, MILLISECOND);
+
+void FF_TimerStart(Timer *pTimer) {
+  FF_TimerStartIntervalEx(pTimer, pTimer->interval, pTimer->unit);
 }
 
 void FF_TimerReset(Timer *pTimer) {

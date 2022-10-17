@@ -1,7 +1,10 @@
 #ifndef FF_RESOURCE_FONT_H
 #define FF_RESOURCE_FONT_H
+
 #include "ft2build.h"
 #include FT_FREETYPE_H
+#include <stdint.h>
+
 typedef struct {
   uint32_t texId;
   int size_w, size_h;

@@ -1,16 +1,12 @@
 #ifndef FF_RESOURCE_FONT_H
 #define FF_RESOURCE_FONT_H
 
-#include "ft2build.h"
-#include FT_FREETYPE_H
-
-typedef struct _Font {
-  FT_Face face;
-} Font;
+typedef struct _FF_Font FF_Font;
+typedef struct _FF_Char FF_Char;
 
 void FF_InitFontSystem();
 void FF_DeinitFontSystem();
 
-Font FF_LoadFont(const char*);
+FF_Font FF_LoadFont(const char*);
 
 #endif

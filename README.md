@@ -19,10 +19,13 @@ I think most of these are obtainable via pkg managers
 ```
 freetype2     - sudo apt install libfreetype-dev
               - brew install freetype2
+              
 glfw3         - sudo apt install libglfw3-dev
               - brew install glfw3
+              
 openal-soft   - sudo apt install libopenal-dev
               - brew install openal-soft
+              
 cglm          - sudo apt install libcglm-dev
               - brew install cglm
 ```

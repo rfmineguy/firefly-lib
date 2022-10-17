@@ -24,7 +24,7 @@ void ProcessShaderInternal(unsigned int* id, char* contents, GLenum shaderType, 
             LOG_CRITICAL("\t%s", infoLog);
         }
     }
-    LOG_INFO("[%s] shader compiled successfully", shaderType == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
+    //LOG_INFO("[%s] shader compiled successfully", shaderType == GL_VERTEX_SHADER ? "Vertex" : "Fragment");
 }
 
 void LinkShaderInteral(Shader* pShader) {

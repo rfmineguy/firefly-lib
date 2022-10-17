@@ -183,6 +183,7 @@ FF_SoundSource FF_CreateSoundSourceEx(FF_AudioSystem* pAudioSystem, float pitch,
   FF_SoundSourceSetLooping(&source, looping);
   source.gain = gain;
   pAudioSystem->sources[pAudioSystem->sourcesCount++] = source;
+  LOG_DEBUG("SoundSource : Created");
   return source;
 }
 

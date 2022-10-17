@@ -17,9 +17,13 @@ typedef struct {
   FT_Face face;
 } FF_Font;
 
-void FF_InitFontSystem();
-void FF_DeinitFontSystem();
+typedef struct FF_int_FontLoader {
+  FT_Library ft_lib;
+} FF_FontLoader;
 
-FF_Font FF_LoadFont(const char*);
+FF_FontLoader* FF_CreateFontLoader();
+void FF_DestroyFontLoader(FF_FontLoader*);
+
+FF_Font FF_LoadFont(FF_FontLoader*, const char*);
 
 #endif

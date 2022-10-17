@@ -4,39 +4,39 @@
 
 FT_Library library;
 
-void FF_InitFontSystem() {
-  FT_Error e = FT_Init_FreeType(&library);
+FF_FontLoader* FF_CreateFontLoader() {
+  FF_FontLoader* l = malloc(sizeof(FF_FontLoader));
+  FT_Error e = FT_Init_FreeType(&l->ft_lib);
   if (e) {
     LOG_CRITICAL("Error initializing freetype");
   }
   else {
     LOG_INFO("[FontSystem] Initialized font system");
   }
+  return l;
 }
 
-void FF_DeinitFontSystem() {
-  FT_Done_FreeType(library);
-  LOG_INFO("[FontSystem] Deinitialized font system");
+void FF_DestroyFontLoader(FF_FontLoader* loader) {
+  FT_Done_FreeType(loader->ft_lib);
 }
 
-FF_Font FF_LoadFont(const char* path) {
+FF_Font FF_LoadFont(FF_FontLoader* loader, const char* path) {
   FF_Font f;
-  FT_Error e = FT_New_Face(library, path, 0, &f.face);
+  FT_Error e = FT_New_Face(loader->ft_lib, path, 0, &f.face);
   if (e == FT_Err_Unknown_File_Format) {
-    LOG_CRITICAL("Font format not recongnized, [%s]", path);
+    LOG_CRITICAL("[Font] Format not recongnized, [%s]", path);
     return (FF_Font){};
   }
   else if (e) {
-    LOG_CRITICAL("Unknown problem with font file, [%s]", path);
+    LOG_CRITICAL("[Font] Unknown problem with font file, [%s]", path);
     return (FF_Font){};
   }
   else {
-    LOG_INFO("Loaded font at [%s]", path);
     FT_Set_Pixel_Sizes(f.face, 0, 48);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     for (int c = 0; c < 128; c++) {
       if ((e = FT_Load_Char(f.face, c, FT_LOAD_RENDER)) != 0) {
-        LOG_CRITICAL("Failed to load font glyph [%c]", c);
+        LOG_CRITICAL("[Font] Failed to load font glyph [%c]", c);
         continue;
       }
       FF_Char char_struct;
@@ -57,6 +57,7 @@ FF_Font FF_LoadFont(const char* path) {
     }
     glBindTexture(GL_TEXTURE_2D, 0);
   }
+  LOG_INFO("[Font] Loaded font from [%s]", path);
   FT_Done_Face(f.face);
   return f;
 }

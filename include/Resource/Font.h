@@ -9,7 +9,8 @@ typedef struct {
   uint32_t texId;
   int size_w, size_h;
   int bearing_x, bearing_y;
-  uint32_t advance;
+  unsigned int advance;
+  char c;
 } FF_Char;
 
 typedef struct {

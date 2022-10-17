@@ -65,9 +65,21 @@ void FF_RendererDrawGeometry(FF_Renderer* r, Geometry g, Camera c, vec3 pos, vec
   glDrawElements(GL_TRIANGLES, g.indice_count, GL_UNSIGNED_INT, 0);
 }
 
-void FF_RendererDrawText(FF_Renderer* r, FF_Font fnt, Camera c, vec2 pos, float scale, const char* str) {
+void FF_RendererDrawText(FF_Renderer* r, FF_Font fnt, Camera c, vec2 pos, vec3 color, float scale, const char* fmt, ...) {
+  
+  char str[500];
+  va_list args;
+  va_start(args, fmt);
+  vsprintf(str, fmt, args);
+  va_end(args);
+  
+  mat4 proj;
+  glm_mat4_identity(proj);
+  glm_ortho(0, c.size[0], 0, c.size[1], -100, 100, proj);
+  
   BindShader(r->textShader);
-  SetUniform3f(r->textShader, "textColor", 1.0f, 1.0f, 1.0f);
+  SetUniform3f(r->textShader, "textColor", color[0], color[1], color[2]);
+  SetUniform4fv(r->textShader, "projection", proj[0]);
   glActiveTexture(GL_TEXTURE0);
   glBindVertexArray(r->font_vao);
   

@@ -136,6 +136,8 @@ FF_Window* FF_CreateWindowGL(const char* name, uint16_t width, uint16_t height, 
         return NULL;
     }
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glfwSwapInterval(1);
     
     LOG_INFO("[Window] Created successfully");

@@ -1,4 +1,5 @@
 out/
+obj/
 libfirefly.so
 .ccls
 .cache/

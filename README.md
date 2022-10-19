@@ -4,12 +4,12 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/rfmineguy/firefly-lib)
 
 # firefly-lib
-This is an intalled library
-For usage of the library you can view [FireflyLibTests](https://github.com/rfmineguy/firefly-lib-tests)
+This is an intalled library <br>
+For usage of the library you can view [FireflyLibTests](https://github.com/rfmineguy/firefly-lib-tests)<br>
 
-The wiki page here will also be being worked on.
+The wiki page here will also be being worked on.<br>
 
-I will most likely **not** provide prebuilt binaries of this library as the build process is set up in a way that makes installation easy and usage easy as well.
+I will most likely **not** provide prebuilt binaries of this library as the build process is set up in a way that makes installation easy and usage easy as well.<br>
 
 # Required dependencies
 ```
@@ -54,6 +54,8 @@ sudo make out/libfirefly.so install
 ## Usage instructions
 Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>
 A pkg-config is installed alongside the library too
+
+**As of Oct 18, 2022 the library will be fully compatible with c++ compilers.**
 
 ```Makefile
 FF_LIB := $(shell pkg-config --libs firefly)

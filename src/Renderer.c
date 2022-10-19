@@ -66,7 +66,6 @@ void FF_RendererDrawGeometry(FF_Renderer* r, Geometry g, Camera c, vec3 pos, vec
 }
 
 void FF_RendererDrawText(FF_Renderer* r, FF_Font fnt, Camera c, vec2 pos, vec3 color, float scale, const char* fmt, ...) {
-  
   char str[500];
   va_list args;
   va_start(args, fmt);
@@ -97,7 +96,7 @@ void FF_RendererDrawText(FF_Renderer* r, FF_Font fnt, Camera c, vec2 pos, vec3 c
 
        { xpos,     ypos + h,   0.0f, 0.0f },
        { xpos + w, ypos,       1.0f, 1.0f },
-       { xpos + w, ypos + h,   1.0f, 0.0f }   
+       { xpos + w, ypos + h,   1.0f, 0.0f }
     };
     
     glBindTexture(GL_TEXTURE_2D, c.texId);
@@ -107,6 +106,7 @@ void FF_RendererDrawText(FF_Renderer* r, FF_Font fnt, Camera c, vec2 pos, vec3 c
     glDrawArrays(GL_TRIANGLES, 0, 6);
     pos[0] += (c.advance >> 6) * scale;
   }
+
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -18,10 +18,14 @@ FF_FontLoader* FF_CreateFontLoader() {
 
 void FF_DestroyFontLoader(FF_FontLoader* loader) {
   FT_Done_FreeType(loader->ft_lib);
+  free(loader);
+  loader = NULL;
 }
 
 FF_Font FF_LoadFont(FF_FontLoader* loader, const char* path) {
   FF_Font f;
+  const int LOWEST_CHAR = 32;
+  const int HIGHEST_CHAR = 128;
   FT_Error e = FT_New_Face(loader->ft_lib, path, 0, &f.face);
   if (e == FT_Err_Unknown_File_Format) {
     LOG_CRITICAL("[Font] Format not recongnized, [%s]", path);
@@ -34,11 +38,12 @@ FF_Font FF_LoadFont(FF_FontLoader* loader, const char* path) {
   else {
     FT_Set_Pixel_Sizes(f.face, 0, 48);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    for (int c = 32; c < 128; c++) {
+    for (int c = LOWEST_CHAR; c < HIGHEST_CHAR; c++) {
       if ((e = FT_Load_Char(f.face, c, FT_LOAD_RENDER)) != 0) {
         LOG_CRITICAL("[Font] Failed to load font glyph [%c]", c);
         continue;
       }
+
       FF_Char char_struct;
       glGenTextures(1, &char_struct.texId);
       glBindTexture(GL_TEXTURE_2D, char_struct.texId);
@@ -56,7 +61,6 @@ FF_Font FF_LoadFont(FF_FontLoader* loader, const char* path) {
       char_struct.advance = (unsigned int) f.face->glyph->advance.x;
       char_struct.c = c;
       f.characters[c] = char_struct;
-      LOG_INFO("[Font] Loaded glyph '%c' at '%d'.", c, c);
     }
     glBindTexture(GL_TEXTURE_2D, 0);
   }

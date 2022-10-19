@@ -64,8 +64,10 @@ CC := gcc -Wall -Werror
 FF_LIB := $(shell pkg-config --libs firefly)
 FF_CFLAGS := $(shell pkg-config --cflags firefly)
 
-build:
-  $(CC) src/main.c -lfirefly
+SRC := main.c paddle.c
+
+game_exe: $(SRC)
+  $(CC) -o $@ $^ $(FF_CFLAGS) $(FF_LIB)
 ```
 
 ## Disclaimers

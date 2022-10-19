@@ -3,6 +3,11 @@
 
 #include <stdbool.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct Atlas {
     char name[50];
     struct Atlas *next;
@@ -17,4 +22,9 @@ bool HasRegion(Atlas*, const char*);
 
 void BindAtlas(Atlas*);
 void UnbindAtlas();
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif

@@ -2,6 +2,11 @@
 #define FL_RES_GEOMETRY_H
 #include <cglm/cglm.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _Vertex {
     vec3 position;
     vec3 color;
@@ -22,5 +27,9 @@ void FreeGeometry(Geometry);
 
 Geometry GenerateQuad();
 Geometry GenerateCube();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

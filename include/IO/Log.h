@@ -2,6 +2,11 @@
 #define FL_IOLOG_H
 #include <stdio.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     DEBUG_, INFO_, WARN_, ERROR_, CRITICAL_
 } LogLevel;
@@ -23,5 +28,9 @@ typedef enum {
 
 FILE* SetLogStream(FILE*);
 void LogFL(LogLevel, char*, int, const char*, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

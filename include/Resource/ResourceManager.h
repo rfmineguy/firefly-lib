@@ -11,6 +11,11 @@
  #define AUTO_RESOURCE_REGISTER for automatic inclusion of individually loaded resources
  */
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //Resource Pool
 typedef struct _ResourcePool ResourcePool;
 
@@ -62,5 +67,9 @@ void PutSoundResource(FF_Sound*, const char*);
 bool IsSoundResourceLoaded(const char*);
 FF_Sound* GetSoundResource(const char*);
 void FreeSoundResource(const char*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

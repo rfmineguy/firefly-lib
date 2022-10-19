@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void FF_RandomSeedTime();
 void FF_RandomSeedLong(uint32_t);
 
@@ -13,5 +18,9 @@ double FF_RandomFromSet(int, double*);
 
 float FF_RandomRangeFloat(float, float);
 float FF_RandomFloat();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

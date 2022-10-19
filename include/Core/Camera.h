@@ -3,6 +3,11 @@
 #include <cglm/cglm.h>
 #include <cglm/cam.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum _ProjectionType {
   ORTHOGRAPHIC, PERSPECTIVE
 } ProjectionType;
@@ -23,5 +28,9 @@ typedef struct _Camera {
   
   ProjectionType projection_type;
 } Camera;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

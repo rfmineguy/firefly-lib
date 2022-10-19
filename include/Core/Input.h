@@ -4,8 +4,9 @@
 #include "HashTable.h"
 #include <stdbool.h>
 
-#ifndef FF_API
-#define FF_API
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef struct {
@@ -200,5 +201,9 @@ Vec2f FF_GetScrollDirection();
 bool FF_IsControllerConneced(int);
 bool FF_IsControllerButtonDown(int, int);
 bool FF_IsControllerButtonPressed(int, int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

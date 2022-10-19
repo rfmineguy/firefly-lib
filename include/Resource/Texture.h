@@ -2,6 +2,10 @@
 #define FL_RES_TEXTURE_H
 #include <glad/glad.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct Texture {
     char name[50];
     int width, height, channels;
@@ -18,5 +22,9 @@ void FF_FreeTexture(Texture);
 void FF_BindTexture(Texture);
 void FF_BindTextureToUnit(Texture, int);
 void FF_UnbindTexture();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

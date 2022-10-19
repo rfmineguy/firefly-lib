@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define READ                   "r"
 #define WRITE                  "w"
 #define APPEND                 "a"
@@ -21,5 +26,9 @@ char* Read(long*);
 FILE* SetWriteStream(FILE*);
 int Write(char*);
 int WriteFmt(const char*, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

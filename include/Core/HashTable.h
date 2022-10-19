@@ -2,6 +2,11 @@
 #define FL_COREHASHTABLE_H
 #include <stdbool.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum Type {INT, FLOAT, DOUBLE, C_STR};
 
 typedef struct hash_entry {
@@ -24,5 +29,9 @@ void* ht_get(ht_t*, const char*);
 void ht_del(ht_t*, const char*);
 
 void ht_dump(ht_t*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,6 +1,10 @@
 #ifndef FL_RES_SHADER_H
 #define FL_RES_SHADER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //Shader
 typedef struct Shader {
 	char name[50];
@@ -24,5 +28,9 @@ void SetUniform4f(Shader*, const char*, float, float, float, float);
 void SetUniform4fv(Shader*, const char*, float*);
 
 int GetUniformLocation(Shader*, const char*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

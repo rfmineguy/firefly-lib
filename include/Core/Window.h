@@ -4,6 +4,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     OPENGL, VULKAN, METAL
 } API;
@@ -33,5 +38,9 @@ int FF_WindowGetHeight(FF_Window*);
 
 void FF_ToggleCursorLocked(FF_Window*);
 bool FF_IsCursorLocked(FF_Window*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

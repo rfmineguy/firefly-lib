@@ -5,6 +5,11 @@
 #include FT_FREETYPE_H
 #include <stdint.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
   uint32_t texId;
   int size_w, size_h;
@@ -26,5 +31,9 @@ FF_FontLoader* FF_CreateFontLoader();
 void FF_DestroyFontLoader(FF_FontLoader*);
 
 FF_Font FF_LoadFont(FF_FontLoader*, const char*);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

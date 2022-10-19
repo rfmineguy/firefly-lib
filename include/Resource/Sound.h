@@ -5,6 +5,11 @@
 #include <AL/al.h>
 #include <stdbool.h>
 
+// Allows for c++ to link lib
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _FF_Sound {
   uint32_t samples;
   int16_t *data;
@@ -43,5 +48,9 @@ void FF_SoundSourceUnpause(FF_SoundSource);
 void FF_SoundSourceStop(FF_SoundSource);
 
 bool FF_SoundSourcePlaying(FF_SoundSource);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

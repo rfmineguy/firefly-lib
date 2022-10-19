@@ -58,9 +58,14 @@ A pkg-config is installed alongside the library too
 **As of Oct 18, 2022 the library will be fully compatible with c++ compilers.**
 
 ```Makefile
+CC := gcc -Wall -Werror
+#CC := g++ -Wall -Werror
+
 FF_LIB := $(shell pkg-config --libs firefly)
 FF_CFLAGS := $(shell pkg-config --cflags firefly)
-gcc src/main.c -lfirefly
+
+build:
+  $(CC) src/main.c -lfirefly
 ```
 
 ## Disclaimers

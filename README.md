@@ -55,8 +55,7 @@ sudo make out/libfirefly.so install
 *Currently not planned either*<br>
 
 ## Usage instructions
-Once the library is installed via `make install` you can simply link the library through gcc with `-lfirefly` <br><br>
-A pkg-config is installed alongside the library too
+This library comes with a package config file to make use in your project easy. The following makefile demonstrates how that is to be done.
 
 **As of Oct 18, 2022 the library will be fully compatible with c++ compilers.**
 

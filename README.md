@@ -28,6 +28,9 @@ openal-soft   - sudo apt install libopenal-dev
               
 cglm          - sudo apt install libcglm-dev
               - brew install cglm
+
+harfbuzz      - sudo apt install libharfbuzz-dev  : I think?
+              - brew install harfbuzz
 ```
 
 ## Build instructions

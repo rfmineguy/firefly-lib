@@ -135,7 +135,6 @@ install:
 	$(info )
 	sudo install -d $(DESTDIR)$(PREFIX)/lib/
 	-sudo install -m 644 out/libfirefly.so $(DESTDIR)$(PREFIX)/lib/
-	-sudo install -m 644 out/libfirefly.a $(DESTDIR)$(PREFIX)/lib/
 	-sudo install -m 644 firefly.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
 
 	# Create directories
@@ -156,7 +155,6 @@ uninstall:
 	$(info Uninstalling libfirefly.so and its headers)
 	$(info =========================================================)
 	sudo rm $(DESTDIR)$(PREFIX)/lib/libfirefly.so
-	sudo rm $(DESTDIR)$(PREFIX)/lib/libfirefly.a
 	sudo rm -rf $(DESTDIR)$(PREFIX)/include/firefly/
 
 clean: clean-cmake clean-build clean-other

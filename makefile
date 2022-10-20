@@ -5,15 +5,6 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglad -lglfw -lcglm
-ifeq ($(uname), darwin)
-	LIBRARY_DEPENDENCIES += -lopenal.1
-	LIBRARY_LIST += 
-else
-	LIBRARY_DEPENDENCIES += -lopenal
-	LIBRARY_LIST += ldd out/libfirefly.so
-endif
-
 # INCLUDE DIRECTORIES FOR THIS FireflyLib
 LOCAL_CORE_INCLUDE = include/Core
 LOCAL_IO_INCLUDE = include/IO
@@ -31,10 +22,9 @@ OBJECTS := $(patsubst src/%.c, obj/%.o, $(SOURCES))
 
 FREETYPE_LIB := $(shell pkg-config --libs freetype2)
 FREETYPE_CFLAGS := $(shell pkg-config --cflags freetype2)
-FREETYPE_PRESENT := $(shell pkg-config --print-errors freetype2)
 
 GLFW_LIB := $(shell pkg-config --libs glfw3)
-GLFW_CFLAGS  := $(shell pkg-config --cflags glfw3)
+GLFW_CFLAGS := $(shell pkg-config --cflags glfw3)
 
 OPENAL_LIB := $(shell pkg-config --libs openal) 
 OPENAL_CFLAGS := $(shell pkg-config --cflags openal)
@@ -45,18 +35,31 @@ CGLM_CFLAGS := $(shell pkg-config --cflags cglm)
 GLAD_C_SRC := ./libs/glad-rf/src/glad.c
 GLAD_C_CFLAGS := -I/libs/glad-rf/include/
 
+HARFBUZZ_LIB := $(shell pkg-config --libs harfbuzz)
+HARFBUZZ_CFLAGS := $(shell pkg-config --cflags harfbuzz)
+
 DYLIB_CMD = -Wl,-rpath,$(shell pwd)/libs/openal/out/
 RESOURCES = $(wildcard example_resources/out/*.o)
+
+define colored_echo
+	@tput setaf $1
+	@echo $2
+	@tput sgr0
+endef
 
 default:
 	$(info Default make target not a valid target)
 	$(info Choose the following: )
-	$(info  - out/libfirefly.so)
-	$(info  - install)
-	$(info  - pkgconfig)
-
-.PHONY: build_static
-build_static: prepare out/libfirefly.a
+	$(info  default)
+	$(info  \__ Display make targets)
+	$(info  build_shared)
+	$(info  \__ Ensure that the required resource files are included)
+	$(info  \__ Shows the availability of required libraries)
+	$(info  \__ Builds the library)
+	$(info  install)
+	$(info  \__ Installs the built library to $(PREFIX)/lib and $(PREFIX)/include)
+	$(info  pkgconfig)
+	$(info  \__ Display package availability)
 
 .PHONY: build_shared
 build_shared: build_resources pkgconfig out/libfirefly.so
@@ -65,30 +68,33 @@ pkgconfig:
 	$(info ==============================================================)
 	$(info PACKAGE AVAILABILITY)
 	$(info ==============================================================)
-	$(info FreeType2)
-	$(info  \___ LIBS    ==> $(FREETYPE_LIB))
-	$(info  \___ CFLAGS  ==> $(FREETYPE_CFLAGS))
-	$(info  \___ EXISTS  ==> $(FREETYPE_PRESENT))
-	$(info GLFW3)
-	$(info  \___ LIBS    ==> $(GLFW_LIB))
-	$(info  \___ CFLAGS  ==> $(GLFW_CFLAGS))
-	$(info GLAD (local))
-	$(info  \___ SRC     ==> $(GLAD_C_SRC))
-	$(info  \___ CFLAGS  ==> $(GLAD_C_CFLAGS))
-	$(info OpenAL)
-	$(info  \___ LIBS    ==> $(OPENAL_LIB))
-	$(info  \___ CFLAGS  ==> $(OPENAL_CFLAGS))
-	$(info CGLM)
-	$(info  \___ LIBS    ==> $(CGLM_LIB))
-	$(info  \___ CFLAGS  ==> $(CGLM_CFLAGS))
+	$(call colored_echo, 9, "FreeType2")
+	$(call colored_echo, 6, "\___ LIBS    ==> $(FREETYPE_LIB)")
+	$(call colored_echo, 6, "\___ CFLAGS  ==> $(FREETYPE_CFLAGS)")
+	$(call colored_echo, 9, "GLFW3")
+	$(call colored_echo, 6, "\___ LIBS    ==> $(GLFW_LIB)")
+	$(call colored_echo, 6, "\___ CFLAGS  ==> $(GLFW_CFLAGS)")
+	$(call colored_echo, 9, "GLAD")
+	$(call colored_echo, 6, "\___ SRC     ==> $(GLAD_C_SRC)")
+	$(call colored_echo, 6, "\___ CFLAGS  ==> $(GLAD_C_CFLAGS)")
+	$(call colored_echo, 9, "OpenAL")
+	$(call colored_echo, 6, "\___ LIBS    ==> $(OPENAL_LIB)")
+	$(call colored_echo, 6, "\___ CFLAGS  ==> $(OPENAL_CFLAGS)")
+	$(call colored_echo, 9, "CGLM")
+	$(call colored_echo, 6, "\___ LIBS    ==> $(CGLM_LIB)")
+	$(call colored_echo, 6, "\___ CFLAGS  ==> $(CGLM_CFLAGS)")
+	$(call colored_echo, 9, "Harfbuzz")
+	$(call colored_echo, 6, "\___ LIBS    ==> $(HARFBUZZ_LIB)")
+	$(call colored_echo, 6, "\___ CFLAGS  ==> $(HARFBUZZ_CFLAGS)")
 	$(info ==============================================================)
 
 prepare: build_resources
 	sudo -k
-	mkdir out obj; chmod 755 out obj
+	mkdir out; chmod 755 out
 
 .PHONY: build_resources
 build_resources:
+	sudo -k
 	$(info =========================================================)
 	$(info Building the resource files \(text files, images, etc.\))
 	$(info =========================================================)
@@ -104,24 +110,16 @@ out/libfirefly.so: $(SOURCES)
 	$(info =========================================================)
 	$(info )
 	sudo -k
-	$(CC) $(CFLAGS) -fPIC -shared -o $@ $^ $(GLAD_C_SRC) $(GLAD_C_CFLAGS) $(FREETYPE_LIB) $(FREETYPE_CFLAGS) $(GLFW_LIB) $(GLFW_CFLAGS) $(OPENAL_LIB) $(OPENAL_CFLAGS) $(CGLM_LIB) $(CGLM_CFLAGS) $(RESOURCES)
-
-#out/libfirefly.a: $(OBJECTS)
-#	$(info =========================================================)
-#	$(info Building static lib 'libfirefly.a')
-#	$(info =========================================================)
-#	$(info _)
-#	sudo -k
-#	ar x /usr/local/lib/libglfw3.a
-#	ar x /usr/local/lib/libcglm.a
-#	ar x /usr/local/lib/libopenal.a
-#	ar x /usr/local/lib/libglad.a
-#	echo $(wildcard ./*.o)
-#	ar rcs out/libfirefly.a $(wildcard ./*.o) $(wildcard obj/*.o)
-#	rm -rf *.o
-#	
-#obj/%.o: src/%.c
-#	$(CC) -c $< -o $@ $(INCLUDE_DIRS)
+	$(CC) \
+		$(CFLAGS) -fPIC -shared \
+		-o $@ $^ \
+		$(GLAD_C_SRC) $(GLAD_C_CFLAGS) \
+		$(FREETYPE_LIB) $(FREETYPE_CFLAGS) \
+		$(GLFW_LIB) $(GLFW_CFLAGS) \
+		$(OPENAL_LIB) $(OPENAL_CFLAGS) \
+		$(CGLM_LIB) $(CGLM_CFLAGS) \
+		$(HARFBUZZ_LIB) $(HARFBUZZ_CFLAGS) \
+		$(RESOURCES)
 
 libinfo:
 	objdump -t out/libfirefly.a >> libinfo.txt

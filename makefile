@@ -5,9 +5,9 @@ ifeq ($(PREFIX),)
 	PREFIX := /usr/local
 endif
 
-LIBRARY_DEPENDENCIES = -lc -lglad -lglfw -lcglm
-ifeq ($(uname), darwin)
-	LIBRARY_DEPENDENCIES += -lopenal.1
+LIBRARY_DEPENDENCIES = -lc -lglad -lglfw3 -lcglm
+ifeq ($(shell uname), Darwin)
+	LIBRARY_DEPENDENCIES += -lopenal.1 -framework OpenGL -framework CoreFoundation -framework Cocoa -framework IOKit -framework CoreVideo
 	LIBRARY_LIST += 
 else
 	LIBRARY_DEPENDENCIES += -lopenal
@@ -16,7 +16,7 @@ endif
 
 # external lib details (in addition to the default search paths)
 LIBRARY_PATHS = -L/opt/homebrew/lib/ \
-				#-Llibs/glad-rf/out/ \
+				-Llibs/glad-rf/out/ \
 				-Llibs/glfw/out/ \
 				-Llibs/cglm/out/ \
 				-Llibs/openal/out/ \
@@ -26,10 +26,10 @@ DYLIB_PATH = $(shell pwd)/libs/openal/out/
 
 INCLUDE_DIRS := -I/include/ \
 			    -I/opt/homebrew/include/ \
-				-I/libs/glad/include/ \
-				-I/libs/stb/include/ \
-				-I/libs/cglm/include/ \
-				-I/libs/openal/include/
+				-Ilibs/glad-rf/include/ \
+				-Ilibs/stb/include/ \
+				-Ilibs/cglm/include/ \
+				-Ilibs/openal/include/
 
 # INCLUDE DIRECTORIES FOR THIS FireflyLib
 LOCAL_CORE_INCLUDE = include/Core
